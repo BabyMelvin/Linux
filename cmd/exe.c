@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  env.c
+ *       Filename:  exe.c
  *
- *    Description:  环境变量操作
+ *    Description:  执行其他程序
  *
  *        Version:  1.0
- *        Created:  03/01/2018 11:22:47 AM
+ *        Created:  03/01/2018 05:17:19 PM
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -16,19 +16,21 @@
  * =====================================================================================
  */
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 
 int main(void){
-    extern char** environ;
-    int i;
-    for(i=0;environ[i]!=NULL;i++){
-        printf("环境：%s\n",environ[i]);
-    }
-    printf("PATH=%s\n",getenv("PATH");
-    //1:override
-    setenv("PATH","hello",1);
-    printf("PATH=%s\n",getenv("PATH")); 
-    
+    char *argv0[]={"ls","-l",NULL};
+    printf("开始：hello world\n");
+    //执行 /bin/ls
+    execl("/bin/ls","ls","-l",NULL);
+
+    execlp("ls","ls","-l",NULL);
+
+    execv("/bin/ls",argv0);
+
+    execvp("ls",argv0);
+    printf("接收: hello world\n");
     return 0;
 }
 

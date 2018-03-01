@@ -1,12 +1,13 @@
 /*
  * =====================================================================================
  *
- *       Filename:  env.c
+ *       Filename:  fifo_ct.c
  *
- *    Description:  环境变量操作
+ *    Description:  创建管道
+ *                  $mkfifo filename 
  *
  *        Version:  1.0
- *        Created:  03/01/2018 11:22:47 AM
+ *        Created:  03/01/2018 05:53:53 PM
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -17,18 +18,20 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 int main(void){
-    extern char** environ;
-    int i;
-    for(i=0;environ[i]!=NULL;i++){
-        printf("环境：%s\n",environ[i]);
+    int fd;
+    fd=mkfifo("my_fifo",0777);
+    if(fd<0){
+        perror("mkfifo");
+        if(errno!=EEXIST){
+            return -1;
+        }
     }
-    printf("PATH=%s\n",getenv("PATH");
-    //1:override
-    setenv("PATH","hello",1);
-    printf("PATH=%s\n",getenv("PATH")); 
-    
+    write(fd,"hello,world\n",sizeof("hello.world\n"));
+    close(fd);
     return 0;
 }
-
