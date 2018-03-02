@@ -26,6 +26,9 @@ int main(void){
     int n=10;
     //一次调用两次返回
     pid=fork();
+    //pid=0 或者子进程pid
+    printf("pid=%ld\n",(long)pid);
+    printf("分开后进程id=%ld\n",(long)getpid());
     if(pid>0){
         //父进程中
         while(1){
