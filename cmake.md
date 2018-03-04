@@ -75,6 +75,85 @@ aux_source_directory(. DIR_LIB_SRCS)
 add_library (MathFunctions ${DIR_LIB_SRCS})
 ```
 在该文件中使用命令`add_library`将src目录中的源文件编译为静态链接库.
+## 3.自定义编译选项
+> CMAKE允许项目增加编译选项，从而可以根据用户环境和需求选择最适合的编译方案。
+
+如：可将MathFunctions库设为一个可选的库，如果该选项为ON，就使用该库的数学函数，否则调用标准库的数学函数库。
+修改CMakeLists文件。
+
+```
+# CMake 最低版号要求
+cmake_minimum_required　（VERSION 2.8)
+
+# 项目信息
+project (Demo4)
+
+#　加入一个配置文件，用于处理CMake对源码设置
+configure_file(
+"${PROJECT_SOURCE_DIR}/config.h.in",
+"${PROJECT_BINARY_DIR}/config.h"
+)
+# 是否使用自己的MathFunctions库
+option (USE_MYMATH "use provided math implementation" ON)
+
+# 是否加入MathFunctions库
+if(USE_MYMATH)
+ include_directories ("${PROJECT_SOURCE_DIR}/math")
+ add_subdirectory (math)
+ set (EXTRA_LIBS ${EXTRA_LIBS} MathFunctions)
+endif (USE_MYMATH)
+
+# 查找当前目录下所有源文件，并将保存到DIR_SRCS变量
+aux_source_directory (. DIR_SRCS)
+
+#　指定生成目标
+add_executable(Demo ${DIR_SRCS})
+target_link_libraries (Demo ${EXTRA_LIBS})
+```
+其中`configure_file`命令用于加入一个配置头文件config.h,这个文件有CMake从config.h.in生成，
+通过这样的机制，将可通过预定义一些参数和变量控制代码的生成．
+
+命令option添加一个`USE_MYMATH`选项，并默认值为`ON`.
+
+变量值USE_MYMATH决定是否使用我们自己编写MathFunctions库
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
