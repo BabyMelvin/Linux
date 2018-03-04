@@ -30,8 +30,8 @@ struct msgbuf{
     long type;
     struct student stu;
     struct msgbuf* next;
-}
-int main(void){
+};
+int main(int argc,char*argv){
     int msg_id,num;
     char ch;
     long type;
@@ -41,10 +41,11 @@ int main(void){
     struct msgbuf *head=NULL;
     
     key_t key;
-    key=ftok(".",'a');
-    msg_id=msget(key,IPC_CREAT,0777);
-
-    msgrcv(msg_id,temp,sizeof(struct msgbuf)),2,0);
+    //key=ftok(".",'a');创建的Key值不同。。。
+    key=0x152000f6;
+    msg_id=msgget(key,IPC_CREAT|0777);
+    printf("msg_id=%d\n",msg_id);
+    msgrcv(msg_id,temp,sizeof(struct msgbuf),2,0);
     printf("temp.type=%ld,temp.num=%d\n",temp->type,temp->stu.num);
     return 0;
 }

@@ -77,7 +77,7 @@ int main(void){
     //生成创建消息链表
     while(1){
         printf("输入 type,num,name\n");
-        scanf("%ld%d%s",%type,&num,name);
+        scanf("%ld%d%s",&type,&num,name);
         temp=create_node(type,num,name);
         printf("y/n,insert?\n");
         getchar();
@@ -88,6 +88,8 @@ int main(void){
             }else{
                 break;
             }
+        }else if(ch=='N'||ch=='n'){
+            break;
         }
         
     }
