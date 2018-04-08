@@ -4,6 +4,7 @@
  *       Filename:  memdev.c
  *
  *    Description:  字符设备驱动
+ *                      锁:信号量
  *
  *        Version:  1.0
  *        Created:  04/08/2018 02:18:53 PM
@@ -16,6 +17,7 @@
  * =====================================================================================
  */
 #include <stdlib.h>
+#include <module.h>
 #include <linux/types.h>
 #include <linux/fs.h>
 #include <linux/errno.h>
@@ -33,6 +35,7 @@ module_param(mem_major,int,S_IRUGO);
 struct mem_dev *mem_devp;//设备结构体指针
 struct cdev cdev;
 
+bool have_data=false;//表明设备足够数据可供读
 struct const struct file_operations mem_fops={
     .owner=THIS_MODULE,
     .llseek=mem_llseek,
@@ -40,6 +43,7 @@ struct const struct file_operations mem_fops={
     .write=mem_write,
     .open=mem_open,
     .release=mem_release,
+    .ioctl=memdev_ioctl,
 };
 
 /** 
@@ -77,6 +81,19 @@ static ssize_t mem_read(struct file* filp,char __user* buf,size_t size,loff_t * 
     int ret=0;
     //获得设备结构指针
     struct mem_dev* dev=filp->private;
+
+    //TODO:获取信号量,获取信号量sem，如果不可用，进程将被设置TASK_INTERRUPTIBLE类型睡眠
+    //返回值来区分是正常被信号中断。0，正常。-ENTER:被信号打断(val 减1)
+    if(down_interruptible(&dev->sem))
+        return -ERESTARTSYS;
+
+    //TODO 没有数据可读，中断唤醒
+    while(!have_data){
+        if(filp->f_flags & O_NONBLOCK)
+            return -EAGAIN;
+        wait_event_interruptible(dev->inq,have_data);
+    }
+
     //判断读位位置是否有效
     if(p>MEMDEV_SIZE)
         return 0;
@@ -87,11 +104,17 @@ static ssize_t mem_read(struct file* filp,char __user* buf,size_t size,loff_t * 
     //读数据到用户空间
     if(copy_to_user(buf,(void*)(dev->data+p),count)){
         ret=-EFAULT;
+        goto out;
     }else{
         *ppos+=count;
         ret=count;
         printk(KERN_INFO"read %d byte(s) from %d\n",count,p);
     }
+out:
+    //没有可读数据 
+    have_data=false;
+    //TODO:释放信号量,信号量加1
+    up(&dev->sem);
     return ret;
 }
 
@@ -104,6 +127,10 @@ static ssize_t mem_write(struct file*filp,const char __user *buf,size_t size,lof
     int ret=0;
     struct mem_dev *dev=filp->private_data;
     
+    //TODO 获取信号量
+    if(down_interruptible(&dev->sem))
+        return -ERESTARTSYS;
+
     //分析和获取有效的写长度
     if(p>=MEMDEV_SIZE)
         return 0;
@@ -113,11 +140,19 @@ static ssize_t mem_write(struct file*filp,const char __user *buf,size_t size,lof
     //从用户空间写入数据
     if(copy_from_user(dev->data+p,buf,count)){
         ret=-EFAULT;
+        goto out;
     }else{
         *ppos+=count;
         ret=count;
         printk(KERN_INFO"written %d byte(s) from %d\n",count,p);
     }
+out:
+    //TODO 释放信号量
+    up(&dev->sem);
+
+    //TODO 唤醒读进程
+    have_data=true;
+    wake_up(&(dev->inq))
     return ret;
 }
 
@@ -145,6 +180,43 @@ static loff_t mem_llseek(struct file*filp,loff_t offset,int whence){
     filp->f_pos=newpos;
     return newpos;
 }
+/* *
+ * IO 操作
+ * */
+static int memdev_ioctl(struct inode* inode,struct file* filp,unsigned int cmd,unsigned long arg){
+    int err=0,ret=0,ioarg=0;
+    //检测命令的有效性
+    if(_IOC_TYP(cmd)!=MEMDEV_IOC_MAGIC){
+        return -EINVAL;
+    }
+    if(_IOC_NR(cmd)>MEMDEV_IOC_MAXNR){
+        return -EINVAL;
+    }
+    //根据命令类型，检测参数空间是否可以访问?
+    if(_IOC_DIR(cmd)&_IOC_READ){
+        err=!access_ok(VERIFY_WRITE,(void*)arg,_IOC_SIZE(cmd));
+    }else if(_IOC_DIR(cmd)& _IOC_WRITE){
+        err=!access_ok(VERIFY_READ,(void*)arg,_IOC_SIZE(cmd));
+    }
+    //根据命令，执行相应的操作
+    switch(cmd){
+        case MEMDEV_IOCPRINT:
+            printk("<--CMD MEMDEV_IOCPRINT DONE-->\n\n");
+            break;
+        case MEMDEV_IOCGETDATA:
+            ioarg=1101;
+            ret=__put_user(ioarg,(int*)arg);
+            break;
+        case MEMDEV_IOCSETDATA:
+            ret=__get_user(ioarg,(int*)arg);
+            printk("<--in kernel MEMDEV_IOCSETDATA ioarg=%d-->\n\n",ioarg);
+            break;
+        default:
+            return -EINVAL;
+    }
+    return ret;
+}
+
 /**
  * 设备驱动模块加载函数
  * */
@@ -186,6 +258,11 @@ static int memdev_init(void){
         mem_devp[i].size=MEMDEV_SIZE;
         mem_devp[i].data=kmalloc(MEMDEV_SIZE,GFP_KERNEL);
         memset(mem_devp[i].data,0,MEMDEV_SIZE); 
+        //TODO:初始化信号量,设置信号量sem值为val
+        sema_init(&mem_devp[i].sem,1);
+
+        //TODO 初始化等待队列
+        init_waitqueue_head(&(mem_devp[i].inq));
     }
     return 0;
 fail_malloc:

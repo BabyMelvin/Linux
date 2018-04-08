@@ -4,6 +4,7 @@
  *       Filename:  app_mem.c
  *
  *    Description:  字符设备应用层
+ *                      read write ioctl
  *
  *        Version:  1.0
  *        Created:  04/08/2018 03:43:12 PM
@@ -17,6 +18,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include "memdev.h"
 int main(){
     FILE*fp0=NULL;
     char buf[4096];
@@ -42,6 +44,30 @@ int main(){
     fread(buf,sizeof(buf),1,fp0);
     //检查结果
     printf("buf:%s\n",buf);
+
+//---------------------------------------
+    //调用命令MEMDEV_IOCPRINT
+    int cmd;int arg;
+    cmd=MEMDEV_IOCPRINT; 
+    if(ioctl(fd,cmd,&arg)<0){
+       printf("call cmd MEMDEV_IOCPRINT fail\n"); 
+       return -1;
+    }
+    //调用命令MEMDEV_IOCSETDATA
+    cmd=MEMDEV_IOCSETDATA;
+    arg=2007;
+    if(ioctl(fd,cmd,&arg)<0){
+        printf("call cmd MEMDEV_IOCSETDATA fail\n");
+        return -1;
+    }
+    //调用命令MEMDEV_IOCGETDATA
+    cmd=MEMDEV_IOCGETDATA;
+    if(ioctl(fd,cmd,&arg)<0){
+        printf("call cmd MEMDEV_IOCGETDATA fail\n");
+        return -1;
+    }
+    printf("in user space memdev_iocgetdata get data is %d\n",arg);
+    close(fp0);
     return 0;
 }
 

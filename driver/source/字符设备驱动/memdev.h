@@ -29,6 +29,19 @@
 struct mem_dev{
     char *data;
     unsigned long size;
+    struct semaphore sem;//定义信号量
+    wait_queue_head_t inq;//等待队列，实现进程阻塞
 };
+
+//ioctl命令定义:命令编码几个位段,类型(幻数)，序号，传送方向，参数大小
+//定义幻数
+#define MEMDEV_IOC_MAGIC 'k'
+
+//定义命令
+#define MEMDEV_IOCPRINT     _IO(MEMDEV_IOC_MAGIC,1)
+#define MEMDEV_IOCGETDATA   _IOR(MEMDEV_IOC_MAGIC,2,int)
+#define MEMDEV_IOCSETDATA   _IOW(MEMDEV_IOC_MAGIC,3,int)
+
+#define MEMDEV_IOC_MAXNR 3
 #endif
 
