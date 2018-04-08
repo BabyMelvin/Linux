@@ -45,7 +45,7 @@ int main(){
     //检查结果
     printf("buf:%s\n",buf);
 
-//---------------------------------------
+//--------------IOCTL-------------------------
     //调用命令MEMDEV_IOCPRINT
     int cmd;int arg;
     cmd=MEMDEV_IOCPRINT; 
@@ -67,6 +67,20 @@ int main(){
         return -1;
     }
     printf("in user space memdev_iocgetdata get data is %d\n",arg);
+    close(fp0);
+//--------------------POLL-----------------------------
+    fd_set rds;
+    fp0=open("dev/memdev0",O_RDWR);
+    FD_ZERO(&rds);
+    FD_SET(fd,&rds);
+    ret=select(fd+1,&rds,NULL,NULL,NULL);
+    if(ret<0){
+        printf("select error\n");
+        exit(1);
+    }
+    if(FD_ISSET(fd,&rds)){
+        read(fd,buf,sizeof(buf));
+    }
     close(fp0);
     return 0;
 }

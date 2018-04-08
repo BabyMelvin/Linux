@@ -29,6 +29,7 @@
 #include <asm/system.h>
 #include <asm/uaccess.h>
 #include "memdev.h"
+#include <linux/device.h> //device_create
 
 static int mem_major=MEMDEV_MAJOR;
 module_param(mem_major,int,S_IRUGO);
@@ -44,6 +45,7 @@ struct const struct file_operations mem_fops={
     .open=mem_open,
     .release=mem_release,
     .ioctl=memdev_ioctl,
+    .poll=mem_poll,
 };
 
 /** 
@@ -217,14 +219,23 @@ static int memdev_ioctl(struct inode* inode,struct file* filp,unsigned int cmd,u
     return ret;
 }
 
+static unsigned int mem_poll(struct file*filp,poll_table*wait){
+   struct mem_dev *dev=filp->private_data;
+   unsigned int mask=0;
+   //将等待队列添加到poll_table
+   poll_wait(filp,&dev->inq,wait); 
+   if(have_data)
+       mask|=POLLIN|POLLRDNORM;//readable
+   return mask;
+}
+
 /**
  * 设备驱动模块加载函数
  * */
 static int memdev_init(void){
     int result,i;
-    //dev_t(unsigned int32),高12为主设备号，低20位为次设备号
-    dev_t devno=MKDEV(mem_major,0);
-    if(mem_major){
+    struct class*my_class;
+    //dev_t(unsigned int32),高12为主设备号，低20位为次设备号 dev_t devno=MKDEV(mem_major,0); if(mem_major){
         //静态注册，from devno,count=2,name="memdev"->/proc/devices
         result=register_chrdev_region(devno,2,"memdev");
     }else{
@@ -264,6 +275,10 @@ static int memdev_init(void){
         //TODO 初始化等待队列
         init_waitqueue_head(&(mem_devp[i].inq));
     }
+    //5.自动创建设备文件
+    //在/sys/class/test_char
+    my_class=class_create(THIS_MODULE,"test_char");
+    device_create(myclass,NULL,MKDEV(mem_major,0),NULL,"memdev0");
     return 0;
 fail_malloc:
     unregister_chrdev_region(devno,1);
