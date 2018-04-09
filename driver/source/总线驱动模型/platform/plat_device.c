@@ -3,7 +3,19 @@
  *
  *       Filename:  plat_device.c
  *
- *    Description:  platform总线设备
+ *    Description:  platform驱动模型
+ *                  首先加载plat_device内核模块。
+ *                      模块初始化函数platform_init被调用,
+ *                      该函数完成plat_device的定义和注册操作
+ *                  再加载pla_buttons内核模块
+ *                      buttons_init被调用，该函数完成plat_driver定义和注册操作
+ *                  TODO plat_driver注册时内核会在相应的platform总线上去遍历所有匹配
+ *                      做匹配操作，匹配函数platform_match(/drivers/base/platform.c)
+ *                      匹配方式为平台设备定义的名字和驱动注册的名字是否一致；
+ *                          如果匹配成功，说明注册的驱动能驱动该设备，则驱动中
+ *                          mini2440_buttons_probe(plat_buttons.c)被调用。该函数
+ *                          完成6个按键中断注册，以及采用混杂字符设备驱动的方式注册
+ *                          按键驱动。
  *
  *        Version:  1.0
  *        Created:  04/09/2018 10:56:58 AM
@@ -35,7 +47,7 @@ static struct resource s3c_buttons_resource[]={
         .flags=IORESOURCE_MEM                           //资源类型，MEM,IO,IRQ
     },
     [1]={
-        .start  = IRQ_EINT8,
+        .start  = IRQ_EINT8,   //TODO EINT外部中断
         .end    = IRQ_EINT8,
         .flags  = IORESOURCE_IRQ,
     },
@@ -46,7 +58,7 @@ static struct resource s3c_buttons_resource[]={
     },
     [3]={
         .start  = IRQ_EINT13,
-        .end    = IRQ_EINT14,
+        .end    = IRQ_EINT13,
         .flags  = IORESOURCE_IRQ,
     },
     [4]={

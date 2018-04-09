@@ -41,7 +41,7 @@ static const struct file_opeations mem_fops={
     .owner=THIS_MODULE,
     .open=mem_open,
     .release=mem_release,
-    .mmap=mem_mmap,
+    .mmap=memdev_mmap,
 };
 
 static int mem_open(struct inode*inode,struct file*filp){
@@ -57,11 +57,21 @@ static int mem_release(struct inode*inode,struct file*filp){
     return 0;
 }
 
+//TODO 一个进程的内存区域可以通过查看/proc/pid/maps
+/* *
+ * vm_area_struct{
+ *     vm_start,
+ *     vm_end,
+ *     vm_flags, 
+ * }
+ * */
 static int memdev_mmap(struct filp*filp,struct vm_area_struct *vma){
     struct mem_dev*dev=filp->priavte_data;
     vma->vm_flags|=VM_IO;
     vma->vm_flags|=VM_RESERVED;
     
+    //一次建立所有页表(vma,addr,pfn,size,prot)->
+    //(虚拟内存区域指针，虚拟内存其实起始值，要映射的物理地址所在物理页帧,大小，保护属性)
     if(remap_pfn_range(vma,vma->vm_start,virt_to_phys(dev->data)>>PAGE_SHIFT,vma->vm_end-vma->vm_start,vma->vm_page_prot)){
         return -EAGAIN;
     }

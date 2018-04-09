@@ -5,6 +5,12 @@
  *
  *    Description:  字符设备驱动
  *                      锁:信号量
+ *                  1.查看设备名，设备号
+ *                    #cat /proc/devices
+ *                  2.手工创建设备节点
+ *                    #mknod /dev/memdev0 c 251 0
+ *
+ *
  *
  *        Version:  1.0
  *        Created:  04/08/2018 02:18:53 PM

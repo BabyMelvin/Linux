@@ -3,7 +3,7 @@
 #include <asm/irq.h>
 #include <mach/regs-gpio.h>
 #include <mach/hardware.h>
-#inclue <linux/kernel.h>
+#include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/mm.h>
@@ -40,7 +40,7 @@ static unsigned int led_cfg_table[]={
 static int sbc2440_leds_ioctl(struct inode*inode,struct file*file,unsigned int cmd,unsigned long arg){
 	int i=0;
 	//检测命令的有效性
-	if(_IO_TYPE(cmd)!=MEMDEV_IOC_MAGIC{
+	if(_IO_TYPE(cmd)!=MEMDEV_IOC_MAGIC){
 		return -EINVAL;
 	}
 	if(_IOC_NR(cmd)>MEMDEV_IOC_MAXNR)

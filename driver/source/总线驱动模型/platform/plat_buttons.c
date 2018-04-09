@@ -3,7 +3,10 @@
  *
  *       Filename:  plat_buttons.c
  *
- *    Description:  
+ *    Description:  按键中断触发方式：
+ *                      上升沿触发
+ *                      下降沿触发
+ *                      双沿触发
  *
  *        Version:  1.0
  *        Created:  04/09/2018 11:25:45 AM
@@ -49,7 +52,7 @@ static void   __iomem   *buttons_base;
 static int button_irqs[6];
 
 
-static struct file_operations mini2440button_fops={
+static struct file_operations mini2440buttons_fops={
     .owner=THIS_MODULE,
     .open=s3c24xx_buttons_open,
     .release=s3c24xx_buttons_close,
@@ -89,6 +92,18 @@ static unsigned int s3c24xx_buttons_poll(struct file*file,struct poll_table_stru
     }
     return mask;
 }
+//TODO 中断处理函数
+static irqreturn_t buttons_interrupt(int irq,void*dev_id){
+    int i;
+    for(i;i<6;i++){
+        printk("-->interrupt number:%d\n",irq);
+        key_value=i;
+        ev_press=1;
+        wake_up_interruptible(&button_waitq);
+    }
+    return IRQ_RETVAL(IRQ_HANDLED);
+}
+
 static int s3c24xx_buttons_open(struct inode*inode,struct file*file){
     int i,err=0;
     //注册中断
@@ -96,6 +111,7 @@ static int s3c24xx_buttons_open(struct inode*inode,struct file*file){
         if(buttons_irqs[i]<0)
             continue
         //中断触发方式：上升沿触发
+//(irq,handler,flags,devname,dev_id)->(中断号,处理函数,中断选项，设备名，共享中断使用)
         err=request_irq(button_irq[i],buttons_interrupt,IRQ_TYPE_EDGE_RISING,NULL,NULL);
         if(err)
             break;
@@ -106,7 +122,9 @@ static int s3c24xx_buttons_open(struct inode*inode,struct file*file){
             if(button_irqs[i]<0){
                 continue;
             }
+            //不处理
             disable_irq(button_irqs[i]);
+            //释放中断号
             free_irq(button_irqs[i],NULL);
         }
         return -EBUSY;
@@ -148,13 +166,14 @@ static int mini2440_buttons_probe(struct platform_device*pdev){
     }
 
     size = (res->end-res->start)+1;
+    //申请I/O内存(start,len,name) /proc/iomem中列出
     buttons_mem=request_mem_region(res->start,size,dpdev->name);
     if(buttons_mem==NULL){
         dev_err(dev,"failed to get memory region \n");
         ret= -ENOENT;
         goto err_req;
     }
-    
+    //映射IO内存 物理地址到虚拟地址映射
     buttons_base=ioremap(res->start,size);
     if(buttons_base ==NULL){
         dev_err(dev,"failed to ioreamp() region\n");
@@ -164,6 +183,7 @@ static int mini2440_buttons_probe(struct platform_device*pdev){
 
     //get irq number
     for(i=0;i<6;i++){
+        //获得中断号(dev,type,num)->(资源所属的设备，获取的资源类型，获取的资源数)
         buttons_irq=platform_get_resource(pdev,IORESOURCE_IRQ,i);
         if(buttons_irq==NULL){
             dev_err(dev,"no irq resource specified\n");
@@ -176,6 +196,7 @@ static int mini2440_buttons_probe(struct platform_device*pdev){
     ret=misc_register(&mini2440_miscdev);
     return 0;
 err_map:
+    //释放I/O内存
     ioumap(buttons_base);
 err_req:
     release_resource(buttons_mem);
