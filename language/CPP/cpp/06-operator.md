@@ -1,0 +1,96 @@
+## 运算符重载
+
+运算符重载的本质是一个函数
+
+### 运算符重载的两种方法
+
+用成员或友元函数重载运算符
+
+* 运算符函数可以重载成员函数或友元函数
+* 关键区别在于成员函数具有this指针,友元函数没有this指针
+* 不管是成员函数还是友元函数重载,运算符的使用方法相同
+
+#### 1.二元运算符
+`ObjectL op ObjectR`
+
+* 重载为成员函数，解释为:`ObjectL.operator op(ObjectR)`
+    * 做操作数由ObjectL通过this指针传递，右操作数由参数ObjectR传递
+
+```cpp
+//声明
+Complex operator-(Complex& c2){};
+
+//调用
+Complex c4=c1-c2;
+c4.printCom();
+```
+* 重载为友元函数，解释为`operator op(ObejctL,ObjectR)`
+    * 左右操作数都由参数传递
+
+```cpp
+//申明
+Complex operator+(Complex &c1,Complex &c2);
+
+int main(){
+    Complex c1(1,2),c2(3,4);
+    Complex c3=c1+c2;
+    c3.printCom();
+}
+```
+
+#### 2.一元运算符
+一元运算符`Object op`或`op Object`
+
+* 重载为成员函数，解释为:`Object.operator op()`
+    * 操作数由对象Obejct通过this指针隐含传递
+
+
+前置--操作符  成员函数实现
+
+```cpp
+Complex& operator--(){
+    this->a--;
+    this->b--;
+    return *this;
+}
+```
+
+后置--操作 成员函数实现
+```cpp
+Complex& operator++(int){
+    Complex tmp =c1;
+    c1.a++;
+    c1.b++;
+    return tmp;
+}
+```
+* 重载为友元函数，解释为:`operator op(Object)`
+    * 操作数由参数表的参数Object提供
+
+前置++操作符 用全局函数实现
+
+```cpp
+Complex& operator++(Complex &c1){
+   c1.a++;
+   c1.b++;
+   return c1;
+}
+
+//调用方法
+++c1;
+c1.printCom();
+```
+
+后置++操作符，用全局函数实现
+
+```cpp
+Complex operator++(Complex& c1,int){
+    Complex tmp=c1;
+    c1.a++;
+    c1.b++;
+    return tmp;
+}
+
+//调用方法
+c1++;
+```
