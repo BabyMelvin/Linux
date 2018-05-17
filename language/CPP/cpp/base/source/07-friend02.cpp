@@ -18,21 +18,23 @@
 #include <stdlib.h>
 #include <iostream>
 #include <stdio.h>
-
+using namespace std;
 class A{
-    
     //B是A的友元
     friend class B;
-
 public:
+    void display(){cout<<x<<endl;}
 private:
+    int x;
 };
 class B{
+
 public:
+    //TODO B可以访问A的私有
     void set(int i){ object.x=i;};
     void display(){object.display();};
 private:
-   A object; 
+    A object; //B中有个A，A是B的子属性
 };
 
 void main(){

@@ -26,18 +26,31 @@ class Complex{
 public:
     int a;
     int b;
+    //TODO 方式一，友元函数
     friend Complex operator+(Complex &c1,Complex &c2);
 public:
     Complex(int a=0,int b=0){
         this->a=a;
         this->b=b;
     }
+    //TODO 方式二,成员函数
+    Complex operator-(Complex &c2){
+        this->a=this->-c2.a;
+        this->b=this->b-c2.b
+        return *this;
+    }
     void pritCom(){
         cout<<a<<"+"<<b<<"i"<<endl;
     }
 private:
 };
+//全局函数
+Complex operator+(Complex&c1,Complex &c2){
+    Complex tmp(c1.a+c2.a,c1.b+c2.b);
+    return tmp;
+}
 
+//友元实现
 Complex operator+(Complex &c1,Complex &c2){
     Complex tmp(c1.a+c2.a,c1.b+c2.b);
     return tmp;

@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 class A{
+
 private:
     int i;
     //语句位置和访问描述无关(private中也成立)
@@ -28,6 +29,7 @@ private:
 public:
     void memberFun(int);
 }
+
 void friendFun(A*ptr,int x){
     //通过参数访问私有成员
     ptr->i=x;
