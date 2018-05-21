@@ -173,7 +173,6 @@ int open_video(struct video_fb*fb,int x,int y){
     if(!fb->frameRGB)return -5;
     return 0;
 }
-#if 0
 /**********only 420P supported now***********/
 int show_picture(struct video_fb*fb,AVFrame* frame,int width,int height,enum pic_format formt){
    struct SwsContext* sws;
@@ -212,7 +211,6 @@ void close_video(struct video_fb*fb){
         fb->video_fd=-1;
     }
 }
-#endif
 
 int main(int argc,char**argv){
 	AVFormatContext* pCtx=0;
@@ -236,11 +234,12 @@ int main(int argc,char**argv){
 	float usecs2=0;
 	struct timeval elapsed1,elapsed2;
 	int decoded=0;
+    struct video_fb fb;
 	
 	av_register_all();
 	av_log_set_callback(log_callback);
 	
-	if(parse_options(&opt,argc,argv)<0||(strlen(opt.finput)==0){
+	if(parse_options(&opt,argc,argv)<0||(strlen(opt.finput)==0)){
 		show_help(argv[0]);
 		return 0;
 	}
@@ -322,6 +321,7 @@ int main(int argc,char**argv){
 				goto fail;
 			}
 			//视频设备
+            open_video(&fd,20,20);
 		}
 	}
 	nframe=0;
@@ -336,8 +336,9 @@ int main(int argc,char**argv){
 		gettimeofday(&elapsed2,NULL);
 		dusecs=(elapsed2.tv_sec-elapsed1.tv_sec)*1000000+(elapsed2.tv_usec-elapsed1.tv_usec);
 		usecs2+=dusecs;
-		timestamp=av_rescale_q(packet.dts,pCtx->streams[packet.stream_index]%6lld,pts:%6lld",
-							nframe++,packet.stream_index,packet.size,timestamp,packet.dts,packet.pts);
+		timestamp=av_rescale_q(packet.dts,pCtx->streams[packet.stream_index],(AV_Rational){1,AV_TIME_BASE});
+        printf("frame  No %5d stream#%d\tsize%6dB,timestamp:%6lld,pts:%6lld",nframe++,packet.stream_index,packet.size,timestamp,packet.dts,packet.pts);
+
 		if(packet.stream_index==opt.streamId){
 #if 0
 			for(i=0;i<16;/*packet_size;*/;i++){
@@ -345,7 +346,7 @@ int main(int argc,char**argv){
 				printf("%2x",packet.data[i]);
 			}
 			printf("/n");
-#end if
+#endif
 			if(usefo){
 				fwrite(packet.data,packet.size,1,fpo1);
 				fflush(fpo1);
@@ -386,6 +387,8 @@ int main(int argc,char**argv){
 						}
 						if(op.bplay){
 							//show picture;
+                            sleep("200");
+                            show_picture(&fb,pFrame,picwidth,picheight,pCtx->streams[opt.streamId]->codec->pix_fmt);
 						}
 						av_free_packet(&packet);
 					}
