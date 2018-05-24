@@ -241,11 +241,14 @@ static unsigned int mem_poll(struct file*filp,poll_table*wait){
 static int memdev_init(void){
     int result,i;
     struct class*my_class;
-    //dev_t(unsigned int32),高12为主设备号，低20位为次设备号 dev_t devno=MKDEV(mem_major,0); if(mem_major){
-        //静态注册，from devno,count=2,name="memdev"->/proc/devices
+    //0.主次设备号的申请 
+    //dev_t(unsigned int32),高12为主设备号，低20位为次设备号 
+    dev_t devno=MKDEV(mem_major,0); 
+    if(mem_major){
+        //0.1 静态注册，from devno,count=2,name="memdev"->/proc/devices
         result=register_chrdev_region(devno,2,"memdev");
     }else{
-        //动态分配，(dev,baseminor,count,name)
+        //0.2 动态分配，(dev,baseminor,count,name)
         result=alloc_chrdev_region(&devno,0,2,"memdev");
         //从dev_t分解主设备号
         mem_major=MAJOR(devno);
@@ -278,7 +281,7 @@ static int memdev_init(void){
         //TODO:初始化信号量,设置信号量sem值为val
         sema_init(&mem_devp[i].sem,1);
 
-        //TODO 初始化等待队列
+        //TODO: 初始化等待队列
         init_waitqueue_head(&(mem_devp[i].inq));
     }
     //5.自动创建设备文件
