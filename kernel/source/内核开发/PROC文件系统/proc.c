@@ -32,7 +32,7 @@ static int myproc_write(struct file*file,const char __user*buffer,unsigned long 
 }
 
 static int __init myproc_init(void){
-	my_dir=proc_mkdir("mydir",NULL);
+	pfile=proc_mkdir("mydir",NULL);
 	if(!my_dir){
 		printk("KERN_ERR Can't create /proc/mydir\n");
 		return -1;
