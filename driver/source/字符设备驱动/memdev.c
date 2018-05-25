@@ -284,7 +284,7 @@ static int memdev_init(void){
         //TODO: 初始化等待队列
         init_waitqueue_head(&(mem_devp[i].inq));
     }
-    //5.自动创建设备文件
+    //5.自动创建设备文件,手动创建(mknode...)
     //在/sys/class/test_char
     my_class=class_create(THIS_MODULE,"test_char");
     device_create(myclass,NULL,MKDEV(mem_major,0),NULL,"memdev0");

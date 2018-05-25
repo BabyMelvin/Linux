@@ -11,12 +11,12 @@ project (Demo1)
 # 指定生成目标
 add_executable(Demo main.cc)
 ```
-**编译**：当前目录执行 `cmake .`,得到Makefile后再使用`make`命令编译得到Demo可执行文件。
+**编译过程**：当前目录执行 `cmake .`,得到Makefile后再使用`make`命令编译得到Demo可执行文件。
 ## 2.多个源文件
 ### 同一个目录，多个源文件
 ```
 # CMake 最低版本要求
-cmake_minimum_required (vERSION 2.8)
+cmake_minimum_required (VERSION 2.8)
 
 # 项目信息
 project(Demo2)
@@ -24,7 +24,7 @@ project(Demo2)
 #指定生成目标
 add_executable(Demo main.cc MathFunctions.cc)
 ```
-把所有源文件添加进去简便写法`aux_source_directory(<dir> <variable>)`,查找指定目录下所有源文件。
+把所有源文件添加进去简便写法`aux_source_directory(<dir> <variable>)`,查找指定目录下所有源文件,文件名放入到`variable`变量中。
 改成CMakeList.txt：
 ```
 #CMake 最低版本要求
@@ -40,8 +40,8 @@ add_executable(Demo ${DIR_SRCS})
 ```
 CMake会将所有源文件的文件名赋值给变量DIR_SRCS,再指示变量DIR_SRCS中源文件需要编译成一个名称为Dem可执行文件.
 ### 多个目录，多个源文件
-目录结构./main.cc,math/MathFunctions.cc,
-这种情况需要分别在项目根目录.和math目录中个编写一个CMakeLists.txt文件。方便可将math目录编译成静态库再由main
+目录结构`./main.cc,math/MathFunctions.cc`,
+这种情况需要分别在项目根目录.和math目录中个编写一个`CMakeLists.txt`文件。方便可将math目录编译成`静态库`再由main
 函数调用.
 
 根目录的CMakeLists.txt:
@@ -63,10 +63,10 @@ add_subdirectory(math)
  # 添加链接表
  target_link_libraries(Demo MathFunctions)
 ```
-其中`add_subdirectory`指明项目包含一个子目录math，这样math目录CMakeLists.txt文件和源码也会被处理。
+其中`add_subdirectory`指明项目包含一个子目录math，这样math目录`CMakeLists.txt`文件和源码也会被处理。
 命令`target_link_libraries`指明可执行文件main需要一个名为MathFuncitons的链接库
 
-子目录中的CMakeLists.txt文件:
+子目录(math)中的CMakeLists.txt文件:
 ```
 # 查找当前目录下的所有文件，并保存名称到DIR_LIB_SRC 变量
 aux_source_directory(. DIR_LIB_SRCS)
