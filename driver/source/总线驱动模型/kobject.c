@@ -33,7 +33,7 @@ void obj_test_release(struct kobject*kobject){
 	printk("eric_test:release\n");
 }
 
-//将会建立属性 /sys/kobject/kobj_config
+//将会建立属性 /sys/kobject_test/kobj_config
 struct attribute test_attr={
 	.name="kobj_config",
 	.mode=S_IRWXUGO,
