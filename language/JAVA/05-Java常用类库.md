@@ -224,3 +224,62 @@ public class CloneDemo{
 ```
 
 # 6.Arrays类
+
+Arrays类是数组操作类，定义在`java.util`中，主要完成实现数组元素的查找、填充、排序。
+
+```java
+//判断两个数组是否相等
+public static boolean equals();
+
+//指定内容填充到数组之中
+public static void fill(int[] a,int val);
+//数组排序
+public static void sort(int[] a);
+
+//对排序后的数据进行检索
+public static int binarySearch(int[] a,int key);
+
+//输出数组信息
+public static String toString(int[] a);
+```
+
+# 7.比较器
+## 7.1Comparable接口
+
+Arrays类进行数组排序操作。Object数组排序，实现Comparable接口。compareTo方法只能以下3种值：
+
+* 1:表示大于
+* -1:表示下于
+* 0:表示相等
+
+成绩由高到底排序，成绩相等，则按年龄由低到高排序：
+
+```java
+class Student implements Compareable<Student>{//指定类型为学生
+	private String name;
+	pirvate int age;
+	private float score;
+	public Student(String name,int age,float score){
+		this.name=name;
+		this.age=age;
+		this.score=score;
+	}
+	public String toString(){
+	}
+	public int compareTo(Student stu){
+		if(this.score>stu.score){
+			return -1;
+		}else if(this.score<stu.score){
+			return 1;
+		}else{
+			if(this.age>stu.age){	return 1;
+			}else if(this.age<stu.age){
+				return -1;
+			}else{
+				return 0;
+			}
+		}
+		
+	}
+}
+```
