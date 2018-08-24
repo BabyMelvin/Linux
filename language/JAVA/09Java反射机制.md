@@ -1,58 +1,54 @@
-#JAVA中反射机制
-> 一个类，创建对象。通过一个对象找类的名称，这称为反射机制。
-> 反射学习中，一切操作都将使用Object完成，类，数组的引用都可以使Object进行接收。
+# JAVA中反射机制
+通过一个类，可以创建对象。如果通过一个对象找到一个类名称，此时需要用到反射机制。
 
-* Class类
-	
-		package org.caohang.getclassDemo;
-		class X{
-		}
-		public class GetClassDemo{
-			public static void main(String args[]){
-				X x=new X();
-				System.out.println(x.getClass().getName());
-			}
-		}
-	*	org.caohang.getclassDemo.X;
-	*	其中默认继承Object类，在Object类中定义：
-	
-			public fianl Class getClass()
-			返回值的类型是一个Class类，实际上此类事Java反射源头。
-	* 所有类的对象实际上都是Class类的实例
-		* Object类是一切类的父类，所有类的对象实际也就是java.lang.Class类的实例，所以所有的对象都可以转变为java.lang.Class类型表示。
+# 1.认识Class类
 
-	* Class本身表示一个类本身，通过Class可以完整得到一个类中完整结构，包括方法定义，属性定义等。
+通常需要一个类完整路径引入之后才可以按照固定格式产生实例对象，Java也允许通过一个实例化对象找到一个类的完整信息，这就是Class的功能。
+
+**所有类的对象实际都是Class类的实例**
+* 1.java中Object类是一切类的父类
+* 2.所有类对象实际就是`java.lang.Class`类的实例，所以所有类对象都可以转换为`java.lang.Class`类型表示.
+
+Class本省表示一个类的本身，通过Class可以完整得到一个类中的完整结构，包括此类中的方法定义、属性定义等：
+
+```java
+//传入完整包名实例化对象
+public static Class<?> forName(String className) throws ClassNotFoundException;
+//得到一个类中的全部构造方法
+public Constructor[] getConstrors() throws SecurityException;
+//得到本类中单独定义全部属性
+public Filed[] getFields() throws SecurityException
+//返回一个Method对象，并设置一个方法中的所有参数类型
+public Method getMethod(String name,Class... parameterTypes) throws NoSuchMethodException,SecurityException;
+//得到一个类中所实现的全部接口
+public Class[] getInterfaces();
+//得到一个类的完整的 包.类名称
+public String getName();
+//得到一个类的包
+public Package getPackage();
+//得到一个类的父类
+public Class getSuperClass();
+//根据Class定义的类实例化对象
+public Object newInstance() throws InstantinationException,IlleagalAccessException
+//返回表示数据类型的Class
+public Class<?> getComponentType()
+//判断Class是否是一个数组
+public boolean isArray();
+```
+### Class类实例化
+本身没有定义构造函数，实例化有三种方式：
+
+* `forName()`
+* `类.class`
+* `对象.getClass()`
+
+# 2.Class类的使用
+通过Class类本身实例化其他类的对象，使用newInstance()方法，**但是保证被实例化存在一个无参构造方法**
 	
-			public static Class<?> forName(String className) throws ClassNotFoundException
-			//传入完整“包.类”名称实例化Class对象。
-			public Constructor[] getConstructors() throws SecurityException
-			//得到一个类中的全部构造方法
-			public Field[] getDeclaredFileds() throws SecurityException得到本类中单独定义全部属性
-			public Filed[] getFields() throws SecurityException得到继承而来全部属性
-			public Method[] getMehods() throws SecurityException得到全部方法
-			public Method getMethod(String name,Class...parameter Types)
-			public Class[] getInterfaces()得到全部接口
-			public String getName()得到一个完整“包.类”名称
-			public Package getPackage()得到一个包
-			public Class getSuperclass()得到一个父类
-			public Object newInstance()根据Class定义的类实例化对象
-			public Class<?> getComponentType()返回表示数组类型Class
-			public boolean isArray()判断此Class是否是一个数组
-* Class类本身没有任何构造方法，使用：
-	* forName()实例化对象
-	* 类.class或者对象.getClass()
-* Class类的使用
-	* 通过Class类本身实例化其他类的对象，使用newInstance()方法，但是保证被实例化存在一个无参构造方法
-	
-			package org.caohang.person
-			class Person{}
-			Class<?> c =null;
-			c=Class.forName("org.caohang.Person")
-			Person per=(Person)c.newInstance()
-	* 各种高级应用中，都提倡类中存在无参构造方法
-		* Java程序中，反射式最为重要的操作原理，开发设计中大量反射机制，使用反射开发时一定要保留无参构造方法
-	* 可以使用指定构造方法，解决没有无参构造函数也是可以的。
-		* 操作步骤
+* 各种高级应用中，都提倡类中存在无参构造方法
+* Java程序中，反射式最为重要的操作原理，开发设计中大量反射机制，**使用反射开发时一定要保留无参构造方法**
+* 可以使用指定构造方法，解决没有无参构造函数也是可以的。
+* 操作步骤
 			*	通过Class类中getConstructors()取得本类全部构造方法
 			*	向构造方法中传递一个对象数组，里面包含构造方法中所需各个参数
 			*	之后通过Constructor实例化对象。
