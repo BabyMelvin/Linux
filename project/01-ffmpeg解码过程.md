@@ -1,4 +1,4 @@
-## FFMPEG解码流程
+# FFMPEG解码流程
 
 * 1.注册所有`容器格式`和`CODEC`:`av_register_all()`
 * 2.打开文件:`av_open_input_file()`
@@ -12,7 +12,7 @@
 * 10.解码完后，释放解码器:`avcodec_close()`
 * 11.关闭输入文件:` avformat_close_input_file()`
 
-### 1.基本概念
+## 1.基本概念
  `编解码器`、`数据帧`、`媒体流`和`容器`是数字媒体处理系统的四个基本概念。
 
 首先需要统一术语：
