@@ -4,6 +4,7 @@
 val1=baseball
 val2=hocky
 
+# 自己测试直接使用 >符号
 if [ $val1 \> $val2 ]
 then 
 	echo "$val1 is greater than $val2"
