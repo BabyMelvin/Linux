@@ -42,48 +42,48 @@ Android可使用的音频设备必须在`system/etc/audio_policy_configuration.x
 
 ```xml
 <audioPolicyConfiguration version="1.0" xmlns:xi=/>
-	<modules>
-		<module name="primary" halVersion="3.0">
-			<attachedDevices>
-				<item>bus0_phone_out</item>
-			</attachedDevices>
-			<defaultOutputDevice>bus0_phone_out</defaultOutputDevice>
-			<!--流的源source，列表，channelMasks过滤条件-->
-			<mixPorts>
-				<mixPort name="mixport_bus0_phone_out"
-					role="source"
-					flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+ <modules>
+	<module name="primary" halVersion="3.0">
+		<attachedDevices>
+			<item>bus0_phone_out</item>
+		</attachedDevices>
+		<defaultOutputDevice>bus0_phone_out</defaultOutputDevice>
+		<!--流的源source，列表，channelMasks过滤条件-->
+		<mixPorts>
+			<mixPort name="mixport_bus0_phone_out"
+				role="source"
+				flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+				<profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+					samplingRates="48000"
+					channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+			</mixPort>
+		</mixPorts>
+		<!--输入输出设备的控制address和gain控制-->
+		<devicePorts>
+			<!--输出设备-->
+			<devicePort tagName="bus0_phone_out"
+					role="sink"
+					type="AUDIO_DEVICE_OUT_BUS"
+					address="BUS0_PHONE">
 					<profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
 						samplingRates="48000"
 						channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
-				</mixPort>
-			</mixPorts>
-			<!--输入输出设备的控制address和gain控制-->
-			<devicePorts>
-				<!--输出设备-->
-				<devicePort tagName="bus0_phone_out"
-						role="sink"
-						type="AUDIO_DEVICE_OUT_BUS"
-						address="BUS0_PHONE">
-						<profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
-							samplingRates="48000"
-							channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
-					<gains>
-						<gain name="" mode="AUDIO_GAIN_MODE_JOINT"
-							minValueMB="-8400"
-							maxValueMB="4800"
-							defaultValueMB="0"
-							stepValueMB="100"
-					</gain>
-				</devicePort>
-			</devicePorts>
-			<!--路由列表-->
-			<routes>
-				<route type="mix" sink="bus0_phone_out"
-					sources="mixport_bus0_phone_out"/>
-			</routes>
-		</module>
-	</modules>
+				<gains>
+					<gain name="" mode="AUDIO_GAIN_MODE_JOINT"
+						minValueMB="-8400"
+						maxValueMB="4800"
+						defaultValueMB="0"
+						stepValueMB="100"
+				</gains>
+			</devicePort>
+		</devicePorts>
+		<!--路由列表-->
+		<routes>
+			<route type="mix" sink="bus0_phone_out"
+				sources="mixport_bus0_phone_out"/>
+		</routes>
+	</module>
+ </modules>
 </audioPolicyConfiguration>
 ```
 # 4.指定devicePorts
@@ -96,7 +96,7 @@ Android可使用的音频设备必须在`system/etc/audio_policy_configuration.x
 
 当存在基于BUS音频驱动被使用，应该设置`audioUseDynamicRouting`为`true`
 
-```
+```xml
 <resource>
 	<bool name="audioUseDynamicRouting">true</bool>
 </resource>
