@@ -35,7 +35,7 @@ public:
     }
     //TODO 方式二,成员函数
     Complex operator-(Complex &c2){
-        this->a=this->-c2.a;
+        this->a=this->a-c2.a;
         this->b=this->b-c2.b
         return *this;
     }
