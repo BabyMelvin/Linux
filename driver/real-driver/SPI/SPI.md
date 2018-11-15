@@ -54,7 +54,7 @@ platform_driver_probe - register driver for non-hotpluggable device
 * 1适用于**非热插拔设备**
 * 2通常Probe位于`__init`段
 * 3当你知道device是**非热拔插**的，而且**设备已经被注册了**，而且你想在probe函数调用一次之后就销毁它节省空间，使用`platform_driver_probe`而非 `platform_driver_register`。
-4一个典型的应用是，用在完整的**控制器驱动**，控制器设备被当作`board setup`的一部分（在板子初始化的时候，设备就已经被注册了，放在board_info里）
+* 4一个典型的应用是，用在完整的**控制器驱动**，控制器设备被当作`board setup`的一部分（在板子初始化的时候，设备就已经被注册了，放在board_info里）
 * 5返回0 ，如果driver注册成功且匹配到一个device ，以后再也无法被别的device probe了。
 * 6.否则，返回一个错误，且driver未注册。
 
@@ -149,7 +149,7 @@ struct spi_master *spi_alloc_master(struct device* dev,unsigned size){
 }
 ```
 
-* 1.`spi_alloc_master`:际申请的内存大小为一个`struct master + struct atmel_spi`,并用`master->dev->p->driver_data`指向这个多出来的`struct atmel_spi `空间，用来存放maste的**中断** **寄存器**等东西。
+* 1.`spi_alloc_master`:实际申请的内存大小为一个`struct master + struct atmel_spi`,并用`master->dev->p->driver_data`指向这个多出来的`struct atmel_spi `空间，用来存放master的**中断** **寄存器**等东西。
 * 2.初始化`master->dev`，设置它的父设备等。
 
 ```c
@@ -469,12 +469,14 @@ void SPIFlashRead(unsigned int addr,unsigned char *buf,int len){
 纸上谈兵一大堆，现在来看看，我们在写一个spi设备驱动的时候需要做哪些工作。
 
 **设备侧**：
-	* 1.分配一个 spi_board_info 结构体
-	* 2.设置 spi_board_info 里的名字、最大频率、控制器编号、模式、片选
-	* 3.注册 spi_register_board_info
+     
+     * 1.分配一个 spi_board_info 结构体
+     * 2.设置 spi_board_info 里的名字、最大频率、控制器编号、模式、片选
+     * 3.注册 spi_register_board_info
 **驱动侧**：
-	* 1、分配一个 spi_driver 结构
-	* 2、设置名字、probe等函数
+
+    * 1、分配一个 spi_driver 结构
+    * 2、设置名字、probe等函数
     * 3、注册 spi_register_driver
     * 4、使用spi_write等系统调用，搞明白`spi_transfer spi_message`，会使用它们进行收发
 
