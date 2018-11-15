@@ -1,8 +1,8 @@
 # 1.SPI 框架简单介绍
 对于SPI的大框架分为两层
 
-* 控制器驱动程序层叫 spi_master,主要提供`transfer`函数，进行spi协议的收发。spi_master 也是基于 Platform 模型的，注册 spi_master 时也会扫描一个链表进行注册设备.
-* 另一层是设备驱动层，基于`spi_bus_type`,需要有名字、片选、最大速率、模式、中断号等等，在driver里则使用`spi_read`、`spi_writer`等函数，最终也会调用到`master->transfer`函数进行发送接收。
+* **控制器驱动程序层**叫 spi_master,主要提供`transfer`函数，进行spi协议的收发。spi_master 也是基于Platform模型的，注册spi_master时也会扫描一个链表进行注册设备.
+* 另一层是**设备驱动层**,基于`spi_bus_type`,需要有`名字`、`片选`、`最大速率`、`模式`、`中断号`等等，在driver里则使用`spi_read`、`spi_writer`等函数，最终也会调用到`master->transfer`函数进行发送接收。
 
 SPI只需要片选选中就行了.
 
@@ -10,7 +10,7 @@ SPI只需要片选选中就行了.
 发现 atmel_spi.c(`drivers\spi`)，里 atmel 实现的底层控制器驱动简单清晰多了，因此就拿它开刀，分析Master驱动框架。
 
 ## 2.1 驱动侧
-前面简介里，我提到 master 驱动框架是基于 platform 平台的（我分析的这俩都是，其它的不清楚），那么肯定就要注册platform_driver了，下面我们就开看看。分配一个platfrom_driver结构。
+前面简介里，我提到 master 驱动框架是基于platform平台的（我分析的这俩都是，其它的不清楚），那么肯定就要注册platform_driver了，下面我们就开看看。分配一个platfrom_driver结构。首先使用的`module_platform_driver`,这个宏，相当于初始化注册的platform的过程.
 
 ```c
 static struct platform_driver atmel_spi_driver = {
@@ -72,6 +72,7 @@ static int __init atmel_spi_probe(struct platform_device *pdev){
 	int 			ret;
 	struct spi_master *master;
 	struct atmel_spi  *as;
+
 	//获取device侧提供的IO内存以及中断
 	regs = platform_get_resource(pdev,IORESOURCE_MEM,0);
 	irq = platform_get_irq(pdev,0);
@@ -79,7 +80,7 @@ static int __init atmel_spi_probe(struct platform_device *pdev){
 	//获取spi时钟，一会好使能它
 	clk = clk_get(&pdev->dev,"spi_clk");
 
-	//分配一个spi_master结构，额外加上一个atmel_spi用来存放其它信息
+	//先设置spi核心，然后具体化atmel-specific驱动状态
 	master = spi_alloc_master(&pdev->dev,sizeof *as);
 
 	//设置master
@@ -96,7 +97,8 @@ static int __init atmel_spi_probe(struct platform_device *pdev){
 	//as指向master->dev->p->driver_data
 	//填充多出来那个atmel_spi结构
 	as = spi_master_get_devdata(master);
-	//连贯的，一致的coherent
+
+	//连贯的，一致的coherent,用来传递rx 和 tx 数据
 	as->buffer = dma_alloc_coherent(&pdev->dev,BUFFER_SIZE,
 				&as->buffer_dma,GFP_KERNEL);
 	spin_lock_init(&as->lock);
@@ -111,12 +113,19 @@ static int __init atmel_spi_probe(struct platform_device *pdev){
 			dev_name(&pdev->dev),master);
 	clk_enable(clk);
 	
+	//初始化硬件
+	ret = clk_prepare_enable(clk);
+
 	//设置硬件寄存器
 	spi_writel(as,CR,SPI_BIT(SWRST));
 	spi_writel(as,CR,SPI_BIT(SWRST));/* AT91SAM9263 Rev B workaround */
 	spi_writel(as,MR,SPI_BIT(MSTR)|SPI_BIT(MODFDIS));
 	spi_writel(as,PTR,SPI_BIT(RXTDIS) | SPI_BIT(TETDIS));
 	spi_writel(as,CR,SPI_BIT(SPIEN));
+	
+	//起来了
+	dev_info(&pdev->dev,"Atmel SPI Controller at 0x%081x (irq %d)\n",(unsigned long)reg->start,irq);
+	
 	
 	//注册master
 	ret = spi_register_master(master);
@@ -178,9 +187,11 @@ static void scan_boardinfo(struct spi_master *master){
 	mutex_unlock(&board_lock);
 }
 ```
-扫描board_list，取出每一个boardinfo,对，如果 boardinfo 里的`bus_num`和`master` 的`bus_num`相等，则认为这个spi设备在硬件物理连接上是接到这个控制器的，则使用 spi_new_device 创建 spi 设备。这个过程和i2c是多么的相似。至于在哪里填充的 board_list ，到后边设备层驱动框架时再说不迟。
+扫描`board_lis`t，取出每一个`boardinfo`,对，如果 boardinfo 里的`bus_num`和`master`的`bus_num`相等，则认为这个spi设备在硬件物理连接上是接到这个控制器的(master相当于spi1，意思，对整个spi1这条线进行控制)，则使用 spi_new_device 创建 spi 设备。这个过程和i2c是多么的相似。至于在哪里**填充的board_list**，到后边设备层驱动框架时再说不迟。
 
 ## 2.2.设备侧
+**device设备信息被新版本的**，DTS取代了。
+
 有`platform_driver`必然有`platform_device`与之对应，`At91sam9260_devices.c`中定义
 
 ```c
@@ -234,7 +245,7 @@ void __init at91_add_device_spi(struct spi_board_info *devices,int nr_devices){
 * 2.将我们的 master 的设备侧 at91sam9260_spi0_device 注册到 platform_bus_type
 
 思考：**这样做有什么好处呢**？
-这样可以保证，master driver 与 device 匹配成功调用 probe 函数 scan_boardinfo 时，spi设备已经被添加到board_list中去~！如果先注册成功了 master 驱动，再添加spi设备信息就无用了。根 i2c 也是一样的。
+这样可以保证，master driver 与 device 匹配成功调用 probe 函数 scan_boardinfo 时，**spi设备已经被添加到board_list中去**~！**如果先注册成功了 master 驱动**，**再添加spi设备信息就无用了**。根 i2c 也是一样的。
 
 至此，Master 驱动的框架就分析完了，至于 master 的那些设置，我们到下篇文件写 master 驱动里细究。
 
