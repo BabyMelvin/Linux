@@ -236,6 +236,7 @@ static int spi_flash_erase(struct mtd_info *mtd,struct erase_info *instr){
 
 static int __devinit spi_flash_probe(struct spi_device *spi){
 	int mid,did;
+	//TODO 这里找到了相对应的设备
 	spi_flash = spi;
 	//TODO 片选使能,pin脚配置完成能够使用了，驱动决定怎么样操作
 	s3c2410_gpio_cfgpin(spi->chip_select,S3C2410_GPIO_OUTPUT);

@@ -291,5 +291,109 @@ Example:
 ```
 
 ```c
+static struct device_type i2c_adapter_type = {
+	.groups = i2c_adapter_attr_groups,
+	.release = i2c_adapter_dev_relese,
+};
+static const struct attribute_group *i2c_adapter_attr_groups[] = {
+};
+static DEVICE_ATTR(new_device,S_IWUSR,NULL,i2c_sysfs_new_device);
+static DEVICE_ATTR(delete_device,S_IWUSR,NULL,i2c_sysfs,delete,device);
+static struct attribute *i2c_adapter_attrs[] = {
+	&dev_attr_name.attr,
+	&dev_attr_new_device.attr,
+	&dev_attr_delete_device.attr,
+	NULL
+};
+```
+ 这里，我就不将宏展开了，大概说一下，当 device_register 注册 device 时，会设置`dev.kobj.ktype = device_ktype`, device_ktype 提供通用的属性show 与 store函数，当用户空间访问属性文件时，通用的 show 与 store 就会 调用具体的show 与 store。
+`DEVICE_ATTR(new_device, S_IWUSR, NULL, i2c_sysfs_new_device)`，就会创建一个device_attribute结构体，`name = “new_device”，.mode = S_IWUSR , show = NULL ,store = i2c_sysfs_new_device `,显然上面`echo eeprom 0x50 > /sys/bus/i2c/devices/i2c-0/new_device`，**就会调用 i2c_sysfs_new_device 函数了**。
 
+```c
+static ssize_t i2c_sysfs_new_device(struct device *dev,struct device_attribute *attr,const char *buf,size_t count){
+	struct i2c_adapter *adap = to_i2c_adapter(dev);
+	struct i2c_board_info info;
+	char *blank,end;
+	int res;
+	
+	memset(&info,0,sizeof(struct i2c_board_info));
+	blanck = strchr(buf,' ');
+	memcpy(info.type,buf,blank-buf);
+	//parse remaining parameters ,reject extra parameters
+	res = sscanf(++blank,"%hi%c",&info.addr,&end);
+	client = i2c_new_device(adap,&info);
+	return count;
+}
+struct i2c_client *i2c_new_device(struct i2c_adapter *adap,struct  i2c_board_info const *info){
+	struct i2c_client *client;
+	int status;
+	client = kalloc(sizeof *client,GFP_KERNEL);
+	client->adapter = adap;
+	client->dev.platform_data = info->platform_data;
+	if(info->archdata)
+		client->dev.archdata = *info->archdata;
+	client->flags = info->flags;
+	client->addr = info->addr;//设备地址
+	client->irq = info->irq;
+	strlcpy(client->name,info->type,sizeof(client->name));//名字很重要
+	//check for address business
+	status = i2c_check_addr(adap,client->addr);
+
+	client->dev.paraent = &client->adapter->dev;
+	client->dev.bus = &i2c_bus_type;
+	client->dev.type =&i2c_client_type;
+
+	dev_set_name(&client->dev,"%d-%4x",i2c_adapter_id(adap),client->addr);
+	status = device_register(&client->dev);
+	return client;
+}
+```
+`i2c_sysfs_new_device`函数，将**用户空间传递进来的命令**进行解析 生成info结构体`(addr ,type)`，然后调用i2c_new_device, 在i2c_new_device中构造client ，设置它的属性并将它注册到`i2c_bus_type`，其中两个必须提的属性`client->name = info->type`,为什么说名字重要，如果看**i2c_bus_type的match***函数就可以知道，`driver`是根据client的名字是否在其idtable中判断是否支持这个client的。另外一个就是addr了，不用多说，每一个i2c设备必须都有个地址。空说无凭，看代码。
+
+```c
+static int i2c_device_match(struct device *dev,struct device_driver *drv){
+	struct i2c_client *client= i2c_verify_client(dev);
+	struct i2c_driver *driver;
+	
+	if(!client)
+		return 0;
+	driver = to_i2c_driver(drv);
+	//match on an id table if there is one
+	if(driver->id_table)
+		return i2c_match_id(driver->id_table,client)!=NULL;
+	return 0;
+}
+static const struct i2c_device_id *i2c_match_id(const struct i2c_device_id *id,
+	const struct i2c_client *client){
+	while(id->name[0]){
+		if(strcmp(client->name,id->name)==0)
+			return id;
+		id++;
+	}
+	return NULL;
+}
+```
+
+分析一下 i2c_scan_static_board_info **第二种创建 device 的方式**
+
+```c
+static void i2c_scan_static_board_info(struct i2c_adapter *adapter){
+	struct i2c_devinfo *devinfo;
+	down_read(&__i2c_board_lock);
+	//遍历__i2c_board_list链表，取出每一个devinfo
+	list_for_each_entry(devinfo,&__i2c_board_list,list){
+		//adapter->nr == 0 devinfo->busnum
+		if(devinfo->busnum == adapter->nr && !i2c_new_device(adapter,&devinfo->board_info)){
+			dev_err(&adapter->dev,"Can't create device at 0x%02x\n",devinfo->board_info.addr);
+		}
+	}
+	up_read(&__i2c_board_lock);
+}
+```
+  来看一下 `__i2c_board_list`这个链表是哪里填充的。
+
+```c
+//mach-mini2440.c arch/arm/mach-s3c2440
+static struct i2c_board_info i2c_devs[] __initdata = {
+};;
 ```
