@@ -395,5 +395,174 @@ static void i2c_scan_static_board_info(struct i2c_adapter *adapter){
 ```c
 //mach-mini2440.c arch/arm/mach-s3c2440
 static struct i2c_board_info i2c_devs[] __initdata = {
-};;
+	{I2C_BOARD_INFO("eeprom",0x50)},
+};
+#define I2C_BOARD_INFO(dev_type,dev_addr) \
+	.type=dev_type,.addr=(dev_addr)
+static void __init mini2440_machine_init(void){
+	i2c_register_board_info(0,i2c_devs,ARRAY_SIZE(i2c_devs));
+	...
+}
+int __init i2c_register_board_info(int busnum,struct i2c_board_info const *info,unsigned len){
+	int status;
+	down_write(&__i2c_board_lock);
+	if(busnum>=__i2c_first_dynamic_bus_num)
+		__i2c_first_dynamic_bus_num = busnum + 1;
+	
+	for(status = 0 ; len;len--,info++){
+		struct i2c_devinfo *devinfo;
+		devinfo = kzalloc(sizeof(*devinfo),GFP_KERNEL);
+	
+		devinfo->busnum = busnum;
+		devinfo->board_info = *info;
+		list_add_tail(&devinfo->list,&__i2c_board_list);
+	}
+	up_write(&__i2c_board_lock);
+}
 ```
+这种方法与第一种用户空间创建device的方法相类似，都是提供一个`addr `和` 名字`,只不过这种方法还有一个限制，前面看代码的时候我们知道，在注册adapter的时候，它会去访问`__i2c_board_list`链表，那么如果想成功创建，你必须在**注册adater之前i2c_register_board_info**.
+
+
+**第二种创建 device 的方式 **:`bus_for_each_drv(&i2c_bus_type, NULL, adap, i2c_do_add_adapter)`分析取出 i2c_bus_type 每一个driver 调用 i2c_do_add_adapter
+
+```c
+static int i2c_do_add_adapter(struct device_driver *d,void *data){
+	struct i2c_driver *driver = to_i2c_driver();
+	struct i2c_adapter *adap = data;
+	
+	//detect supported devices on that bus ,and instantiate them
+	i2c_detect(adap,driver);
+	
+	//let legacy driver scan this bus for matching devices
+	if(driver->attach_adapter){
+		//we ignore the reurn code;if it ails ;too bad
+		driver->attach_adapter(adap);
+	}
+	return 0;
+}
+static int i2c_detect(struct i2c_adapter *adapter,struct i2c_driver *driver){
+	const struct i2c_client_address_data *address_data;
+	struct i2c_client *temp_client;
+	int i,err = 0;
+	int adap_id = i2c_adapter_id(adapter);
+	
+	//driver 设置了address_data，是创建device的前提
+	//因为address_data中保存了设备的addr 与 名字，看设备驱动的时候会知道
+	address_data = driver->address_daata;
+	if(!driver->detect || !dress_data)
+		return 0;
+	//set up a temporary client to help detect callback
+	temp_client = kzalloc(sizeof(struct i2c_client),GFP_KERNEL);
+	if(!temp_client)
+		return -ENOMEM;
+	temp_client->adapter = adapter;
+	
+	//force entries are done first,and not affected by ignore entries
+	if(address_data->forces){
+		...
+	}
+
+	//stop here if the classes do not match
+	if(!(adapter->class & driver->class)
+		goto exit_free;
+	//stop here if we can't use SMBUS_QUICK
+	if(!i2c_check_functionality(adapter,I2_FUNC_SMBUS_QUICK)){
+		...
+	}
+	//probe entries are done second ,and are not affected by ifnore entries either
+	for (i = 0;address_adata->probe[i]!=I2C_CLIENT_END;i+=2){
+		...
+	}
+	//normal entries are done last,unless shadowed by an ignore entry
+	for(i=0;address_data->normal_i2c[i]!=I2C_CLIENT_END;i+=1){
+		int j,ignore;
+		ignore=0;
+		...
+		temp_client->addr = address_data->normal_i2c[i];
+		err = i2c_detect_address(temp_client,-1,driver);
+	}
+}
+static int i2c_detect_address(struct i2c_client *temp_client,int kind,struct i2c_driver *driver){
+	struct i2c_board_info info;
+	struct i2c_adapter *adapter = temp_client->adapter;
+	int addr = temp_client->addr;
+	int err;
+	//发送start信号，以及i2c设备地址；看是否能收到ack信号，判断设备是否存在，不存在返回
+	if(kind < 0){
+		// 最终就会调用到adapter驱动中我们设置的 i2c_algorithm
+		if(i2c_smbus_xfer(adapter,addr,0,0,0,
+				I2C_SMBUS_QUICK,NULL)<0)
+			return 0;
+	}
+	//Finally call the custom detection funtion
+	memset(&info,0,sizeof(struct i2c_board_info));
+	info.addr = addr;
+	//要在driver->detect设置info->type
+	err = driver->detect(temp_client,kind,&info);
+	
+	//如果设置了info.type,创建client,调用i2c_new_device
+	if(info.type[0] == '\0'){
+		....
+	} else {
+		struct i2c_client *client;
+		//detection succeed,instantiate the device
+		client = i2c_new_device(adapter,&info);
+		if(client)
+			list_add_tail(&client->detected,&driver->clients);
+	}
+	return 0;
+}
+```
+我们在 向`i2c_bus_type`注册driver时，与上面的方法是一样的，因此，我们可以动态加载driver时，创建对应的device，**但是并不推荐这样做**。
+i2c_add_driver-》i2c_register_driver-》bus_for_each_dev(&i2c_bus_type, NULL, driver, __attach_adapter);__attach_adapter 和 i2c_do_add_adapter 内容是同理的。
+
+# 3.i2c 设备驱动框架
+## 3.1 i2c_bus_type
+前面已经分析过了它的 match 函数，稍后我们会注意一下它的probe函数。
+## 3.2  i2c_driver
+注册driver的过程，创建 device 前面也分析过了
+## 3.3 i2c_device
+device 就更不用提了，前面讲了3中创建它的方法，还有第四种 直接 i2c_new_device ，岂不是更来得痛快。
+关于以上3点，就不再分析了，后面直接看 代码更直接，这里再记录一下 我分析这里时遇到的一个小问题。
+
+```c
+static struct i2c_driver eeprom_driver = {
+	.driver = {
+		.name	= "eeprom",
+	},
+	.probe		= eeprom_probe,
+	.remove		= eeprom_remove,
+	.id_table	= eeprom_id,
+ 
+	.class		= I2C_CLASS_DDC | I2C_CLASS_SPD,
+	.detect		= eeprom_detect,
+	// 由I2C_CLIENT_INSMOD_1(eeprom)宏定义
+	.address_data	= &addr_data,
+};
+```
+ 我们在写i2c_driver时，在 .driver 中没有指定 probe函数，那么配对成功后是如何调用到 eeprom_probe 的，对于platform平台，它是在注册platform_driver时，给.driver设置了通用的probe接口，platform_probe，使用它跳转到 上层的 probe 也就类似于这里的 eeprom_probe。但是搜遍代码 i2c_bus_type 并没有这样做呀，奇怪奇怪。回想在分析设备总线驱动模型，设备与驱动的配对过程，在调用probe函数时，首先会看bus->probe有没有，有就调用，没有才会调用driver->probe，platform_bus_type 是没有Probe函数的，但是i2c_bus_type有！！！所以，来看看 i2c_bus_type->probe吧。
+
+```c
+static int i2c_device_probe(struct device *dev){
+	struct i2c_clinet *client = i2c_verify_client(dev);
+	struct i2c_driver *driver;
+	int status;
+	
+	if(!client)
+		return 0;
+	driver = to_i2c_client(dev->driver);
+	if(!driver->probe || !driver->id_table)
+		return -ENODEV;
+	client->driver = driver;
+	if(!device_cal_wakeup(&client->dev))
+		device_init_wakeup(&client->dev,client->flags & I2C_CLIENT_WAKE);
+	dev_dbg(dev,"probe\n");
+	status = driver->probe(client,i2c_match_id(driver->id_table,client));
+	if(status)
+		client->driver = NULL;
+	return status;
+}
+```
+不难分析，原来是通过 Bus->probe 函数进行了跳转，以后分析别的总线模型又涨知识了。
+
+# 4.写设备程序
