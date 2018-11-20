@@ -566,3 +566,139 @@ static int i2c_device_probe(struct device *dev){
 不难分析，原来是通过 Bus->probe 函数进行了跳转，以后分析别的总线模型又涨知识了。
 
 # 4.写设备程序
+ 我们使用最简单粗暴的方法，直接在设备侧使用 i2c_new_device 创建一个设备注册到 i2c_bus_type里，再写个驱动与它配对。
+
+```c
+#include <linux/kernel.h>
+#include <linux/moudle.h>
+#include <linux/platform_device.h>
+#include <linux/i2c.h>
+#include <linxu/err.h>
+#include <linux/regmap.h>
+#include <linux/slab.h>
+
+static struct i2c_board_info at24cxx_info = {
+	I2C_BOARD_INFO("at24c08",0x50);
+};
+static struct i2c_client *at24cxx_client;
+static int at24cxx_dev_init(void){
+
+	struct i2c_adapter *i2c_adap;
+	//获取设备号为0的adapter，也就是adapter->nr == 0
+	i2c_adapter = i2c_get_adapter(0);
+	
+	//直接使用i2c_new_device 创建client自动注册到i2c_bus_type中去
+	//client->name == "at24cxx08",client->addr = 0x50
+	at24cxx_client = i2c_new_device(i2c_adap,&at24cxx_info);
+	//释放掉adapter
+	i2c_put_adapter(i2c_adap);
+	return 0;
+}
+static void at24cxx_dev_exit(void){
+	i2c_unregister_device(at24cxx_client);
+}
+module_init(at24cxx_dev_init);
+module_exit(at24cxx_dev_exit);
+```
+设备侧的程序相对简单，我们只需要构造一个board_info结构体，设置名字`Info->type`以及地址`info->addr`，然后使用 i2c_new_device 将其注册到I2c_bus_type 即可。
+
+```c
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/platform_device.h>
+#include <linux/i2c.h>
+#include <linux/err.h>
+#include <linux/regmap.h>
+#include <linux/slab.h>
+#include <linux/fs.h>
+#include <asm/uaccess.h>
+static int major;
+static struct class *class;
+static struct i2c_client *at24cxx_client;
+
+
+//输入:buf[0]:addr,输出:buf[0]:data
+static ssize_t at24cxx_read(struct file *file,char __user *buf,size_t count,loff_t *off){
+	unsigned char addr,data;
+	
+	copy_from_user(&addr,buf,1);
+	data = i2c_smbus_read_byte_data(at24cxx_client,addr);
+	copy_to_user(buf,&data,1);
+	return 1;
+}
+
+//buf[0]:addr,buf[1]:data
+static ssize_t at24cxx_write(struct file *file,const char __user *buf,size_t count,loff_t *off){
+	unsigned char ker_buf[2];
+	unsigned char addr，data;
+	
+	copy_from_user(ker_buf,buf,2);
+	addr = ker_buf[0];
+	data = ker_buf[1];
+	printk("addr =0x%02x, data = 0x%02x\n",addr,data);
+	if(!i2c_smbus_write_byte_data(at24cxx_client,addr,data)){
+		return 2;
+	}else{
+		return -EIO;
+	}
+}
+
+static struct file_operations at24cxx_fops = {
+	.owner = THIS_MODULE,
+	.read = at24cxx_read,
+	.write = at24cxx_write,
+};
+
+static int __devinit at24cxx_probe(struct i2c_client *client,const struct i2c_client_id *id){
+	at24cxx_client = client;
+	printk("%s %s %d\n",__FILE__,__FUNCITON__,__LINE);
+	major = register_chrdev(0,"at24cxx",&at24cxx_fops);
+	/* /dev/at24cxx */
+	device_create(class,NULL,MKDEV(major,0),NULL,"at24cxx");
+	return 0;
+}
+
+static int __devexit at24cxx_remove(struct i2c_client *client){
+	//printk("%s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
+	device_destory(class,MKDEV(major,0));
+	class_destory(class);
+	unregister_chrdev(major,"at24cxx");
+	return 0;
+}
+
+static const struct i2c_device_id at24cxx_id_table[] = {
+	{"at24c08",0}，
+	{}
+};
+//1.分配/设置 i2c_driver
+static struct i2c_driver at24cxx_driver = {
+	.driver = {
+		.name = "100ask",
+		.owner = THIS_MODULE,
+	},
+	.probe = at24cxx_probe,
+	.remove = __devexit_p(at24cxx_remove),
+	.id_table = at24cxx_id_table,
+};
+static int at24cxx_drv_init(void){
+	//2.注册i2c_driver
+	i2c_add_driver(&at24cxx_driver);
+	return 0;
+}
+static void at24cxx_drv_exit(void){
+	i2c_del_driver(&at24cxx_driver);
+}
+module_init(at24cxx_drv_init);
+module_exit(at24cxx_drv_exit);
+MODULE_LICENSE("GPL");
+```
+
+驱动侧的程序，思路：
+
+1、分配一个 i2c_driver 结构体
+2、设置它的名字，仅仅是出现在 sysfs 的目录名
+3、设置 id_table ，根据 id_table 与 client 的名字进行匹配
+4、设置 probe 函数，配对成功后调用它，我们往往在这里面创建类，在类下面创建设备，让Mdev自动帮我们创建设备节点。
+5、设备 remove 函数  ，与 i2c_add_driver 相反，我们在remove函数里 将driver删除掉，使用 i2c_del_driver 。
+
+还有需要注意的是，我们在Probe函数里，注册了一个字符设备驱动，在它的 read 和 write 函数里，用到了两个简单的函数，i2c_smbus_read_byte_data 与 i2c_smbus_write_byte_data，这两个函数是什么东西，我们之前用过 i2c_transfer 使用 mesg 结构体进行传输过，i2c_transfer 最终会调用到 adapter 里我们设置的传输函数。这里就不再分析代码了，根据我个人的理解，我们现在使用的 i2c_smbus_read_byte_data 等函数，是对 i2c_transfer 与 meag 进行了更深层次的封装，我们以前向读数据时，需要用两个mesg 结构体，因为要先发送地址，再读取数据，i2c_smbus_read_byte_data 函数我们只需要提供一个要读取的地址，它就会帮我们去构造那两个Mesg 结构体，总而言之，我们写程序更方便了。
