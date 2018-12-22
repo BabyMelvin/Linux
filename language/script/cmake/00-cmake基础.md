@@ -51,9 +51,9 @@ MESSAGE([SEND_ERROR | STATUS | FATAL_ERROR] "message to display"
 ```
 包含了三种类型:
 
-	* SEND_ERROR,产生错误,生成过程被跳过。 
-	* SATUS,输出前缀为—的信息* 
-	* FATAL_ERROR,立即终止所有 cmake 过程。
+* SEND_ERROR,产生错误,生成过程被跳过。 
+* SATUS,输出前缀为—的信息* 
+* FATAL_ERROR,立即终止所有 cmake 过程。
 
 * `ADD_EXECUTABLE(hello ${SRC_LIST})`定义了这个工程会生成一个文件名为hello的可执行文件，相关的源文件是SRC_LIST 中定义的源文件列表，本例中你也可以直接写成ADD_EXECUTABLE(hello main.c) 。
 
@@ -61,5 +61,5 @@ MESSAGE([SEND_ERROR | STATUS | FATAL_ERROR] "message to display"
 
 * 上面的例子展示的是“内部构建”生成的临时文件比您的代码文件还要多的时候
 * 举个简单的例子来说明外部构建，以编译wxGTK动态库和静态库为例，在Everest 中打包方式是这样的：解开wxGTK 后。在其中建立static 和shared 目录。
-	* 进入static 目录，运行`../configure –enable-static;make `会在`static 目录`生成`wxGTK 的静态库`。
-	* 进入`shared 目录`，运行`../configure –enable-shared;make `就会在`shared 目录`生成动态库。
+	* 进入`static`目录，运行`../configure –enable-static;make `会在`static 目录`生成`wxGTK 的静态库`。
+	* 进入`shared`目录，运行`../configure –enable-shared;make `就会在`shared 目录`生成动态库。
