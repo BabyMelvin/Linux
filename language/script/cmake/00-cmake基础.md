@@ -50,9 +50,10 @@ MESSAGE([SEND_ERROR | STATUS | FATAL_ERROR] "message to display"
 ...)
 ```
 包含了三种类型:
-	*	 SEND_ERROR,产生错误,生成过程被跳过。 
-	*	 SATUS,输出前缀为—的信息* 
-	*	 FATAL_ERROR,立即终止所有 cmake 过程。
+
+	* SEND_ERROR,产生错误,生成过程被跳过。 
+	* SATUS,输出前缀为—的信息* 
+	* FATAL_ERROR,立即终止所有 cmake 过程。
 
 * `ADD_EXECUTABLE(hello ${SRC_LIST})`定义了这个工程会生成一个文件名为hello的可执行文件，相关的源文件是SRC_LIST 中定义的源文件列表，本例中你也可以直接写成ADD_EXECUTABLE(hello main.c) 。
 
