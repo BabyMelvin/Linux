@@ -11,14 +11,14 @@ set(HELLO_SRC main.c SOURCE_PATH)
 
 ### 2.cmake中常用的常量
 
-* CMAKE_BINARY_DIR、PROJECT_BINARY_DIR、_BINARY_DIR这三个变量指代的内容是一致的
+* `CMAKE_BINARY_DIR`、`PROJECT_BINARY_DIR`、`_BINARY_DIR`这三个变量指代的内容是一致的
 	* 如果是`in source `编译，指得就是工程顶层目录。
 	* 如果是`out-of-source`编译，指的是工程编译发生的目录。
 * `CMAKE_SOURCE_DIR`  `PROJECT_SOURCE_DIR`  `_SOURCE_DIR`这三个变量指代的内容是一致的.
 	* 不论采用何种编译方式，都是工程顶层目录。
 * `CMAKE_CURRENT_SOURCE_DIR` 指的是当前处理的`CMakeLists.txt` 所在的路径，比如上面我们提到的src子目录。 
 * `CMAKE_CURRRENT_BINARY_DIR`如果是in-source 编译，它跟`CMAKE_CURRENT_SOURCE_DIR `一致，如果是out-of-source 编译，他指的是target 编译目录。
-* `CMAKE_CURRENT_LIST_FILE` 输出调用这个变量的CMakeLists.txt 的完整路径
+* `CMAKE_CURRENT_LIST_FILE` 输出调用这个变量的`CMakeLists.txt`的完整路径
 * `CMAKE_CURRENT_LIST_LINE` 输出这个变量所在的行
 * `CMAKE_MODULE_PATH`这个变量用来定义自己的cmake 模块所在的路径。如果你的工程比较复杂，有可能会自己编写一些cmake 模块，这些cmake 模块是随你的工程发布的，为了让cmake 在处理CMakeLists.txt 时找到这些模块，你需要通过SET指令，将自己的cmake 模块路径设置一下。`SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)` 这时候你就可以通过`INCLUDE 指令`来调用自己的模块了。
 * `EXECUTABLE_OUTPUT_PATH` 和`LIBRARY_OUTPUT_PATH `分别用来重新定义最终结果的存放目录，前面我们已经提到了这两个变量。
@@ -77,63 +77,49 @@ ADD_EXECUTABLE(main ${SRC_LIST})
 八、cmake 常用指令
 九、复杂的例子
 本文档使用 看云 构建
-#八、cmake 常用指令
+
+# 八、cmake 常用指令
 
 前面我们讲到了cmake 常用的变量，相信“cmake 即编程的感觉会越来越明显，无论如何，我们仍然可以看到cmake 比autotools要简单很多。接下来我们就要集中的看一看cmake 所提供的常用指令。在前面的章节我们已经讨论了很多指令的用法，如PROJECT，ADD_EXECUTABLE，INSTALL，ADD_SUBDIRECTORY，SUBDIRS，INCLUDE_DIRECTORIES，LINK_DIRECTORIES，TARGET_LINK_LIBRARIES，SET等。
 
 本节会引入更多的cmake指令，为了编写的方便，我们将按照cmake man page的顺序来介绍各种指令，不再推荐使用的指令将不再介绍，INSTALL系列指令在安装部分已经做了非常详细的说明，本节也不在提及。(你可以将本章理解成选择性翻译，但是会加入更多的个人理解)
 
-##一，基本指令
+## 一，基本指令
 
-1，ADD_DEFINITIONS 向C/C++ 编译器添加-D定义，比如: ADD_DEFINITIONS(-DENABLE_DEBUG -DABC)，参数之间用空格分割。
+1.`ADD_DEFINITIONS`:向`C/C++`编译器添加`-D`定义，比如: `ADD_DEFINITIONS(-DENABLE_DEBUG -DABC)`，参数之间用空格分割。
 
-如果你的代码中定义了：#ifdef ENABLE_DEBUG #endif这个代码块就会生效。如果要添加其他的编译器开关，可以通过CMAKE_C_FLAGS 变量和CMAKE_CXX_FLAGS 变量设置。
+如果你的代码中定义了：`#ifdef ENABLE_DEBUG #endif`这个代码块就会生效。如果要添加其他的**编译器开关**，可以通过`CMAKE_C_FLAGS变量`和`CMAKE_CXX_FLAGS变量`设置。
 
-２，ADD_DEPENDENCIES
+２.`ADD_DEPENDENCIES`:定义target依赖的其他target ，确保在编译本target 之前，其他的target已经被构建。
 
-定义target 依赖的其他target ，确保在编译本target 之前，其他的target 已经被构建。
+`ADD_DEPENDENCIES(target-name depend-target1 depend-target2 ...)`
 
-ADD_DEPENDENCIES(target-name depend-target1depend-target2 ...)
+３.`ADD_EXECUTABLE` 、`ADD_LIBRARY` 、`ADD_SUBDIRECTORY`前面已经介绍过了，这里不再罗唆。
 
-３，ADD_EXECUTABLE 、ADD_LIBRARY 、ADD_SUBDIRECTORY 前面已经介绍过了，这里不再罗唆。
+４.`ADD_TEST`与`ENABLE_TESTING`指令。
 
-４，ADD_TEST 与ENABLE_TESTING 指令。
+`ENABLE_TESTING`:指令用来控制Makefile是否构建test目标，涉及工程所有目录。语法很简单，没有任何参数，`ENABLE_TESTING()` ，一般情况这个指令放在工程的主CMakeLists.txt 中.
 
-ENABLE_TESTING 指令用来控制Makefile 是否构建test目标，涉及工程所有目录。语法很简单，没有任何参数，ENABLE_TESTING() ，一般情况这个指令放在工程的主CMakeLists.txt 中.
+`ADD_TEST`指令的语法是:
 
-ADD_TEST 指令的语法是:
+`ADD_TEST(testname Exename arg1 arg2 ...)`
 
-ADD_TEST(testname Exename arg1 arg2 ...)
+testname 是自定义的test 名称，Exename可以是构建的目标文件也可以是外部脚本等等。后面连接传递给可执行文件的参数。如果没有在同一个CMakeLists.txt 中打开`ENABLE_TESTING()`指令，任何`ADD_TEST`都是无效的。
 
-testname 是自定义的test 名称，Exename 可以是构建的目标文件也可以是外部脚本等等。后面连接传递给可执行文件的参数。如果没有在同一个CMakeLists.txt 中打开ENABLE_TESTING() 指令，任何ADD_TEST 都是无效的。
+比如我们前面的Helloworld 例子，可以在工程主CMakeLists.txt 中添加`ADD_TEST(mytest ${PROJECT_BINARY_DIR}/bin/main) ENABLE_TESTING()`
 
-比如我们前面的Helloworld 例子，可以在工程主CMakeLists.txt 中添加ADD_TEST(mytest ${PROJECT_BINARY_DIR}/bin/main) ENABLE_TESTING()
+生成Makefile 后，就可以运行`make test`来执行测试了。
 
-生成Makefile 后，就可以运行make test 来执行测试了。
+５，`AUX_SOURCE_DIRECTORY`基本语法是：
 
-５，AUX_SOURCE_DIRECTORY 基本语法是：
+`AUX_SOURCE_DIRECTORY(dir VARIABLE)`:作用是发现一个目录下所有的源代码文件并将列表存储在一个变量中，这个指令临时被用来自动构建源文件列表。因为目前cmake 还不能自动发现新添加的源文件。
 
-AUX_SOURCE_DIRECTORY(dir VARIABLE)
+比如`AUX_SOURCE_DIRECTORY(. SRC_LIST)` ,`ADD_EXECUTABLE(main ${SRC_LIST})`你也可以通过后面提到的`FOREACH`指令来处理这个LIST
 
-作用是发现一个目录下所有的源代码文件并将列表存储在一个变量中，这个指令临时被用来自动构建源文件列表。因为目前cmake 还不能自动发现新添加的源文件。
+6，`CMAKE_MINIMUM_REQUIRED`其语法为`CMAKE_MINIMUM_REQUIRED(VERSION versionNumber [FATAL_ERROR])`比如`CMAKE_MINIMUM_REQUIRED(VERSION 2.5 FATAL_ERROR)`如果cmake 版本小与2.5，则出现严重错误，整个过程中止。
 
-比如
-
-AUX_SOURCE_DIRECTORY(. SRC_LIST)ADD_EXECUTABLE(main ${SRC_LIST})
-
-你也可以通过后面提到的FOREACH 指令来处理这个LIST
-
-6，CMAKE_MINIMUM_REQUIRED其语法为CMAKE_MINIMUM_REQUIRED(VERSION versionNumber [FATAL_ERROR])比如CMAKE_MINIMUM_REQUIRED(VERSION 2.5 FATAL_ERROR)如果cmake 版本小与2.5，则出现严重错误，整个过程中止。
-
-7，EXEC_PROGRAM
-
-在CMakeLists.txt 处理过程中执行命令，并不会在生成的Makefile 中执行。具体语法为：
-
-`EXEC_PROGRAM(Executable [directory in which to run][ARGS ][OUTPUT_VARIABLE ][RETURN_VALUE ])`
-
-用于在指定的目录运行某个程序，通过ARGS 添加参数，如果要获取输出和返回值，可通过
-
-`OUTPUT_VARIABLE` 和`RETURN_VALUE` 分别定义两个变量. 这个指令可以帮助你在CMakeLists.txt 处理过程中支持任何命令，比如根据系统情况去修改代码文件等等。
+7，`EXEC_PROGRAM`:在CMakeLists.txt 处理过程中执行命令，并不会在生成的Makefile中执行。具体语法为：`EXEC_PROGRAM(Executable [directory in which to run][ARGS ][OUTPUT_VARIABLE ][RETURN_VALUE ])`
+用于在指定的目录运行某个程序，通过ARGS 添加参数，如果要获取输出和返回值，可通过`OUTPUT_VARIABLE` 和`RETURN_VALUE` 分别定义两个变量. 这个指令可以帮助你在CMakeLists.txt 处理过程中支持任何命令，比如根据系统情况去修改代码文件等等。
 
 举个简单的例子，我们要在src目录执行ls命令，并把结果和返回值存下来。
 
@@ -141,14 +127,14 @@ AUX_SOURCE_DIRECTORY(. SRC_LIST)ADD_EXECUTABLE(main ${SRC_LIST})
 
 ```cmake
 EXEC_PROGRAM(
-			ls ARGS "*.c" OUTPUT_VARIABLE LS_OUTPUT RETURN_VALUELS_RVALUE)
-			IF(not LS_RVALUE)
-				MESSAGE(STATUS "ls result: " ${LS_OUTPUT})
-			ENDIF(not LS_RVALUE)
+			ls ARGS "*.c" OUTPUT_VARIABLE LS_OUTPUT RETURN_VALUE LS_RVALUE)
+IF(not LS_RVALUE)
+	MESSAGE(STATUS "ls result: " ${LS_OUTPUT})
+ENDIF(not LS_RVALUE)
 ```
-在cmake 生成Makefile的过程中，就会执行ls命令，如果返回0，则说明成功执行，那么就输出ls *.c 的结果。关于IF语句，后面的控制指令会提到。
+在cmake 生成Makefile的过程中，就会执行ls命令，如果返回0，则说明成功执行，那么就输出`ls *.c`的结果。关于IF语句，后面的控制指令会提到。
 
-* 8，`FILE指令`文件操作指令，基本语法为:
+* 8.`FILE指令`文件操作指令，基本语法为:
 ```cmake
 FILE(WRITE filename "message to write"... )
 FILE(APPEND filename "message to write"... ) 

@@ -89,8 +89,9 @@ cmake_minimum_required　（VERSION 2.8)
 project (Demo4)
 
 #　加入一个配置文件，用于处理CMake对源码设置
+#  whitespace not ","
 configure_file(
-"${PROJECT_SOURCE_DIR}/config.h.in",
+"${PROJECT_SOURCE_DIR}/config.h.in"
 "${PROJECT_BINARY_DIR}/config.h"
 )
 # 是否使用自己的MathFunctions库
@@ -113,7 +114,7 @@ target_link_libraries (Demo ${EXTRA_LIBS})
 其中`configure_file`命令用于加入一个配置头文件config.h,这个文件有CMake从config.h.in生成，
 通过这样的机制，将可通过预定义一些参数和变量控制代码的生成．
 
-命令option添加一个`USE_MYMATH`选项，并默认值为`ON`.
+命令option添加一个`USE_MYMATH`选项，并默认值为`ON`.(if config.h.in not config?)
 
 变量值USE_MYMATH决定是否使用我们自己编写MathFunctions库
 
@@ -147,6 +148,9 @@ int main(int argc,char*argv[]){
 不直接编写config.h文件，这个文件预定义了USE_MYMATH的值。方便CMakeLists.txt中导入配置，编写一个
 config.h.in文件。内容:
 ```
+//mean off USE_MYMATH
+//open to use
+//#cmakedefine USE_MYMATH ON
 #cmakedefine USE_MYMATH
 ```
 CMake会自动根据CMakeLists配置文件中设置自动生成config.h文件
@@ -174,7 +178,7 @@ USE_MYMATH 为 OFF
 在 math/CMakeLists.txt文件添加：
 ```
 #指定 MathFunctions库安装路径
-install (TARGETS MathFunctions DESTIANTION bin)
+install (TARGETS MathFunctions DESTIANTION lib)
 install (FILES MathFunctions.h DESTIANTION include)
 ```
 指明MathFunctions库安装路径。之后同样修改目录CMakeLists文件，添加如下:
@@ -195,7 +199,7 @@ Install the project...
 -- Install configuration: ""
 -- Installing: /usr/local/bin/Demo
 -- Installing: /usr/local/include/config.h
--- Installing: /usr/local/bin/libMathFunctions.a
+-- Installing: /usr/local/lib/libMathFunctions.a
 -- Up-to-date: /usr/local/include/MathFunctions.h
 [ehome@xman Demo5]$ ls /usr/local/bin
 Demo  libMathFunctions.a
@@ -214,7 +218,7 @@ add_test (test_run Demo 5 2)
 
 #测试帮助信息是否可以正常提示
 add_test(test_usage Demo)
-set_test_properties (test_usage
+set_tests_properties (test_usage
                     PROPERTTIES PASS_REGULAR_EXPRESSION "Usage: .* base exponent")
 
 #测试 5 的平方

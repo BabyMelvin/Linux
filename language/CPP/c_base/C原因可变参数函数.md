@@ -28,7 +28,7 @@ int demo(char* msg,...){
 	int argno=0;
 	/* 存放取出的字符串参数 */    
 	char* para;
-	/* argp指向传入的第一个可选参数，    msg是最后一个确定的参数 */ 
+	/* argp指向传入的第一个可选参数，    msg是确定的参数最后那个参数 */ 
 	va_start(argp,msg);
 	while(1){
 		/*    取出当前的参数，类型为char *. */   
