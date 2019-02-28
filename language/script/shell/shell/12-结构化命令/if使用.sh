@@ -21,7 +21,7 @@ else
 fi
 
 # 3.if-elif-else
-
+# 注意空格要严格,方括号两边都要有
 if [ $USER = "tiandi" ]
 then
     echo "welcome $USER"

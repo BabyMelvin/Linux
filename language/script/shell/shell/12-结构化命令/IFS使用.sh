@@ -1,6 +1,6 @@
 #!/bin/bash
-#reading values from a file
 
+# 1.使用IFS
 file="state"
 
 #更改字段分隔符，使其只能识别换行符
@@ -16,3 +16,19 @@ for state in `cat $file`
 do
 	echo "Visit beautiful $state"
 done
+
+# 2.changing the IFS value
+
+IFS.OLD=$IFS
+IFS=$'\n'
+for entry in `cat /etc/passwd`
+do	
+	echo "Values in $entry -"
+	IFS=:
+	for value in $entry
+	do
+		echo " $value"
+	done
+done
+
+
