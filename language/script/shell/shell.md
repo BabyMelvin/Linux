@@ -65,6 +65,15 @@ arry[2]=c
 * `$-`:现实shell使用的当前选项，和set命令相同
 * `$?`:现实最后命令的退出状态，0表示没有错误，其他表示有错
 
+输出最后参数的方法
+
+```bash
+# 花括号里不能使用美元符号
+params=$#
+echo the last parameter is $params
+echo the last parameter is ${!#}
+```
+
 # 条件
 
 * 数值:`-eq`:等于,`-ne`:不等于,`-gt`:大于,`-ge`:大于等于,`-lt`:小于,`-le`:小于等于
