@@ -62,7 +62,3 @@ gcc -c -o sub.o sub.c
 gcc -shared -o -fPIC libsub.a sub.o
 gcc -L. -o test main.o -lsub
 ```
-
-# 2.`arm-linux-ld`选项
-# 3.`arm-linux-objcopy`选项
-arm-linux-objcopy 被用来拷贝一个目标文件的内容到另一个文件中，可以使用不同于源文件的格式来输出目的文件，即可以进行格式转换。
