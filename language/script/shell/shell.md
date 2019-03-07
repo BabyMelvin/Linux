@@ -110,7 +110,16 @@ else
 fi
 ```
 
+# find 命令
 
+```
+#在压缩文件内寻找文本片段
+find . -type f -print | xarg bzgrep ZUT
+```
+
+# xargs和管道的区别
+* `echo '--help' | cat`:该命令输出的是echo的内容，echo命令的输出通过管道定向到cat的输入了。然后cat从其标准输入中读取待处理的文本内容。cat出显示信息是--help
+* `echo '--help' | xargs cat`:xargs将其接受的字符串成cat的一个命令参数来运行命令,这里最终显示内容应该是执行`cat --help`命令的显示效果
 
 
 
