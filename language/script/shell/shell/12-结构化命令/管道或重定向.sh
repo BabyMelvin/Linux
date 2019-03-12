@@ -18,3 +18,8 @@ do
 	echo "$state is next place to go"
 done | sort
 echo "This completes our travels"
+
+
+# 重定向到文件,既有到终端又到hello.txt文件中
+
+echo "hello world\n" 2>&1 | tee hello.txt
