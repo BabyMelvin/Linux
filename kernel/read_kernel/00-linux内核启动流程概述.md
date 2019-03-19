@@ -88,9 +88,9 @@ start_kernel是所有 Linux 平台进入系统内核初始化后的入口函数�
 
 `Init进程`首先进行一系列的硬件初始化，然后通过命令行传递过来的参数挂载根文件系统。最后init进程会执行用户传递过来的`init＝`启动参数执行用户指定的命令，或者执行以下几个进程之一：
 
-* 1.`execve("/sbin/init",argv_init,envp_init);`  
-* 2.`execve("/etc/init",argv_init,envp_init);`  
-* 3.`execve("/bin/init",argv_init,envp_init);`   
+* 1.`execve("/sbin/init",argv_init,envp_init);` 
+* 2.`execve("/etc/init",argv_init,envp_init);`
+* 3.`execve("/bin/init",argv_init,envp_init);`
 * 4.`execve("/bin/sh",argv_init,envp_init)`
 
 **当所有的初始化工作结束后**，cpu_idle()函数会被调用来使系统处于闲置（idle）状态并等待用户程序的执行。至此，整个 Linux 内核启动完毕.
