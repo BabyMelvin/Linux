@@ -167,6 +167,7 @@ sudo cp busybox-1.20.2/_install/* -r rootfs/
 
 ```
 sudo cp -P /usr/arm-linux-gnueabi/lib/* rootfs/lib/
+rm rootfs/lib/*.a #去掉不用的.a库
 ```
 
 
@@ -180,6 +181,8 @@ sudo mknod rootfs/dev/tty2 c 4 2
 sudo mknod rootfs/dev/tty3 c 4 3
 
 sudo mknod rootfs/dev/tty4 c 4 4
+sudo mknod rootfs/dev/console c 5 1
+sudo mknod rootfs/dev/null c 1 3
 ```
 
 ## 4.2 制作根文件系统镜像
