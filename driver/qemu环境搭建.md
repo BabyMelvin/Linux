@@ -142,6 +142,7 @@ make CROSS_COMPILE=arm-linux-gnueabi-
 make install CROSS_COMPILE=arm-linux-gnueabi-
 ```
 
+注意配置：`.config`中的rootfs执向编译器libc中的位置，避免出现limits.h:no such file等错误
 
 安装完成后，会在busybox目录下生成`_install`目录，该目录下的程序就是单板运行所需要的命令。
 
@@ -153,7 +154,7 @@ make install CROSS_COMPILE=arm-linux-gnueabi-
 `mkdir -p rootfs/{dev,etc/init.d,lib}`
 
 
-
+其中etc目录：[etc文件](https://github.com/xjas/embedded_linux-configure-files.git)
 2. 拷贝busybox命令到根目录下
 
 ```
