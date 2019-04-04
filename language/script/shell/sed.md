@@ -1,15 +1,16 @@
 # sed使用
+sed命令可实现文件的添加删除修改，替换.
 ## 1.命令格式
 
 ```
-sed [options] 'command' file(s)
-sed [options] -f scriptfile file(s
+sed [-hnV][-e<script>][-f<script文件>][文本文件]
 ```
 
 选项
 
 * `-e<script>`：选项中script来处理文本
 * `-f<script>`：选项中指定script文本处理输入文本
+* `-n`: 仅显示script处理后的结果
 * `-h`:象时帮助
 * `-V`或`--version`：显示版本信息
 
@@ -31,6 +32,49 @@ sed [options] -f scriptfile file(s
 * `q`:退出sed
 * `r`:file从file中读行
 
+
+# 以行为单位
+## 1.添加
+```
+# 在第4行后添加新的字符串
+sed -e 4a\newline testfile
+```
+## 2.删除
+```
+# 删除2~5行(-e可省略),nl相当于cat加上序号
+nl /etc/passwd | sed '2,5d'
+
+# 只删除第2行
+nl /etc/passwd | sed '2d'
+
+# 删除3到最后一行
+nl /etc/passwd | sed '3,$d'
+```
+
+## 3.插入
+
+```
+# 第2行前加入 drink tea
+nl /etc/passwd | sed '2a drink tea'
+
+# 第2行后加入 drink tea
+nl /etc/passwd | sed '2i drink tea'
+```
+
+# 4.替换
+
+```
+# 将2~5行内容取代为No 2-5 Number
+nl /etc/passwd | sed '2,5c No 2-5 Number'
+```
+# 5.打印
+
+```
+# 仅列出/etc/passwd 文件内的第5~7行
+nl /etc/passwd | sed -n '5,7p'
+```
+
+
 ## sed替换标记
 
 * `g`表示行内全面替换。  
@@ -41,6 +85,49 @@ sed [options] -f scriptfile file(s
 * `\1`子串匹配标记
 * `&`已匹配字符串标记
 
+# 数据的搜索并显示
+
+```
+# 搜索/etc/passwd有root关键字的行(这个即输出结果，又输出所有的文件内容)
+nl /etc/passwd | sed '/root/p'
+
+# 只显示匹配的结果
+nl /etc/passwd | sed -n '/root/p'
+```
+
+# 数据的搜索并删除
+
+```
+# 将会删除匹配root的行
+nl /etc/passwd | sed '/root/d'
+```
+
+# 搜索并执行命令
+
+搜索root，并执行花括号中命令，每个命令之间用分号分隔
+
+```
+# 把bash 替换为blueshll，再执行命令
+nl /etc/passwd | sed -n '/root/{s/bash/blueshell/;p;q}'
+```
+
+# 多点编辑
+
+```
+nl /etc/passwd | sed -e '3,$d' -e 's/bash/blueshell/'
+```
+
+# 数据的搜搜并替换
+
+```
+sed 's/oldstring/newstring/g'
+```
+
+# 直接修改文件内容
+
+```
+sed -i 's/\.$/\!/g' regular_express.txt
+```
 ## sed元字符集
 
 * `^`匹配行开始，如：`/^sed/`匹配所有以sed开头的行。
