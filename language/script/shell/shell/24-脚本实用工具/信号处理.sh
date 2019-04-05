@@ -1,5 +1,15 @@
 #!/bin/bash
 
+
+#命令kill $kill -l 列出所有的信号
+#命令trap
+#	1.自己处理(可以多个信号)
+#      $trap "command;command;exit" 1 2
+#	2.忽略信号
+#      $trap "" 2
+#	3.恢复信号
+#      $trap 1 2
+
 # 调用流程.
 # What is your favorite vegetable
 # TimerOn 等待三秒出发14信号，调用Int4Vector
