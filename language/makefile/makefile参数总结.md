@@ -22,6 +22,15 @@ endif
 
 `$(MAKE) -f Makefile.perf --no-print-directory -j$(JOBS) O=$(FULL_O) $(SET_DEBUG) $@`
 
+## 1.1Makefile选择控制
+
+```
+ifeq ()
+else ifeq()
+else
+endif
+```
+
 # 2.make 参数
 
 ```
@@ -44,6 +53,7 @@ endif
   -l [N], --load-average[=N], --max-load[=N]
                               Don't start multiple jobs unless load is below N.
   -L, --check-symlink-times   Use the latest mtime between symlinks and target.
+//这里可用于调试
   -n, --just-print, --dry-run, --recon
                               Don't actually run any commands; just print them.
   -o FILE, --old-file=FILE, --assume-old=FILE
@@ -57,6 +67,7 @@ endif
                               Turns off -k.
   -t, --touch                 Touch targets instead of remaking them.
   -v, --version               Print the version number of make and exit.
+//用于调试
   -w, --print-directory       Print the current directory.
   --no-print-directory        Turn off -w, even if it was turned on implicitly.
   -W FILE, --what-if=FILE, --new-file=FILE, --assume-new=FILE
