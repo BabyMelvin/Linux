@@ -36,4 +36,17 @@ foo = $(call reverse,a,b)
 # foo的值就是“b a”。
 ```
 ## 1.6 origin 函数
-`$(origin <variable> )` ->undefined default environment file "command line" override automatic 
+`$(origin <variable> )` 返回变量的来源，可能值有：
+
+`undefined` `default` `environment` `file` `command line` `override` `automatic` 
+
+```makefile
+ifeq ("$(origin O)","command line")
+	KBUILD_OUTPUT :=$(0)
+endif
+```
+* LANG是环境变量（environment），所有printenv打印出来的变量，origin该变量，应该都是environment。
+* 对于普通的变量MYVAR，其origin为file；但是，如果在命令行指定了同样的变量（make -f hello.mk MYVAR="value_from_command_line")，则其origin为`command line`，MYVAR的值也会被命令行中的参数取代。可见，命令行参数的优先级大于本地变量。但是也有办法阻止命令行参数覆盖局部变量，即采用override。
+* 变量myvar2是override类型的，其origin为`override`。可以看到，即使在命令行指定了`myvar2（make -f hello.mk myvar2="value from command line"）`，也不会覆盖hello.mk中的myvar2的值。
+* 未定义的变量novar，其origin为`undefined`。
+* make中预置的隐含变量（例如 CC），其origin为default。如果在mk文件中对CC进行重新赋值，则其origin为file，与普通本地变量一样。
