@@ -93,9 +93,10 @@ asmlinkage long sys_fork(void)
         __attribute__((section("__syscalls_metadata"))) \
         *__p_syscall_meta_##sname = &__syscall_meta_##sname;
 ```
-## 3.1创建的流程：
+## 3.1 创建的流程：
 
-* 1.调用`dup_task_struct(current)`为新进程分配内核栈，task_struct等，其中的内容与父进程相同。
+### 3.1.1 dup_task_struct
+调用`dup_task_struct(current)`为新进程分配内核栈，task_struct等，其中的内容与父进程相同。
 
 关于current分析,current类型为`task_struct`,表示当前进程结构体。来自宏`#define current get_current()`,其中`get_current()`也是一个宏`#define get_current() (current_thread_info()->task)`(路径：`include/asm-generic/current.h`)
 
@@ -134,8 +135,7 @@ struct thread_info {
     union vfp_state vfpstate;
 };
 ```
-当内核线程执行到此处时，其SP堆栈指针指向调用进程所对应的内核线程的栈顶。通过`sp & ~(THREAD_SIZE-1)`向上对齐，达到栈底部。
- 将结果强制类型转换为thread_info类型，此类型中有一个成员为task_struct，它就是 当前正在运行进程的 task_struct指针。
+当内核线程执行到此处时，其SP堆栈指针指向调用进程所对应的内核线程的栈顶。通过`sp & ~(THREAD_SIZE-1)`向上对齐，达到栈底部。将结果强制类型转换为thread_info类型，此类型中有一个成员为task_struct，它就是 当前正在运行进程的 task_struct指针。
 备注：
  在内核中，进程的task_struct是由slab分配器来分配的，slab分配器的优点是对象复用和缓存着色
  联合体：
@@ -151,16 +151,74 @@ union thread_union {
 
 整个8K的空间，顶部供进程堆栈使用，最下部为thread_info。从用户态切换到内核态时，进程的内核栈还是空的，所以sp寄存器指向栈顶，一旦有数据写入，sp的值就会递减，内核栈按需扩展，理论上最大可扩展到`8192- sizeof(thread_info)`大小，考虑到函数的现场保护，往往不会有这么大的栈空间。内核在代表进程执行时和所有的中断服务程序执行时，共享8K的内核栈。
 
+具体看下`dup_task_struct(current)`具体实现：
 
-* 2.check新进程(进程数目是否超出上限等)
+```c
+static struct task_struct *dup_task_struct(struct task_struct *orig)
+{
+	struct task_struct *tsk;
+	struct thread_info *ti;
+	
+	//1
+	int node = tsk_fork_get_node(orig);
+	int err;
 
-3. 清理新进程的信息(比如PID置0等)，使之与父进程区别开。
-4. 新进程状态置为`TASK_UNINTERRUPTIBLE`
-5. 更新task_struct的flags成员。
-6. 调用`alloc_pid()`为新进程分配一个有效的PID
-7. 根据`clone()`的参数标志，拷贝或共享相应的信息
-8. 做一些扫尾工作并返回新进程指针
+	//2
+	tsk = alloc_task_struct_node(node);
+	//3.
+	ti = alloc_thread_info_node(tsk, node);
+	//4.
+	arch_dup_task_struct(tsk, orig);
+	tsk->stack = ti;
+	
+	//5.
+	setup_thread_stack(tsk, orig);
+	clear_user_return_notifier(tsk);
+	clear_tsk_need_resched(tsk);
+	set_task_stack_end_magic(tsk);
+	
+	atomic_set(&tsk->usage, 2);
+	tsk->splice_pipe = NULL;
+	tsk->task_frag.page = NULL;
 
+	//6.
+	account_kernel_stack(ti, 1);
+	return tsk;
+}
+```
+
+* 1.node:这里值`node = -1`
+* 2.调用`kmem_cache_alloc_node(task_struct_cachep, GFP_KERNEL, -1)`，其中task_struct_cachep为全局指针(加个了p，表示指针).
+
+```c
+void *kmem_cache_alloc_node(struct kmem_cache *cachep, gfp_t flags, int nodeid)
+{
+	//_RET_IP_对应宏(unsigned long)__buildin_return_address(0)表示调用函数的返回地址
+	void *ret = slab_alloc_node(cachep, flags, nodeid, _RET_IP_);
+	trace_keme_cache_alloc_node(_RET_IP_, ret,
+		cachep->object_size, cachep->size, 
+		flags, nodeid);
+	return ret;
+}
+```
+### 3.1.2.check新进程
+check新进程(进程数目是否超出上限等)
+
+### 3.1.3清理新进程的信息
+清理新进程的信息(比如PID置0等)，使之与父进程区别开。
+
+### 3.1.4 设置状态
+新进程状态置为`TASK_UNINTERRUPTIBLE`
+### 3.1.5 更新flags
+更新task_struct的flags成员。
+### 3.1.6.分配一个有效的PID
+调用`alloc_pid()`为新进程分配一个有效的PID
+### 3.1.7 拷贝或共享相应的信息
+根据`clone()`的参数标志，拷贝或共享相应的信息
+### 3.1.8 做一些扫尾
+做一些扫尾工作并返回新进程指针
+
+## 3.2 小节
 创建进程的`fork()`函数和`clone()`实际上最终是调用`do_fork()`函数。创建线程和进程的步骤一样，只是最终传给`do_fork()`函数的参数不同。比如，
 
 * 通过一个普通的fork来创建进程，相当于：`do_fork(SIGCHLD, 0)`
