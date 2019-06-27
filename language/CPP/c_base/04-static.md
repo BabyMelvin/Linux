@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 int get_static() {
-    //只初始化一次,预编译时候？？
+    //只初始化一次,只在预编译时候
     static int a = 0;
     int b = 0;
     a ++;
