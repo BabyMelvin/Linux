@@ -2,6 +2,7 @@
 #ifndef LIST_H_
 #define LIST_H_
 
+#define ADD_ITEM_IMPROVE
 typedef enum {false, true} bool;
 
 #define TSIZE 45
@@ -23,8 +24,11 @@ typedef struct node
 
 typedef struct list
 {
-    Node *head;
     int size;
+    Node *head;
+#ifdef ADD_ITEM_IMPROVE
+    Node *end;
+#endif
 } List;
 
 void initialize_list(List *plist);

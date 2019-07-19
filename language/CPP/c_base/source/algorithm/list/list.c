@@ -7,8 +7,11 @@ static void copy_to_node(Item item, Node *pnode);
 
 void initialize_list(List *plist)
 {
-    plist->head = NULL;
     plist->size = 0;
+    plist->head = NULL;
+#ifdef ADD_ITEM_IMPROVE 
+    plist->end = NULL;
+#endif
 }
 
 bool list_is_empty(const List *plist)
@@ -26,6 +29,32 @@ unsigned int list_item_count(const List *plist)
     return plist->size;
 }
 
+#ifdef ADD_ITEM_IMPROVE
+bool add_item(Item item, List *plist)
+{
+    Node *pnew;
+    Node *scan;
+
+    pnew = (Node *)malloc(sizeof(Node));
+    if(pnew == NULL)
+        return false;
+
+    copy_to_node(item, pnew);
+    pnew->next = NULL;
+    if(plist->head == NULL) {
+        plist->head = pnew;
+        plist->end = pnew;
+    } else {
+        scan = plist->end;
+        scan->next = pnew;
+        plist->end = pnew;
+    }
+
+    plist->size++;
+
+    return true;
+}
+#else
 bool add_item(Item item, List *plist)
 {
     Node *pnew;
@@ -51,7 +80,8 @@ bool add_item(Item item, List *plist)
 
     return true;
 }
-    
+#endif 
+
 void traverse(const List *plist, void (*pfun)(Item item))
 {
     Node *pnode = plist->head;
