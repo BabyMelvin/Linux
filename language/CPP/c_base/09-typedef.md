@@ -33,3 +33,40 @@ char *name,sign;
 typedef char (*FRPTC())[5];
 ```
 表示一个函数类型，该函数的返回值是一个指向有5个元素的char数据的指针.
+
+# ifdef和ifndef
+
+```c
+#include <stdio.h>
+#define JUST_CHECKING
+#define LIMIT 4
+
+int main(void)
+{
+	int i;
+	int total = 0;
+	for (i = 1; i <= LIMIT; i++) {
+		total += 2*i*i +1;
+		#ifdef JUST_CHECKING
+		printf("i = %d,running total = %d\n", i, total);
+		#endif
+	}
+	return 0;
+}
+```
+
+# if和elif
+
+`#if`很像C中的if，`#if`后面跟整型常量表达式
+
+```c
+#if SYS == 1
+#include "ibm.h"
+#elif SYS == 2
+#include "vax.h"
+#else
+#include "general.h"
+#endif
+```
+
+另一种方法测试是否定义：`#if defined(VAX)`代替`#ifdef VAX`
