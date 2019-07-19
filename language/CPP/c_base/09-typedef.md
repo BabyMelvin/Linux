@@ -70,3 +70,13 @@ int main(void)
 ```
 
 另一种方法测试是否定义：`#if defined(VAX)`代替`#ifdef VAX`
+
+```c
+#if defined(IBMPC)
+#include "ibmpc.h"
+#elif defined(VAX)
+#include "vax.h"
+#else
+#iclude "general.h"
+#endif
+```
