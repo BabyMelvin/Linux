@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 <<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 # ARM Linux系统调用详细分析
 
 ## 1.系统调用与软中断关系
@@ -434,6 +437,7 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd) // asmlinkage lo
 {
     ...
 }
+<<<<<<< Updated upstream
 =======
 # ARM Linux系统调用详细分析
 
@@ -872,3 +876,6 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd) // asmlinkage lo
 }
 >>>>>>> b7ecb1df90d166f6b28478286d6ef2ac6f80bc7e
 ```
+=======
+```
+>>>>>>> Stashed changes
