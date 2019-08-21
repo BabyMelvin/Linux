@@ -5,7 +5,7 @@
 static void copy_to_node(Item item, Node *pn);
 static void copy_to_item(Node *pn, Item *pi);
 
-void initializeQueue(Queue *pq)
+void initialize_queue(Queue *pq)
 {
    pq->front = NULL; 
    pq->rear = NULL;
@@ -39,6 +39,7 @@ bool en_queue(Item item, Queue *pq)
         return false;
     }
 
+    copy_to_node(item, pnew);
     if (queue_is_empty(pq))
         pq->front = pnew;
     else
@@ -53,7 +54,7 @@ bool en_queue(Item item, Queue *pq)
 bool de_queue(Item *pitem, Queue *pq)
 {
     Node *pt;
-    if(queue_is_empty(qp))
+    if(queue_is_empty(pq))
         return false;
 
     copy_to_item(pq->front, pitem);
