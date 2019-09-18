@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# redirecting the for output to a file
-for file in /home/tiandi/*
+# 可以对循环输出使用管道或进行重定向，done命令后面添加处理命令来实现
+
+# shell会将for命令结果输出到Output.txt文件而不是屏幕上
+for file in /home/melvin/*
 do
 	if [ -d "$file" ]
 	then

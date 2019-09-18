@@ -13,9 +13,9 @@
 #define DASHED 2
 
 /* 三原色 */ 
-#define BLUE  4
-#define GREEN 2
-#define RED  1
+#define BLUE   4
+#define GREEN  2
+#define RED    1
 
 /* 混合颜色 */
 #define BLACK 0

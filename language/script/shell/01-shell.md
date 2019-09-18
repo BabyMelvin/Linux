@@ -80,6 +80,8 @@ echo the last parameter is ${!#}
 * 字符串:`=`:等于，`!=`:不等于,`-z`:为零，`-n`:不为零
 * 文件测试：`-e`:文件存在,`-r`:存在且可读，`-w`:存在且可写,`-x`:存在且可执行,`-s`:存在且至少有一个字符
     * `-d`:文件存在且为目录,`-f`:存在普通文件,`-c`:存在字符文件,`-b`:存在块文件
+    * `file1 -nt file2`:检查file1是否比file2新
+    * `file1 -ot file2`:检查file1是否比file2旧
 
 # 双括号和双方括号
 
@@ -162,7 +164,114 @@ find . -type f -print | xarg bzgrep ZUT
 
 注意：在使用`{}`时，`{}`与命令之间必须使用**一个空格**
 
+## 6.重定向
+STDERR并不会随着STDOUT重定向而发生改变
 
+重定向错误：可以选择只重定向错误
+方法：将文件描述符放在重定向符号前
 
+`ls -al badfile 2> test4`
 
+两种方法在脚本中重定向输出：
 
+* 临时重定向输出
+* 永久重定向脚本中的所有命令
+
+ ### 6.1 临时重定向
+
+ 将单独一行重定向到STDERR,在重定向文件描述符前添加一个`&`符号.(>后面没有空格)
+
+ `echo "The is an error message >&2"`
+
+ 临时重定向和对整个文件错误输出重定向结合使用，将会达到错误文件重定向的效果.
+
+ ```bash
+ #!/bin/bash
+ echo "This is an error" >&2
+ echo "This is normal output"
+ ```
+ 需要这样执行达到很好的效果：`./test 2> test_out`,只会把错误信息放入test_out
+
+### 6.2 永久重定向
+使用exec 命令让shell脚本执行期间重定向某个特定文件描述符.
+
+```bash
+#!/bin/bash
+
+# 重定向所有输出到testout文件
+exec 1>testout
+echo "This is a test of redirections all output"
+echo "from a script to another file."
+
+# exec会启动一个新shell将STDOUT文件描述符重定向到文件
+exec 2>testerr
+echo "without having to redirect every individual line"
+```
+
+同样可以使用`exec 0< testfile`
+
+### 6.3 重定向文件描述符
+
+将SDOUT的原来位置重定向到另一个文件描述符，然后再利用该文件描述符重定向回STDOUT
+
+```bash
+#!/bin/bash
+exec 3>&1
+exec 1>testout
+echo "This should store in the output file"
+echo "along with this line"
+
+exec 1>&3
+echo "Now things should be back to normal"
+```
+
+### 6.4 创建和关闭文件描述符
+文件描述符，内部会维护一个当前文件中位置的指针。任何读或写都会从文件指针上次的位置开始。
+
+1.打开文件描述符
+```bash
+#!/bin/bash
+
+# 将文件描述符3分配给testfile进行文件读写
+exec 3<>testfile
+read line <&3
+echo "Read:$line"
+echo "This is a test file line" >&3
+
+```
+
+2.关闭文件描述符
+`exec 3>&-`
+
+3.列出打开的文件描述符
+
+`lsof`,常用选项`-p`执行PID($$当前进程)和`-d`:执行文件描述符,`-a`:逻辑运算，与.
+
+`lsof -a  -p $$ -d 0,1,2`
+
+* COMMAND:正在运行的命令名的前9个字符
+* PID:进程的PID 
+* USER:进程属主的登录名
+* FD:文件描述符以及访问类型(r读，w写,u读写)
+* TYPE:文件类型，CHR,BLK,DIR,REG
+* DEVICE:设备的设备号
+* SIZE:如果有的话，表示文件的大小
+* NODE:本地文件的节点号
+* NAME:文件名
+
+### 6.5阻止文件输出
+将STDERR重定向到一个叫做null文件的特殊文件.shell输出到这里文件不会保存都会被丢弃掉.
+
+`$ls -al > /dev/null`
+
+清楚文件的方法:`cat /dev/null > testfile`
+
+## 7.临时文件
+大多数Linux发行版配置系统在启动时自动删除`/tmp`目录的所有文件.并且所有用户都有权限读写`/tmp`.
+
+特殊命令来创建临时文件。`mktemp`在`tmp`中中创建一个唯一的临时文件.一旦创建脚本有了完整的读写权限，其他人没办法访问它.
+
+### 7.1 创建临时文件
+文件名模板可以包含任意文本文件，在文件名末尾添加6个X就可以了:`$mktemp testing.XXXXXX`
+
+`tee`命令 既能将数据保存，也能将数据显示在屏幕上
