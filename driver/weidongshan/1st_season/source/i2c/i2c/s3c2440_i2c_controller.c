@@ -68,7 +68,7 @@ void i2c_interrupt_func(int irq)
             IICCON = ~(1<<4);
             delay(1000);
         }
-    } else { /*read*/
+    } else {                            /*read*/
         /*对于第一个中断，它是发送出设备地址后产生的
          *需要判断是否有ACK
          *      有ACK：设备存在，恢复I2C传输，这样下一个中断才能得到第一个数据
@@ -125,7 +125,7 @@ int do_master_tx(p_i2c_msg msg)
 
     /*设置寄存器启动传输*/
 
-    /*1.配置Master Rx Mode*/
+    /*1.配置Master tx Mode*/
     IICCON |= (1<<7); /*TX mODE,在ACK周期释放SDA*/
     IICSTAT = (1<<4);
 
@@ -161,7 +161,9 @@ int do_master_rx(p_i2c_msg msg)
     /*2.把从设备地址写入IICDS*/
     IICDS = (msg->addr << 1) | (1<<0);
 
-    /*3.IICSTAT = 0xb0, 从设备地址即被发送出去，将导致中断产生*/
+    /*3.IICSTAT = 0xb0,主机接收器,并且使能接收读写
+     * 将IICDS地址发送出去
+     *  从设备地址即被发送出去，将导致中断产生*/
     IICSTAT = 0xb0;
 
     /*后续的传输由中断驱动*/
@@ -180,9 +182,9 @@ int s3c2440_master_xfer(p_i2c_msg msgs, int num)
     int i, err;
 
     for (i = 0; i < num; i++) {
-        if (msgs[i].flags == 0)
+        if (msgs[i].flags == 0) /*write*/
             err = do_master_tx(&msgs[i]);
-        else
+        else                    /*read*/
             err = do_master_rx(&msgs[i]);
 
         if(err)
