@@ -22,4 +22,5 @@ while [ $# -gt 0 ] ; do
 	-n) shift ; BOARD_NAME = "${1%%_config}" ; shift ;;
 	-t) shift ; TARGETS = "`echo $1 | sed 's:_: g'` ${TARGETS}" ; shift ;;
 	*)  break ;;
+	esac
 done
