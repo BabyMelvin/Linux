@@ -13,3 +13,13 @@ jessica)
 *)
 	echo "Sorry, you are not allowed here";;
 esac
+
+
+while [ $# -gt 0 ] ; do
+	case "$1" in
+	--) shift ; break ;;
+	-a) shift ; APPEND = yes ;;
+	-n) shift ; BOARD_NAME = "${1%%_config}" ; shift ;;
+	-t) shift ; TARGETS = "`echo $1 | sed 's:_: g'` ${TARGETS}" ; shift ;;
+	*)  break ;;
+done
