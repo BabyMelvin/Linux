@@ -3,8 +3,21 @@
 t_nand_controller nand_controller[MAX_NUM_CONTROLLER] = {0};
 p_nand_controller current_nand_controller;
 
+void nand_controller_init(void)
+{
+    if(current_nand_controller != NULL) {
+        current_nand_controller->init();
+    }
+}
 
-int32_t register_nand_controller(t_nand_controller nand_cntl)
+void deinit(void)
+{
+    if(current_nand_controller != NULL) {
+        current_nand_controller->deinit();
+    }
+}
+
+static int32_t add_nand_controller(t_nand_controller nand_cntl)
 {
     int i;
     for(i = 0; i < MAX_NUM_CONTROLLER; i++) {
@@ -39,8 +52,12 @@ int32_t set_nand_controller(int8_t *name)
 
     return 0;
 }
-int32_t nand_controller_init()
+
+int32_t register_nand_controller()
 {
-   s3c2410_controller_init(); 
-   s3c2440_controller_init();
+    extern t_nand_controller s3c2410_controller;
+    extern t_nand_controller s3c2440_controller;
+
+    add_nand_controller(s3c2410_controller);
+    add_nand_controller(s3c2440_controller);
 }

@@ -1,51 +1,37 @@
-#include "nand_controller.h"
+#ifndef __NADN_H__
+#define __NADN_H__
 
-static S3C2440_NAND *s3c2440nand = (S3C2440_NAND *)0x4e000000;
-static t_nand_chip nand_chip[MAX_NUM_NAND] = {0};
-static p_nand_chip nand_chip_c;
+#define MAX_NUM_NAND
+#define LARGE_NAND_PAGE
 
-/* 通用接口 */
-static void nand_reset(void);
-static void wait_idle(void);
-static void nand_deselect_chip(void);
-static void write_cmd();
-static void write_addr(unsigned int addr);
-static unsigned char read_data(void);
+#define GSATUS1     (*(volatile unsigned int *)0x5600000B0)
+#define NAND_BUSY        1 
+#define NAND_SECTOR_SIZE   512
+#define NAND_BLOCK_MASK    (NAND_SECTOR_SIZE - 1)
+
+#define NAND_SECTOR_SIZE_LP    2048
+#define NAND_BLOCK_MASK_LP     (NAND_SECTOR_SIZE_LP - 1)
+
+typedef unsigned int S3C24X0_REG32;
 
 
-void nand_register(t_nand_chip nand_c)
-{
-    int i;
-    for(i = 0; i < MAX_NUM_NAND; i++) {
-        if(nand_chip[i].name) {
-            nand_chip[i] = nand_c;
-            break; 
-        }
-    }
-}
+typedef struct {
+    int8_t *name;
+    void(*nand_reset)(void);
+    void(*wait_idle)(void);
+    void(*nand_select_chip)(void);
+    void(*nand_deselect_chip)(void);
+    void (*write_cmd)(int cmd);
+    void (*write_addr)(unsigned int addr);
+    unsigned char (*read_data)(void);
+} t_nand_chip, *p_nand_chip;
 
-void set_current_nand_chip(int8_t *name)
-{
-    int i;
-    for(i = 0; i < MAX_NUM_NAND; i++) {
-        if(!strcmp(nand_chip[i].name, name)) {
-            nand_chip_c = &nand_chip[i];
-            break; 
-        }
-    }
+void nand_init(void);
+void nand_reset(void);
+void nand_wait_idle(void);
+void nand_select_chip(void);
+void nand_deselect_chip(void);
+void nand_write_cmd(int cmd);
+void nand_write_addr(unsigned int addr);
 
-    printf("wtf, cann't find:%s nand chip\n", name);
-}
-
-void nand_init(void)
-{
-    s3c2410_init();
-    s3c2440_init();
-
-    if((STATUS1 == 0x32410000) || (GSTATUS1 == 0x32410002)) {
-        set_current_nand_chip("s3c2410");
-    } else {
-        set_current_nand_chip("s3c2440");
-    }
-    nand_init();
-}
+#endif
