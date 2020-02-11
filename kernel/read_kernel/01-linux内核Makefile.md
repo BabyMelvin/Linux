@@ -1,5 +1,52 @@
 Linux 内核 Makefile
 
+# 0.内核编译
+
+1.打补丁
+
+`patch`命令，-p是指需要忽略的目录层数。
+
+```
+patch -p1 < ./linux.jz2440.patch
+```
+
+2.配置
+
+*  `make menuconfig`，手动配置所有 太复杂
+*  使用默认配置，在这基础上进行修改
+	*  `cd arch/arm/configs;ls`，然后配置`cd -;make s3c2410_deconfig`
+*  使用厂家提供的配置文集那(将_config直接复制一份为`.config`，然后make menuconfig)
+	*  make menuconfig 在s3c2410_deconfig的基础上进行修改,其中"高亮首字母按下对应的字母直接跳转到相应的目录上去"
+
+3.编译:make
+
+生成uImage:make uImage
+uImage：头部+真正的内核，我们想编译一个内核给 UBOOT 用，则用 make uImage.
+上电开发板，接上USB 线（装驱动）在UBOOT 命令中选：`[K]`
+
+```
+[k] Download Linux Kernel uImage
+```
+之后会等待通过USB 上传文件。用工具 “dnw.exe”,查看下源代码，看看[k]对应于哪个命令：在Cmd_menu.c 中查找。
+
+```c
+	case 'k':
+		strcpy(cmd buf, "usbslave 1 0x300000000; nand erase kernel; nand write.jffs2 0x3000000 kernel $(filesize)");
+		run_command(cmd_buf, 0);
+		break;
+```
+
+首先上传数据 ：`usbslave 1 0x30000000`来接收 dnw.exe 发出来的数据，放到 0x3000
+0000 地址处。
+然后擦除内核分区 ：`nand erase kernel`收到数据后，接着擦除这个kernel 内核分区。
+最后写到内核分区：`nand write.jffs2 0x30000000 kernel $(filesize)`
+将原来接收到 0x3000 0000 处的文件烧到 kernel 分区去。
+烧多大`$(filesize)`由这个宏定义，表示接收到的文件大小。
+
+烧写完后，用`[b]`命令启动。
+进入UBOOT 后，可以用`nand erase root`是删除文件系统。然后 boot 是UBOOT 启动内
+核。
+
 # 1.概述
 从Linux内核2.6开始，Linux内核的编译采用Kbuild系统，这同过去的编译系统有很大的不同,尤其对于Linux内核模块的编译。在新的系统下，Linux编译系统会**两次扫描**Linux的Makefile：首先编译系统会读取Linux内核顶层的 Makefile，然后根据读到的内容第二次读取Kbuild的Makefile来编译Linux内核。
 
