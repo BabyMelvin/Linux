@@ -716,5 +716,44 @@ console=ttySAC0
 们。
 这些函数如何分析？是内核里面有这样一些代码：
 
+```c
+static int __init root_dev_setup(char *line)
+{
+	strlcpy(saved_root_name, line, sizeof(saved_root_name));
+	return 1;
+}
+```
+
+`__setup("root=", root_dev_setup);`
+对于不同的“root=”这样的字符串，如等于“root=/dev/mtdblock3 ”，它有一个处理函数“root_dev_setup”。这个("root=", root_dev_setup);字符串和函数被定义在一个结构体中：
+
+```c
+#define __setup(str, fn) \
+	__setup_param(str, fn, fn, 0)
+#define __setup_param(str, 	unique_id, fn, early) \
+	static char __setup_str_##unique_id[] __initdata = str; \
+	static struct obs_kernel_param __setup_##unique_id \
+	__attribute_used__ \
+	__attribute__((__section__(".init.setup"))) \
+	__attribute__((aligned((sizeof(long))))) \
+	= { __setup_str_##unique_id, fn, early }
+```
+
+这个结构体被加了一个 段属性 为“.init.setup”，则这些很多这样的结构体，被内核脚本vmlinux.lds放到一块地方：
+
+```
+__setup_start = .;
+ *(.init.setup)
+__setup_end = .;
+```
+
+当调用这些结构体（UBOOT 传来的参数）时，就从"__setup_start"一直搜到"__setup_end".现在是root=/dev/mtdblock3 ，我们说过在 FLASH 中没有分区表。那这个分区mtdblock3体现在写死的
+代码。和UBOOT 一样： “bootloader|参数|内核|文件系统”在代码中写死。也是用这个分
+区，在代码里也要写死。启动内核时，会打印出这些“分区信息”。
+
+![flash_partial](image/partial_flash.jpg)
+
+在源代码中搜索下分区名字："bootloader" .看哪个文件比较像
 
 
+dts中配置了
