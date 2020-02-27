@@ -5,23 +5,21 @@
 链接器并不管函数所在的源文件，只管函数的中间目标文件（Object File），
 在大多数时候，由于源文件太多，编译生成的中间目标文件太多，而在链接时需要明显地指出中间目标
 文件名，这对于编译很不方便。所以，我们要给中间目标文件打个包，在 Windows 下这种包叫“库文
-件”（Library File），也就是 .lib 文件，在 UNIX 下，是 Archive File，也就是 .a 文件。
+件”(Library File)，也就是 .lib 文件，在 UNIX 下，是 Archive File，也就是 .a 文件。
 
 Makefile规则：
 
-1.  如果这个工程没有编译过，那么我们的所有 c 文件都要编译并被链接。
+1. 如果这个工程没有编译过，那么我们的所有 c 文件都要编译并被链接。
 2. 如果这个工程的某几个 c 文件被修改，那么我们只编译被修改的 c 文件，并链接目标程序。
 3. 如果这个工程的头文件被改变了，那么我们需要编译引用了这几个头文件的 c 文件，并链接目标程
 序。
 
-make 会比较 targets 文
-件和 prerequisites 文件的修改日期，如果 prerequisites 文件的日期要比 targets 文件的日期要新，或者
-target 不存在的话，那么，make 就会执行后续定义的命令。
+make 会比较 targets 文件和 prerequisites 文件的修改日期，如果 prerequisites 文件的日期要比 targets 文件的日期要新，或者target 不存在的话，那么，make 就会执行后续定义的命令。
 
-Makefile工作过程：make 会在当前目录下找名字叫“Makefile”或“makefile”的文件。如果找不到，它会找文件中的第一个目标文件（target）.整个 make 的依赖性，make 会一层又一层地去找文件的依赖关系，直到最终编译出第一个目
-标文件。
+Makefile工作过程：make 会在当前目录下找名字叫“Makefile”或“makefile”的文件。如果找不到，它会找文件中的第一个目标文件（target）.整个 make 的依赖性，make 会一层又一层地去找文件的依赖关系，直到最终编译出第一个目标文件。
 
 Makefile 里主要包含了五个东西：显式规则、隐晦规则、变量定义、文件指示和注释。在 Makefile 中的**命令**，必须要以 Tab 键开始。
+
 ### 1.2.makefile 中使用变量
 
 ```makefile
@@ -42,7 +40,7 @@ utils.o : defs.h
 clean :
 	-rm edit $(objects)
 ```
-`.PHONY `表示 clean 是一个“伪目标”。而在 rm 命令前面加了一个**小减号**的意思就是，也
+`.PHONY `表示 clean 是一个"伪目标"。而在 rm 命令前面加了一个**小减号**的意思就是，也
 许某些文件出现问题，但不要管，继续做后面的事。当然，clean 的规则不要放在文件的开头，不然，这就会变成 make 的默认目标，相信谁也不愿意这样。不成文的规矩是——“clean 从来都是放在文件的最后”。
 
 ### 1.3 引用其它的 Makefile
@@ -56,12 +54,12 @@ include包含其他makefile：
 ### 1.4  make 的工作方式
 GNU 的 make 工作时的执行步骤如下：
 
-1.  读入所有的 Makefile。
-2.  读入被 include 的其它 Makefile。
+1. 读入所有的 Makefile。
+2. 读入被 include 的其它 Makefile。
 3. 初始化文件中的变量。
 4. 推导隐晦规则，并分析所有规则。
 5. 为所有的目标文件创建依赖关系链。
-6.  根据依赖关系，决定哪些目标要重新生成。
+6. 根据依赖关系，决定哪些目标要重新生成。
 7. 执行生成命令。
 
 1-5 步为第一个阶段，6-7 为第二个阶段。
@@ -75,11 +73,11 @@ targets : prerequisites ; command
 	command
 	...
 ```
-如果命令太长，你可以使用反斜杠（`\ `）作为换行符。make 会以 UNIX 的标准 Shell，也就是`/bin/sh 来执行命令(command)`。
+如果命令太长，你可以使用反斜杠(`\`)作为换行符。make 会以 UNIX 的标准 Shell，也就是`/bin/sh 来执行命令(command)`。
 
 ### 2.1 通配符
 make 支持三个通配符：
-`*` ，`?` 和 `~` 。这是和 Unix 的 B-Shell 是相同的。波浪号（~ ）字符在文件名中也有比较特殊的用途。如果是 `~/test` ，这就表示当前用户的 `$HOME` 目录下的 test 目录。而 `~hchen/test` 则表示用户 hchen 的宿主目录下的 test 目录。
+`*` ，`?` 和 `~` 。这是和 Unix 的 B-Shell 是相同的。波浪号(~)字符在文件名中也有比较特殊的用途。如果是 `~/test` ，这就表示当前用户的 `$HOME` 目录下的 test 目录。而 `~hchen/test` 则表示用户 hchen 的宿主目录下的 test 目录。
 
 *  `*.c` 表示所有后缀为 c 的文件.如：`*` ，那么可以用转义字符`\` ，如 `\*` 来表示真实的`*`字符，而不是任意长度的字符串。
 
@@ -125,10 +123,10 @@ vpath %h ../headers
 我们可以连续地使用 vpath 语句，以指定不同搜索策略。如果连续的 vpath 语句中出现了相同的
 `<pattern>` ，或是被重复了的`<pattern>`，那么，make 会按照 vpath 语句的先后顺序来执行搜索。如
 
-```
+```makefile
 # .c 结尾的文件，先在“foo”目录，然后是“blish”，最后是“bar”目录
 vpath %.c foo
-vpath % blish
+vpath %.c blish
 vpath %.c bar
 ```
 
@@ -148,7 +146,7 @@ clean:
 伪目标一般没有依赖的文件。但是，我们也可以为伪目标指定所依赖的文件。伪目标同样可以作为
 “默认目标”，只要将其放在**第一个**。
 
-一个示例就是，如果你的 Makefile 需要一口气生成若干个可执行文件，但你只想简单地敲一个 make 完事，并且，所有的目标文件都写在一个 Makefile 中，那么你可以使用“伪目标”这个特性：
+一个示例就是，如果你的 Makefile 需要一口气生成若干个可执行文件，但你只想简单地敲一个 make 完事，并且，所有的目标文件都写在一个 Makefile 中，那么你可以使用“伪目标”这个特性
 
 ```makefile
 all : prog1 prog2 prog3
@@ -242,12 +240,11 @@ $(filter %.elc,$(files)): %.elc: %.el
 	emacs -f batch-byte-compile $<
 ```
 
-`$(filter %.o,$(files))`表示调用 Makefile 的 filter 函数，过滤“$files”集，只要其中模式为“%.o”的
-内容。
+`$(filter %.o,$(files))`表示调用 Makefile 的 filter 函数，过滤“$files”集，只要其中模式为“%.o”的内容。
 
 ### 2.6自动生成依赖性
 
-Makefile的自动推导功能只会推导出目标文件对源文件的依赖关系，而不会增加头文件的依赖关系！！！这导致的直接问题就是修改项目的头文件，不会导致make的自动更新！除非修改头文件后运行一次make clean，再运行make…… 
+Makefile的自动推导功能只会推导出目标文件对源文件的依赖关系，而不会增加**头文件的依赖关系**!!!这导致的直接问题就是修改项目的头文件，不会导致make的自动更新！除非修改头文件后运行一次make clean，再运行make…… 
 
 如果将每个源文件的依赖关系包含到Makefile里，就可以使得目标文件自动依赖于头文件了！
 
@@ -260,15 +257,15 @@ CFLAGS=-g
 
 all:depend $(EXE)
 depend:
-	@(CC)−MM(SRC) > .depend
+	@(CC) −MM (SRC) > .depend
 
 -include .depend
 
 (EXE):(OBJ)
-	(CC)(OBJ) -o $(EXE)
+	(CC) (OBJ) -o $(EXE)
 
 clean:
-	@rm (EXE)(OBJ) .depend -
+	@rm (EXE) (OBJ) .depend -
 ```
 当头文件的依赖关系不发生变化时，每次make也会重新生成.depend文件。如果这样使得工程的编译变得不尽人意，那么我们可以尝试将依赖文件拆分，使得每个源文件独立拥有一个依赖文件，这样每次make时变化的只是一小部分文件的依赖关系。让make自动包含头文件的依赖关系，我们需要做一点额外的工作。
 
@@ -285,8 +282,8 @@ CFLAGS=-g
 $(DEP):%.d:%.c
 	@set -e;
 	rm -f $@;
-	(CC)−M< > @.$$$;
-	sed 's,$∗.o[ :]*,1.o @:,g′ <@. > $@;
+	(CC) −M< > @.$$$;
+	sed 's,$@.o[:]*,1.o @:,g′ <@. > $@;
 	rm -f @.$$$
 
 -include $(DEP)
@@ -295,15 +292,13 @@ clean:
 	@rm (EXE)(OBJ) $(DEP) -f
 ```
 
-Makefile 中，我们的依赖关系可能会需要包含一系列的头文件，比如，如果我们的 main.c 中有一
-句 `#include "defs.h"` ，那么我们的依赖关系应该是：
+Makefile 中，我们的依赖关系可能会需要包含一系列的头文件，比如，如果我们的 main.c 中有一句 `#include "defs.h"` ，那么我们的依赖关系应该是：
 
 ```makefile
 main.o : main.c defs.h
 ```
 
-大多数的`C/C++` 编译器都支持一个“-M”的
-选项，即自动找寻源文件中包含的头文件，并生成一个依赖关系。例如，如果我们执行下面的命令:`gcc -MM main.c`
+大多数的`C/C++` 编译器都支持一个“-M”的选项，即自动找寻源文件中包含的头文件，并生成一个依赖关系。例如，如果我们执行下面的命令:`gcc -MM main.c`
 
 输出是：`main.o : main.c defs.h`
 
