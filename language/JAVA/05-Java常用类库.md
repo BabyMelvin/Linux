@@ -1,7 +1,7 @@
 # 1.StringBuffer
 
 * 如果一个字符串要经常改变，则必须使用StringBuffer。
-* `str+=x；`//循环修改String，产生多个垃圾，会占用内存。
+* `str+=x；`循环修改String，产生多个垃圾，会占用内存。
 
 ```java
 public StringBuffer()
@@ -21,7 +21,7 @@ public String toString()
 
 java 中Runtime类表示实时操作类，是一个封装了JVM进程的类（**单例设计思想**），获得Runtime实例：`Runtime run=Runtime.getRuntime();`
 
-```
+```java
 //取得Runtime类实例
 public static Runtime getRuntime();
 //返回Java虚拟机中的空闲内存量
@@ -46,10 +46,11 @@ Process pro=null;
 pro=run.exec("notepad.exe");
 pro.destory();
 ```
+
 # 3.System类
 System类中的所有属性都是静态的。System类是与系统相关属性的方法集合。
 
-```java	
+```java
 //系统退出，Status非0就表示退出
 public static void exit(int status)
 //运行垃圾回收机制，调用的是Runtime类中的gc()方法。
@@ -93,7 +94,7 @@ public class SystemDemo04{
 
 ### 对象声明周期
 
-[对象声明周期](image/05-01.png)
+![对象声明周期](image/05-01.png)
 
 一个类加载后进行初始化。然后进行实例化，对象实例化会调用构造方法完成。一个对象不再使用时要等待垃圾对象收集，然后对象终结，最后被程序卸载。
 
@@ -246,7 +247,7 @@ public static String toString(int[] a);
 # 7.比较器
 ## 7.1Comparable接口
 
-Arrays类进行数组排序操作。Object数组排序，实现Comparable接口。compareTo方法只能以下3种值：
+Arrays类进行数组排序操作。Object数组排序，实现Comparable接口。compareTo方法只能以下3种值:
 
 * 1:表示大于
 * -1:表示下于
@@ -296,7 +297,7 @@ public class CompareableDemo{
 ## 7.2另一种比较器Comparator
 已实现的类，然后对其增加排序操作需要Comparator。主要利用`Arrays.sort(stu,new MyCompartor());`方法。
 
-```
+```java
 //student.java
 public class Student {
     private String name;

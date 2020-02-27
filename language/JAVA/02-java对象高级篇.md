@@ -21,11 +21,11 @@
 	* 全局常量和公共的抽象方法所组成。
 
 ```java
-其中不写public 也是默认全局
-interface A{
+//其中不写public 也是默认全局
+interface A {
 	public static final String name="heo";
 	public abstract void print();
-	public abstaract String getInfo();
+	public abstract String getInfo();
 }
 ```
 
@@ -34,26 +34,26 @@ interface A{
  # 2.多态
 * Java中面向对象主要体现：
 	* 方法的重载与覆写
-	* 对象的多态性（两种类型）
+	* 对象的多态性(两种类型)
 		* 向上转型：`子类对象->父类对象`
 		* 向下转型：`父类对象->子类对象`
 	* 对于向上转型，程序自动完成。向下转型，必须声明要传递子类的类型。
 
 ```
 对象向上转型：父类 父类对象=子类实例
-对象向下转型：子类 子类对象=（子类）父类实例
+对象向下转型：子类 子类对象= (子类)父类实例
 ```
 	
 * `class B extends A`
 
 ```java
-B b=new B();定义子类实例对象
-A a=b;发生向上转型关系，子类--->父类
------------------------------------
-A a=new B();发生向上转型关系，子类--->父类
-B b=(B)a; 此时发生向下转型。
+B b=new B(); //定义子类实例对象
+A a=b;       //发生向上转型关系，子类--->父类
+/*-----------------------------------*/
+A a=new B(); //发生向上转型关系，子类--->父类
+B b=(B)a;    //此时发生向下转型。
 ```
-* 再设计的过程中，**永远不要去继承一个已经实现好的类**，只能继承抽象类或者实现接口。**一旦发生对象向上传递关系后**，**方法被子类所覆写**。
+* 再设计的过程中，**永远不要去继承一个已经实现好的类**,只能继承抽象类或者实现接口。**一旦发生对象向上传递关系后**，**方法被子类所覆写**。
 
 ## 3.instanceof关键字
 
@@ -65,9 +65,9 @@ B b=(B)a; 此时发生向下转型。
 * Object中的主要方法
 
 ```java
-public boolean equals(Object obj);对象的比较
-public int hashCode();取得Hash码
-public String toString();对象打印调用
+public boolean equals(Object obj); //对象的比较
+public int hashCode();             //取得Hash码
+public String toString();          //对象打印调用
 ```
 
 * `toString().b`和`b.toString()`调用的结果一样。
@@ -80,19 +80,20 @@ public String toString();对象打印调用
 
 * java一切事物皆对象
 * 基本工作类型
+
 ### 匿名类部内
 # 异常基本概念
 
 ```java
-	try{
-	}catch(){
-	}catch(){
-	}finally{
-	}
+try{
+} catch() {
+} catch() {
+} finally {
+}
 ```
 * catch中寻找匹配的，**不管程序是否产生异常**，**肯定会执行finally语句**。没有finally,则跳到`finally之后`执行.
 * Java中异常结构，最常用的类分别是`Exception`和`Error`,都是`Throwable`的子类。
-	* Exception：程序中出错，可以用`try....catch`
+	* `Exception`：程序中出错，可以用`try....catch`
 	* `Error`:**JVM错误**，程序无法处理.
 * `throws` 和 `throw`关键字
 	* `throws`定义一个方法，表示此方法不处理异常，交给调用处理。
@@ -105,21 +106,22 @@ public String toString();对象打印调用
 * 自定义异常
 
 ```java
-class MyException extends Exception{
-	public MyException(String msg){
+class MyException extends Exception {
+	public MyException(String msg) {
 		super(msg);
 	}
 }
-public class DefaultException{
-	public static void main(String args[]){
+public class DefaultException {
+	public static void main(String args[]) {
 		try{
-			throw new MyException(“自定义异常”);
-		}catch(Exception e){
+			throw new MyException("自定义异常");
+		} catch (Exception e){
 			System.out.println(e);
 		}
 	}
 }
 ```
+
 * 断言
 
 ```java
@@ -148,7 +150,7 @@ public class DefaultException{
 * 静态导入
 	* 一个类中所有方法都是static声明的静态方法，可用`import static 包.类.*；`
 	* 静态导入，调用可以直接调用其中的方法，不必用,类.静态方法的形式。
-* jar 命令主要参数（java archive file ）
+* jar 命令主要参数(java archive file)
 	* `C`:创建新的文档
 	* `V`：生成详细的输出信息
 	* `F`：指定存档的文件名

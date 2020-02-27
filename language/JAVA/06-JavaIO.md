@@ -148,18 +148,26 @@ public class RandomRead {
     }
 }
 ```
+
 # 3.字节流和字符流基本操作
+
 in out:相对于终端。
+
 read write：文件，或内存本身
+
 程序中所有数据以流的方式传输或保存。`java.io`中`字节流`、`字符流`两大类。
-	* **字节流**输出用`OuterStream`类，输入使用`InputStream`
-	* **字符流**输出主要是`Writer`类，输入主要是`Reader`类。
-* javaIO操作相应步骤，文件操作为例。
-	* 使用File类打开一个文件
-	* 通过字节流或字符流的子类指定输出位置
-	* 进行读/写操作
-	* 关闭输入/输出
+* **字节流**输出用`OuterStream`类，输入使用`InputStream`
+* **字符流**输出主要是`Writer`类，输入主要是`Reader`类。
+
+javaIO操作相应步骤，文件操作为例。
+
+* 使用File类打开一个文件
+* 通过字节流或字符流的子类指定输出位置
+* 进行`读/写`操作
+* 关闭`输入/输出`
+
 ## 3.1 字节流
+
 字节流主要是以byte类型数据，以byte数组为准，主要操作是OuptStream类和InputStream类。如果想操作一个文件，可以使用FileOutputStream类，通过向上传递作为OutputStream实例化。字节输出：OutputStream(字节流中最大的父类)
 
 字节输出流outputStream
@@ -205,6 +213,7 @@ public abstract void flush() throws IOException
 * 整个程序与OutputStream 操作没有太大区别，不需要转换。
 
 `public FileWriter(File file,boolean append) throws IOException`
+
 ### 字符输入流Reader
 需要从FileReader子类
 
@@ -222,7 +231,7 @@ public int read(char[] buf) throws IOExcepton
 
 ### OutputStreamWriter类与InputStreamReader类转换流
 
-# 4.内存操作流	
+# 4.内存操作流
 `ByteArrayInputStream` 和`ByteArrayOutputStreams`来进行内存操作
 
 * ByteArrayInputStream：写入到内存中。
@@ -238,7 +247,9 @@ public ByteArrayInputStream(byte[],buf,int offset,int length)
 public ByteArrayOutputStream()
 public void write(int b)//内存中输出
 ```
-###管道流
+
+### 管道流
+
 管道流主要作用是进行两个线程间通讯
 	
 `PipeOutputStream`输出流和`PipeInputStream`输入流
@@ -251,63 +262,69 @@ public void write(int b)//内存中输出
 package org.caohang.demo;
 import java.io.*;
 class Send implements Runnable{
-private PipeOutputStream pos=null;
-public Send(){
-	this.pos=new PipeOutputStream();
-}
-public void run(){
-	String str="Hello world";
-	try{
-		this.pos.write(str.getBytes());
-	}catch(IOException e){
-		e.printStackTrace();
+	private PipeOutputStream pos=null;
+	public Send(){
+		this.pos=new PipeOutputStream();
 	}
-	try{
-		this.pos.close();
-	}catch(IOException e){
-		e.printStackTrace();
+
+	public void run(){
+		String str="Hello world";
+		try{
+			this.pos.write(str.getBytes());
+		}	catch(IOException e){
+			e.printStackTrace();
+		}
+		try{
+			this.pos.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	public PipeOutputStream getPos(){
+		return pos;
 	}
 }
-public PipeOutputStream getPos(){
-	return pos;
-}
-}
+
 class Receive implements Runnable{
-private PipedInputStream pis=null;
-public Receive(){
-	this.pis=new PipedInputStream();
-}
-public void run(){
-	byte b[]=new byte[1024];
-	int len=0;
-	try{
-		len=this.pis.read(b);
-	}catch(IOException e){
-		e.printStackTrace();
+	private PipedInputStream pis=null;
+	public Receive(){
+		this.pis=new PipedInputStream();
 	}
-	try{
-		this.pis.close();
-	}catch(IOException e){
-		e.printStackTrace();
+
+	public void run(){
+		byte b[]=new byte[1024];
+		int len=0;
+		try{
+			len=this.pis.read(b);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		try{
+			this.pis.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		System.out.println("收到："+new String(b,0,len));
 	}
-	System.out.println("收到："+new String(b,0,len));
+
+	public PipedInputStream getPis(){
+		return pis;
+	}
 }
-public PipedInputStream getPis(){
-	return pis;
-}
-}
+
 public class PipedDemo{
-public static void main(String args[]){
-	Send s=new Send();	
-	Receive r=new Receive();
-	try{
-		s.getPos().connect(r.getPis());
-	}catch(IOException e){
-		e.printStackTrace();
+	public static void main(String args[]){
+		Send s=new Send();	
+		Receive r=new Receive();
+		try{
+			s.getPos().connect(r.getPis());
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		new Thread(s).start();
+		new Thread(r).start();
 	}
-	new Thread(s).start();
-	new Thread(r).start();
-}
 }
 ```
 # 5.打印流
@@ -389,6 +406,7 @@ while((temp=input.read())!=-1){
 System.out.println("内容为："+buf);
 input.close();
 ```
+
 ### 输入输出重定向
 	
 ```java
@@ -399,12 +417,14 @@ public static void setErr(PrintStream err);
 //重定向标准输入流
 public static void setIn(InputStream in);
 ```
+
 ### 实例
 		
 ```java
 System.setOut(new PrintStream(new FileOutputStream(new File(""))))
 System.out.print("www.ajfda.com")输出时候，不再向屏幕
 ```
+
 # 7.BufferedReader类
 用于从缓冲区中读取内容，**所有输入字节数据都放在缓冲区中**。
 	
@@ -422,6 +442,7 @@ buf =new BufferReader(new InputStreamReader(System.in))
 String str=buf.readLine();
 ```
 *	程序没有长度限制，可以接收中文，以上键盘输入数据的标准格式
+
 # 8.Scanner类
 java1.5专门输入数据类，此类不仅可以完成输入数据操作，也可以方便数据验证。
 
@@ -439,7 +460,6 @@ public Scanner useDelimiter(String pattern)
 
 # 9.压缩流
 在java中减少传输时的数据量提供专门的压缩流，可以使用zip，jar，gzip等格式。
-
 
 # 10.字符编码
 `System.getProperty("file.encoding");`得到系统编码
@@ -515,41 +535,43 @@ private transient String name;
 读到默认:null
 ```
 * 序列化一组对象
-	* 对象输出只是提供了一个对象输出操作，(writeObject(Object obj)),可以使用对象数组进行操作，因为数组属于引用数据类型，直接使用Object类型进行接收。		
+	* 对象输出只是提供了一个对象输出操作，(writeObject(Object obj)),可以使用对象数组进行操作，因为数组属于引用数据类型，直接使用Object类型进行接收。
+		
 ###本章要点
 
-* 各类继承关系
-	* OutputStream
-		* FileOutputStream
-		* ByteArrayOutputStream
-		* PipedOutputStream
-		* ObjectOutputStream
-		* FilterOutputStream
-				* PrintStream
-				* DataOutputStream//使用与平台无关数据操作
-				* DefaultOutputStream
-					* ZipOutputStream
-	* InputStream
-		* FileInputStream
-		* ByteArrayInputStream
-		* PipedInputStream
-		* SequenceInputStream//将两个文件内容进行合并
-		* ObjectInputStream
-		* FilterInputStream
-			* DataInputStream
-			* PushbackInputStream//将不要数据回退到数据缓冲区待重新读取
-			* InflaterInputStream
-				* ZipInputStream//数据过大使用压缩数据
-				  * java中三种ZIP,JAR,GZIP3
-	* Writer
-		* PrintWriter
-		* OutputStreamWriter
-			* FileWriter
-	* Reader
-		* InputStreamReader
-			* FileReader
-		* BufferedReader
-		* FilterReader 
-			* PushbackReader
+各类继承关系
+
+* OutputStream
+	* FileOutputStream
+	* ByteArrayOutputStream
+	* PipedOutputStream
+	* ObjectOutputStream
+	* FilterOutputStream
+		* PrintStream
+		* DataOutputStream//使用与平台无关数据操作
+		* DefaultOutputStream
+			* ZipOutputStream
+* InputStream
+	* FileInputStream
+	* ByteArrayInputStream
+	* PipedInputStream
+	* SequenceInputStream//将两个文件内容进行合并
+	* ObjectInputStream
+	* FilterInputStream
+		* DataInputStream
+		* PushbackInputStream//将不要数据回退到数据缓冲区待重新读取
+		* InflaterInputStream
+			* ZipInputStream//数据过大使用压缩数据
+				 * java中三种ZIP,JAR,GZIP3
+* Writer
+	* PrintWriter
+	* OutputStreamWriter
+		* FileWriter
+* Reader
+	* InputStreamReader
+		* FileReader
+	* BufferedReader
+	 * FilterReader 
+		* PushbackReader
 
 			
