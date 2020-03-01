@@ -19,13 +19,16 @@
 * `$(basename <names...> )`返回文件名序列`<names>`的前缀序列，如果文件没有前缀，则返回空字串。
 * `$(addsuffix <suffix>,<names...> )`把后缀`<suffix>`加到`<names>`中的每个单词后面。
 * `$(join <list1>,<list2> )`把`<list2>`中的单词对应地加到`<list1>`的单词后面。`$(join aaa bbb , 111 222 333)`返回值是`aaa111 bbb222 333`。
+
 ## 1.3 foreach 函数
-- `$(foreach <var>,<list>,<text> )`把参数`<list>`中的单词逐一取出放到参数`<var>`所指定的变量中，然后再执行`<text>`所包含的表达式。
-```
+* `$(foreach <var>,<list>,<text> )`把参数`<list>`中的单词逐一取出放到参数`<var>`所指定的变量中，然后再执行`<text>`所包含的表达式。
+
+```make
 names := a b c d
 files := $(foreach n,$(names),$(n).o)
 # files=a.o b.o c.o d.o
 ```
+
 ## 1.4 if 函数
 `$(if <condition>,<then-part> )`或`$(if <condition>,<then-part>,<else-part> )`
 ## 1.5 call 函数

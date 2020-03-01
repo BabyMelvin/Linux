@@ -43,83 +43,92 @@ public boolean isArray();
 * `对象.getClass()`
 
 # 2.Class类的使用
-通过Class类本身实例化其他类的对象，使用newInstance()方法，**但是保证被实例化存在一个无参构造方法**
+通过Class类本身实例化其他类的对象，使用`newInstance()`方法，**但是保证被实例化存在一个无参构造方法**
 	
 * 各种高级应用中，都提倡类中存在无参构造方法
 * Java程序中，反射式最为重要的操作原理，开发设计中大量反射机制，**使用反射开发时一定要保留无参构造方法**
 * 可以使用指定构造方法，解决没有无参构造函数也是可以的。
 * 操作步骤
-			*	通过Class类中getConstructors()取得本类全部构造方法
-			*	向构造方法中传递一个对象数组，里面包含构造方法中所需各个参数
-			*	之后通过Constructor实例化对象。
-		* Constructor常用方法
+ *	通过Class类中getConstructors()取得本类全部构造方法
+ *	向构造方法中传递一个对象数组，里面包含构造方法中所需各个参数
+ *	之后通过Constructor实例化对象。
+   * Constructor常用方法
 			
-				public int getModifiers()得到构造方法修饰符
-				public String getName()得到构造方法名称
-				public Class<?>[] getPararmeterTypes()构造参数类型
-				public String toString()返回此构造方法的信息
-				public T newInstance(Object... initargs)
-				----
-				Class<?> c=null;
-				c=Class.forName("org.caohang.Person");
-				Person per=null;
-				Constructor<?> const[]=null;
-				cons=c.getConstructors();
-				per=(Person) cons[0].newInstance("caohang","26")//自动拆装参数
-### 反射的应用--取得类的结构
-* 反射取得一个类完整结构，使用java.lang.reflect包几个类，AccessibleObject子类：
-	* Constructor:类中构造方法
-	* Fileld：表示类中的属性
-	* Method：表示类中的方法
-* 取得类实现的所有接口
-		
-		public Class[] getInterfaces()
-	* 返回的一个Class对象数组，之后直接利用Class类中的getName()方法输出
-* 取得父类
 
-		public Class<? super T> getSuperclass()
+```java
+public int getModifiers()得到构造方法修饰符
+public String getName()得到构造方法名称
+public Class<?>[] getPararmeterTypes()构造参数类型
+public String toString()返回此构造方法的信息
+public T newInstance(Object... initargs)
+----
+Class<?> c=null;
+c=Class.forName("org.caohang.Person");
+Person per=null;
+Constructor<?> const[]=null;
+cons=c.getConstructors();
+per=(Person) cons[0].newInstance("caohang","26")//自动拆装参数
+```
+
+### 反射的应用--取得类的结构
+
+反射取得一个类完整结构，使用`java.lang.reflect`包几个类，AccessibleObject子类：
+* Constructor:类中构造方法
+* Fileld：表示类中的属性
+* Method：表示类中的方法
+
+取得类实现的所有接口:`public Class[] getInterfaces()`
+		
+* 返回的一个Class对象数组，之后直接利用Class类中的getName()方法输出
+* 取得父类:`public Class<? super T> getSuperclass()`
 	* 返回Class实例，可以通过getName()方法取得名称
 * 换回构造方法和修饰符
 	* getConstructor()用getName()输出，但是权限是数字，而不是public,需要Modifier类完成，其中的方法：
-		
-			public static String toString(int mod)
-		* Class<?> cl=Class.forName("org.caohang.Person");
-		* Constructor<?> con[]=cl.getConstructors()
-		* i<con.length
-		* Class<?>=con[i].getParametrTypes()
-		* int mo=con[i].getModifiers()
-		* Modifier.toString(mo)+""+con[].getName();
-* 取得全部方法
-	* Class 中getMethods()，此方法返回Method类对象数组,想进一步取得具体方法参数，抛出异常，依靠Method类。Method类中方法：
-	
-			public int getModifiers()取得本方法访问修饰符
-			public String getName()取得方法名称
-			pubic Class<?>[] getParameterTypes()取得全部参数
-			public Class<?> getReturnType()得到方法换回类型
-			public Class<?>[] getExceptionTypes()得到全部抛出异常
-			public Object invoke(Object obj,Object... args)通过反射调用类方法
-		* IDE进行程序开发，“.”提示出全部方法，是利用反射机制完成的。
-* 取得全部属性
-	* 取得属性两种不同的方式：
-		*	得到接口和父类中公共属性：
-			
-				public Field[] getFields() throws SecurityException
-		* 本类中的全部属性
-				
-				pubic Filed[] getDeclaredFileds() throws SecutityException
-		* 每个Field对象表示一个属性，Field类常用的方法：
-		
-				public Object get(Object obj)对象属性具体内容
-				public void set(Object obj,Object value)设置属性的具体内容
-				public int getModifiers()得到属性修饰符
-				pubilic String getName()返回属性名称
-				public boolean isAccessible()判断属性是否被外部访问
-				public void setAccessible(boolean flag)设置属性能否被外部访问
-				public static void setAccessible(AccessibeObject[] arrary,boolean flag)
-				public String toString()返回Field类的信息
-* Java反射机制深入应用
-	* 调用类中指定方法或指定属性，并通过反射完成数组的操作。
-	* 调用setter（）和getter（）方法
+
+```java		
+public static String toString(int mod)
+Class<?> cl=Class.forName("org.caohang.Person");
+Constructor<?> con[]=cl.getConstructors()
+i<con.length
+Class<?>=con[i].getParametrTypes()
+int mo=con[i].getModifiers()
+Modifier.toString(mo)+""+con[].getName();
+```
+
+取得全部方法
+* Class 中getMethods()，此方法返回Method类对象数组,想进一步取得具体方法参数，抛出异常，依靠Method类。Method类中方法：
+
+```java
+public int getModifiers()取得本方法访问修饰符
+public String getName()取得方法名称
+pubic Class<?>[] getParameterTypes()取得全部参数
+public Class<?> getReturnType()得到方法换回类型
+public Class<?>[] getExceptionTypes()得到全部抛出异常
+public Object invoke(Object obj,Object... args)通过反射调用类方法
+```
+* IDE进行程序开发，“.”提示出全部方法，是利用反射机制完成的。
+
+取得全部属性
+* 取得属性两种不同的方式：
+	*得到接口和父类中公共属性：`public Field[] getFields() throws SecurityException`
+	* 本类中的全部属性:`public Filed[] getDeclaredFileds() throws SecutityException`
+	* 每个Field对象表示一个属性，Field类常用的方法：
+
+```java
+public Object get(Object obj)对象属性具体内容
+public void set(Object obj,Object value)设置属性的具体内容
+public int getModifiers()得到属性修饰符
+pubilic String getName()返回属性名称
+public boolean isAccessible()判断属性是否被外部访问
+public void setAccessible(boolean flag)设置属性能否被外部访问
+public static void setAccessible(AccessibeObject[] arrary,boolean flag)
+public String toString()返回Field类的信息
+```
+
+**Java反射机制深入应用**
+
+* 调用类中指定方法或指定属性，并通过反射完成数组的操作。
+* 调用`setter()`和`getter()`方法
 		* 从面向对象部分开强调“类中属性必须封装，封装之后属性要通过setter及getter方法，反射调用方法最重要调用setter和getter方法”
 		
 				public class InvokeSet{

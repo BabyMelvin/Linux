@@ -34,9 +34,9 @@ public void fun(int... arg){
 
 ```java	
 public String(char[] value);
-public String(char[] value,int offset,int count);
+public String(char[] value, int offset, int count);
 public String(byte[] bytes);
-public String(byte[] bytes,int offset,int length);
+public String(byte[] bytes, int offset, int length);
 public char[] toCharArray();
 public char charAt(int index);
 public byte[] getBytes();
@@ -46,7 +46,7 @@ public String[] split(String regex);
 			
 ## 2.2 Static关键字
 
-### 属性声明表示全局属性（静态属性）
+### 属性声明表示全局属性(静态属性)
 
 * java中常用的内存区域
 	* 栈内存空间：保存所有的对象名称（引用堆内存的地址）
@@ -54,15 +54,15 @@ public String[] split(String regex);
 	* 全局数据区：保存static类型的属性
 	* 全局代码区：保存所有的方法定义
 * static 声明方法
-	* 成为类方法注意
+	* 成为类方法**注意**
 		* 非static声明的方法，可以调用static声明的属性和方法
 		* static声明的方法，不能调用非static声明属性和方法
 	* static 代码块
-		* 静态代码块优先于主方法执行指`main（)`，而在类中定义的静态代码块优先于构造快执行，并且不管有多少对象产生，静态代码块只执行一次。
+		* 静态代码块优先于主方法执行指`main()`，而在类中定义的静态代码块优先于构造快执行，并且不管有多少对象产生，静态代码块只执行一次。
 
 ```java	
-public class CodeDemo{
-    static{
+public class CodeDemo {
+    static {
 			System.out.println("hello world");
 			System.exit(1);
 	}
@@ -72,12 +72,12 @@ public class CodeDemo{
 ### 代码块
 
 ```java
-class Demo{
+class Demo {
 	{
 		int x=30;
 		System.out.println(x);
 	}
-	public Demo(){
+	public Demo() {
 		int x=40;
 		System.out.println(x);
 	}
@@ -88,10 +88,12 @@ class Demo{
 * 构造方法私有化（单例设计模式）		
 
 ```java
-class Singleton{
-	private static Singleton instance=new Singleton();
-	private Singeton(){
+class Singleton {
+	private static Singleton instance= new Singleton();
+
+	private Singeton() {
 	}
+
 	public static Singleton getInstance(){
 		return instance;
 	}
@@ -101,8 +103,8 @@ class Singleton{
 }
 ```
 
-* `Singleton s=Singleton.getInstance();s.print();`
-* 所有的实例的对象其实都指向同一个地址。（`window的回收站`）
+* `Singleton s=Singleton.getInstance(); s.print();`
+* 所有的实例的对象其实都指向同一个地址。(`window的回收站`)
 
 ### 内部类
 
@@ -110,11 +112,13 @@ class Singleton{
 * 使用static定义内部类
 	* static声明的内部类变成了外部类，但是用**static声明的内部类不能访问非static的外部类属性**。
 
-```java			
+
+```java
 class Outer{
 	private static String info="Hello world";
+
 	static class Inner{
-		public void print(){
+		public void print() {
 			System.out.println(info);
 		}
 	}
@@ -127,11 +131,11 @@ class Outer{
 		* 生成class文件是以`Outer$Inner.class`文件存在。Java中只要文件存在$,程序就以“.”替换。
 	* 实例化 
 		* `Outer out =new Outer();`外部对象
-		* `out.Inner in=out.new Inner();`     
+		* `out.Inner in=out.new Inner();`
 		* `in.print()`;
 	* 在方法中定义内部类
 
-```java		
+```java
 class Outer{
 	private String info="hello world";
 	public void fun(final int temp){
