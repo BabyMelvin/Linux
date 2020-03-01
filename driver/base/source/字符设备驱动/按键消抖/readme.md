@@ -219,5 +219,5 @@ void buttons_timer_function(unsigned long data)
 		return;
 
 	//pindec不为空时就接着下面的处理
-	pinval = s3c2410_gpio_getpin(pindesc->pin); //确定按键值
+	pinval = s3c2410_gpio_getpin(pindesc->pin); //确定按
 ```
