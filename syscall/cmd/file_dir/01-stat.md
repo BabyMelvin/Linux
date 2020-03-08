@@ -1,6 +1,5 @@
 ## stat fstat
 
-
 ```c
 #include <sys/stat.h>
 int stat(const char* restrict pathname,struct stat*restrict buf);

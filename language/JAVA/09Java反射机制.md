@@ -129,7 +129,7 @@ public String toString()返回Field类的信息
 
 * 调用类中指定方法或指定属性，并通过反射完成数组的操作。
 * 调用`setter()`和`getter()`方法
-		* 从面向对象部分开强调“类中属性必须封装，封装之后属性要通过setter及getter方法，反射调用方法最重要调用setter和getter方法”
+	* 从面向对象部分开强调“类中属性必须封装，封装之后属性要通过setter及getter方法，反射调用方法最重要调用setter和getter方法”
 		
 				public class InvokeSet{
 					public static void main(String args[]){
