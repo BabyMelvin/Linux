@@ -40,7 +40,7 @@ static int first_drv_init(void) // 这是入口函数
 {
 	major = register_chrdev(0, "first_drv", &first_drv_fops);
 	firstdrv_class = class_create(THIS_MOUDLE, "fistdrv"); //先创建一个类
-	firstdrv_class_dev = class_device_create(first_class, NULL, MKDEV(major, 0), NULL, DEV_NAME);
+	firstdrv_class_dev = device_create(first_class, NULL, MKDEV(major, 0), NULL, DEV_NAME);
 	gpfcon = (volatile unsigned long *)ioremap(0x56000050, 16);
 	gpdat = gpfcon + 1;
 
