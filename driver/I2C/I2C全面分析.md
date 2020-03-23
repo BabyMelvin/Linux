@@ -285,7 +285,7 @@ static int i2c_register_adapter(struct i2c_adapter *adap){
 
 Example:
 
-```
+```c
 #echo eeprom 0x50 > /sys/bus/i2c/devices/i2c-0/new_device
 分析过设备模型的都知道，i2c-0 是我们上面设置的 dev_set_name(&adap->dev, "i2c-%d", adap->nr)，new_device 就是它的一个属性了，这个属性在哪里？在i2c_adapter_type 中
 ```
@@ -482,6 +482,7 @@ static int i2c_detect(struct i2c_adapter *adapter,struct i2c_driver *driver){
 		err = i2c_detect_address(temp_client,-1,driver);
 	}
 }
+
 static int i2c_detect_address(struct i2c_client *temp_client,int kind,struct i2c_driver *driver){
 	struct i2c_board_info info;
 	struct i2c_adapter *adapter = temp_client->adapter;

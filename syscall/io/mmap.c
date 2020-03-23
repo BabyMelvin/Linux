@@ -26,7 +26,7 @@
 
 struct student{
     int id;
-    char name[128;
+    char name[128];
     char sex;
 };
 void sys_err(char *src,int exitno){
