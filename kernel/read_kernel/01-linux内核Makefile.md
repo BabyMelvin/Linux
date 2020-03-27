@@ -173,7 +173,7 @@ gcc在3.0之后改变了指定函数、循环等对齐选项的类型。
 * `gcc < 3.00`时，`cc-option-align = -malign；`
 * `gcc >= 3.00`时，`cc-option-align = -falign`。使用`$(cc-option-align)`来选择正确的前缀。例如：
 
-```
+```m
 KBUILD_CFLAGS += $(cc-option-align)-functions=4
 ```
 
