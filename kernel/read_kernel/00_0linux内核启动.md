@@ -70,8 +70,8 @@ movs r8, r5 @invalid machine(r5=0)?
 beq __error_a @yes, error 'a'
 bl __create_page_tables
 ```
-__lookup_machine_type 机器ID。
-一个编译好的内核能支持哪些单板，都是定下来的。内核上电后会检测下看是否支持当前的
+`__lookup_machine_type` 机器ID。
+一个编译好的内核能支持哪些单板，都是定下来的。(`make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm vexpress_defconfig`编译内核时候制定)内核上电后会检测下看是否支持当前的
 单板。若可以支持则继续往下跑，不支持则 __error_a 跳到死循环。
 
 # 4.内核
@@ -211,6 +211,33 @@ static const struct machine_desc __mach_desc_S3C2440
 	.init_machine = smdk2440_machine_init,
 	.timer = &s3c24xx_timer,
 };
+```
+
+**新内核**：
+
+```c
+//linux\arch\arm\mach-at91\at91rm9200.c
+static void __init at91rm9200_dt_device_init(void)
+{
+	//注意这里解析 dts
+	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+
+	arm_pm_idle = at91rm9200_idle;
+	arm_pm_restart = at91rm9200_restart;
+	at91rm9200_pm_init();
+}
+
+static const char *at91rm9200_dt_board_compat[] __initconst = {
+	"atmel,at91rm9200",
+	NULL
+};
+
+DT_MACHINE_START(at91rm9200_dt, "Atmel AT91RM9200")
+	.init_time      = at91rm9200_dt_timer_init,
+	.map_io		= at91_map_io,
+	.init_machine	= at91rm9200_dt_device_init,
+	.dt_compat	= at91rm9200_dt_board_compat,
+MACHINE_END
 ```
 看看结构体：machine_desc
 
