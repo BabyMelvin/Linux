@@ -18,9 +18,10 @@ shell中使用`source conf.sh`，是直接运行conf.sh的命令，不创建**�
 * 1.`readonly`:只读变量
 * 2.`unset`:删除变量
 
-* 局部变量：代码快或者函数中,local关键字
+* 局部变量：代码快或者函数中,`local`关键字
 * 环境变量:影响用户接口和shell行为，分配环境空间是有限的
     * 脚本设置为环境变量,export出来,export只能影响自己子进程
+    * export 函数 export -f func_name
     * 脚本命令行调用，那么脚本不能影响环境变量
 
 `IFS`:内部域分隔符。默认是space,tab,newline.可以设置作为输出分隔
@@ -35,7 +36,7 @@ shell中使用`source conf.sh`，是直接运行conf.sh的命令，不创建**�
 
 `数组名=(n1 n2 ... n3)`
 
-```
+```bash
 # 注释
 
 :<<EOF
@@ -114,7 +115,7 @@ fi
 
 # find 命令
 
-```
+```bash
 #在压缩文件内寻找文本片段
 find . -type f -print | xarg bzgrep ZUT
 ```
