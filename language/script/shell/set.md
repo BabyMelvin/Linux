@@ -75,3 +75,14 @@ set -eo pipfail
 hehe | echo hello1
 echo hello2
 ```
+
+`set -r ` 运行限制模式
+`# 或者使用#/bin/bash -r`
+
+`set +r`  关闭限制模式
+
+`set -b ` #norify 打开作业完成就通知
+
+fg可以将后台进程变为前台进程
+
+`CTRL+Z` 组合实现shell作业阻塞

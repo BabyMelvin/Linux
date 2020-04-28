@@ -1,0 +1,28 @@
+Binary file /usr/local/lib/perl/5.18.2/auto/XML/Parser/Expat/Expat.so matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/api.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/color.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/compat.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/display.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/drawing.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/exceptions.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/font.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/image.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/__init__.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/resource.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/sequence.pyc matches
+Binary file /usr/local/lib/python2.7/dist-packages/wand/version.pyc matches
+/usr/local/lib/perl/5.18.2/XML/Parser/Expat.pm:element. This will be zero outside of the root element. For example,
+/usr/local/lib/perl/5.18.2/XML/Parser/Expat.pm:this will return 1 when called from the start handler for the root element
+/usr/local/lib/perl/5.18.2/XML/Parser.pm:The root document "foo", has 3 children: a "head" element, a "bar"
+/usr/local/lib/perl/5.18.2/XML/Parser/Style/Tree.pm:The root document "foo", has 3 children: a "head" element, a "bar"
+/usr/local/lib/python2.7/dist-packages/wand/image.py:                'abs', 'exponential', 'median', 'sum', 'rootmeansquare')
+/usr/local/lib/python2.7/dist-packages/wand/image.py:                   'perceptual_hash', 'root_mean_square')
+/usr/local/lib/python2.7/dist-packages/wand/image.py:#: - ``'root_mean_square'``
+/usr/local/man/man3/XML::Parser.3pm:The root document \*(L"foo\*(R", has 3 children: a \*(L"head\*(R" element, a \*(L"bar\*(R"
+/usr/local/man/man3/XML::Parser::Expat.3pm:element. This will be zero outside of the root element. For example,
+/usr/local/man/man3/XML::Parser::Expat.3pm:this will return 1 when called from the start handler for the root element
+/usr/local/man/man3/XML::Parser::Style::Tree.3pm:The root document \*(L"foo\*(R", has 3 children: a \*(L"head\*(R" element, a \*(L"bar\*(R"
+/usr/local/share/man/man3/XML::Parser.3pm:The root document \*(L"foo\*(R", has 3 children: a \*(L"head\*(R" element, a \*(L"bar\*(R"
+/usr/local/share/man/man3/XML::Parser::Expat.3pm:element. This will be zero outside of the root element. For example,
+/usr/local/share/man/man3/XML::Parser::Expat.3pm:this will return 1 when called from the start handler for the root element
+/usr/local/share/man/man3/XML::Parser::Style::Tree.3pm:The root document \*(L"foo\*(R", has 3 children: a \*(L"head\*(R" element, a \*(L"bar\*(R"

@@ -1,0 +1,463 @@
+Binary file /etc/ld.so.cache matches
+Binary file /etc/selinux/default/policy/policy.29 matches
+Binary file /etc/ssl/certs/java/cacerts matches
+/etc/anacrontab:HOME=/root
+/etc/anacrontab:LOGNAME=root
+/etc/apache2/apache2.conf:# not allow access to the root filesystem outside of /usr/share and /var/www.
+/etc/apache2/conf-available/security.conf:# If you use version control systems in your document root, you should
+/etc/apache2/mods-available/userdir.conf:	UserDir disabled root
+/etc/apparmor.d/abstractions/lightdm_chromium-browser:    capability sys_chroot, # fod sandbox to chroot to a safe directory
+/etc/apparmor.d/abstractions/nis:  # portmapper may ask root processes to do nis/ldap at low ports
+/etc/apparmor.d/abstractions/ubuntu-helpers:# 1. This does not work for root owned processes, because of the way we use
+/etc/apparmor.d/abstractions/ubuntu-helpers:#    and going unconfined as root is not desirable any way.
+/etc/apparmor.d/abstractions/ubuntu-helpers:#    this to support root, but it would make the policy harder to understand
+/etc/apparmor.d/abstractions/ubuntu-helpers:  # While the chromium and chrome sandboxes are setuid root, they only link
+/etc/apparmor.d/cache/.features:caps {mask {chown dac_override dac_read_search fowner fsetid kill setgid setuid setpcap linux_immutable net_bind_service net_broadcast net_admin net_raw ipc_lock ipc_owner sys_module sys_rawio sys_chroot sys_ptrace sys_pacct sys_admin sys_boot sys_nice sys_resource sys_time sys_tty_config mknod lease audit_write audit_control setfcap mac_override mac_admin syslog wake_alarm block_suspend audit_read
+/etc/apparmor.d/cache/.features:namespaces {pivot_root {yes
+/etc/apparmor.d/snap/abstractions/nis:  # portmapper may ask root processes to do nis/ldap at low ports
+/etc/apparmor.d/snap/abstractions/postfix-common:  capability            sys_chroot,
+/etc/apparmor.d/snap/abstractions/ubuntu-helpers:# 1. This does not work for root owned processes, because of the way we use
+/etc/apparmor.d/snap/abstractions/ubuntu-helpers:#    and going unconfined as root is not desirable any way.
+/etc/apparmor.d/snap/abstractions/ubuntu-helpers:#    this to support root, but it would make the policy harder to understand
+/etc/apparmor.d/snap/abstractions/ubuntu-helpers:  # While the chromium and chrome sandboxes are setuid root, they only link
+/etc/apparmor.d/tunables/home:@{HOME}=@{HOMEDIRS}/*/ /root/
+/etc/apparmor.d/usr.sbin.cupsd:  # filters and drivers (PPD generators) are always run as non-root,
+/etc/apt/apt.conf.d/50unattended-upgrades://Unattended-Upgrade::Mail "root";
+/etc/at-spi2/accessibility.conf:    <!-- Allow root to connect -->
+/etc/at-spi2/accessibility.conf:    <allow user="root"/>
+/etc/bash.bashrc:    debian_chroot=$(cat /etc/debian_chroot)
+/etc/bash.bashrc:if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+/etc/bash.bashrc:PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+/etc/bash.bashrc:	See "man sudo_root" for details.
+/etc/bash.bashrc:# set variable identifying the chroot you work in (used in the prompt below)
+/etc/bash.bashrc:	To run a command as administrator (user "root"), use "sudo <command>".
+/etc/bash_completion.d/subversion:	      # no se, let us suggest the repository root...
+/etc/bash_completion.d/tig:			--root --not --topo-order --date-order
+/etc/brltty/en-us-g2.ctb:begword redro 1235-1246-1235-135 redroot redrock
+/etc/brltty/ipa.ctb:always  ̘ 6-156		# advancing sign below         417 advanced tongue root
+/etc/brltty/ipa.ctb:always  ̙ 6-234		# retracting sign below        418 retracted tongue root
+/etc/ca-certificates.conf.dpkg-old:mozilla/Comodo_AAA_Services_root.crt
+/etc/ca-certificates.conf.dpkg-old:mozilla/Comodo_Secure_Services_root.crt
+/etc/ca-certificates.conf.dpkg-old:mozilla/Comodo_Trusted_Services_root.crt
+/etc/ca-certificates.conf:mozilla/Comodo_AAA_Services_root.crt
+/etc/ca-certificates.conf:mozilla/Comodo_Secure_Services_root.crt
+/etc/ca-certificates.conf:mozilla/Comodo_Trusted_Services_root.crt
+/etc/cron.daily/apt:#  - Send report mail to root
+/etc/cron.daily/man-db:    chown man:root /var/cache/man || true
+/etc/cron.d/anacron:30 7    * * *   root	start -q anacron || :
+/etc/crontab:17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+/etc/crontab:25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+/etc/crontab:47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+/etc/crontab:52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+/etc/cron.weekly/man-db:    chown man:root /var/cache/man || true
+/etc/cups/cups-files.conf:#DocumentRoot /usr/share/cups/doc-root
+/etc/cups/cups-files.conf:# of ServerRoot is used as the root directory.  Also see the "LogLevel"
+/etc/cups/cups-files.conf:# of ServerRoot is used as the root directory.  Also see the "PageLogFormat"
+/etc/cups/cups-files.conf:#RemoteRoot remroot
+/etc/cups/cups-files.conf:# root directory.  Also see the "AccessLogLevel" directive in cupsd.conf.
+/etc/cups/cups-files.conf:# User that is substituted for unauthenticated (remote) root accesses...
+/etc/dbus-1/session.conf:  <include if_selinux_enabled="yes" selinux_root_relative="yes">contexts/dbus_contexts</include>
+/etc/dbus-1/system.conf:  <include if_selinux_enabled="yes" selinux_root_relative="yes">contexts/dbus_contexts</include>
+/etc/dbus-1/system.conf:  <!-- Only systemd, which runs as root, may report activation failures. -->
+/etc/dbus-1/system.conf:  <policy user="root">
+/etc/dbus-1/system.d/avahi-dbus.conf:  <!-- Only root or user avahi can own the Avahi service -->
+/etc/dbus-1/system.d/avahi-dbus.conf:  <policy user="root">
+/etc/dbus-1/system.d/avahi-dbus.conf:  <policy user="root">
+/etc/dbus-1/system.d/bluetooth.conf:    <!-- allow root to send to agents -->
+/etc/dbus-1/system.d/bluetooth.conf:  <policy user="root">
+/etc/dbus-1/system.d/com.hp.hplip.conf:  <!-- Only root can own the service -->
+/etc/dbus-1/system.d/com.hp.hplip.conf:  <policy user="root">
+/etc/dbus-1/system.d/com.redhat.NewPrinterNotification.conf:	<policy user="root">
+/etc/dbus-1/system.d/com.redhat.NewPrinterNotification.conf:	<policy user="root">
+/etc/dbus-1/system.d/com.redhat.PrinterDriversInstaller.conf:	<policy user="root">
+/etc/dbus-1/system.d/com.redhat.PrinterDriversInstaller.conf:	<policy user="root">
+/etc/dbus-1/system.d/com.ubuntu.LanguageSelector.conf:        <policy user="root">
+/etc/dbus-1/system.d/com.ubuntu.SoftwareCenter.conf:        <policy user="root">
+/etc/dbus-1/system.d/com.ubuntu.SoftwareProperties.conf:  <policy user="root">
+/etc/dbus-1/system.d/com.ubuntu.SystemService.conf:        <policy user="root">
+/etc/dbus-1/system.d/com.ubuntu.USBCreator.conf:  <!-- Only root can own the service -->
+/etc/dbus-1/system.d/com.ubuntu.USBCreator.conf:  <policy user="root">
+/etc/dbus-1/system.d/com.ubuntu.WhoopsiePreferences.conf:  <!-- Only root can own the service -->
+/etc/dbus-1/system.d/com.ubuntu.WhoopsiePreferences.conf:  <policy user="root">
+/etc/dbus-1/system.d/dnsmasq.conf:	<policy user="root">
+/etc/dbus-1/system.d/Mountall.Server.conf:  <!-- Only the root user can own the Mountall name -->
+/etc/dbus-1/system.d/Mountall.Server.conf:  <!-- Permit the root user to invoke all of the methods on Mountall-->
+/etc/dbus-1/system.d/Mountall.Server.conf:  <policy user="root">
+/etc/dbus-1/system.d/Mountall.Server.conf:  <policy user="root">
+/etc/dbus-1/system.d/nm-avahi-autoipd.conf:        <policy user="root">
+/etc/dbus-1/system.d/nm-dhcp-client.conf:        <policy user="root">
+/etc/dbus-1/system.d/nm-dispatcher.conf:	<policy user="root">
+/etc/dbus-1/system.d/nm-ofono.conf:        <policy user="root">
+/etc/dbus-1/system.d/nm-pptp-service.conf:	<policy user="root">
+/etc/dbus-1/system.d/org.debian.apt.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.debian.AptXapianIndex.conf:        <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.Accounts.conf:  <!-- Only root can own the service -->
+/etc/dbus-1/system.d/org.freedesktop.Accounts.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.ColorManager.conf:  <!-- Only user root or user colord can own the colord service -->
+/etc/dbus-1/system.d/org.freedesktop.ColorManager.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.DisplayManager.conf:  <!-- Only root can own the service -->
+/etc/dbus-1/system.d/org.freedesktop.DisplayManager.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.hostname1.conf:        <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.locale1.conf:        <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.login1.conf:        <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.ModemManager1.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.NetworkManager.conf:        <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.PackageKit-aptd.conf:  <!-- Only user root can own the PackageKit service -->
+/etc/dbus-1/system.d/org.freedesktop.PackageKit-aptd.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.PolicyKit1.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.PolicyKit1.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.systemd-shim.conf:        <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.thermald.conf:        <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.timedate1.conf:        <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.UDisks2.conf:  <!-- Only root can own the service -->
+/etc/dbus-1/system.d/org.freedesktop.UDisks2.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.freedesktop.UPower.conf:  <!-- Only root can own the service -->
+/etc/dbus-1/system.d/org.freedesktop.UPower.conf:  <policy user="root">
+/etc/dbus-1/system.d/org.opensuse.CupsPkHelper.Mechanism.conf:  <!-- Only root can own the service -->
+/etc/dbus-1/system.d/org.opensuse.CupsPkHelper.Mechanism.conf:  <policy user="root">
+/etc/dbus-1/system.d/Upstart.conf:  <!-- Only the root user can own the Upstart name -->
+/etc/dbus-1/system.d/Upstart.conf:  <!-- Permit the root user to invoke all of the methods on Upstart, its jobs
+/etc/dbus-1/system.d/Upstart.conf:  <policy user="root">
+/etc/dbus-1/system.d/Upstart.conf:  <policy user="root">
+/etc/dbus-1/system.d/wpa_supplicant.conf:        <policy user="root">
+/etc/default/grub:# Uncomment if you don't want GRUB to pass "root=UUID=xxx" parameter to Linux
+/etc/gitweb.conf:# file with project list; by default, simply scan the projectroot dir.
+/etc/gitweb.conf:$projectroot = "/var/lib/git";
+/etc/gitweb.conf:#$projects_list = $projectroot;
+/etc/group:root:x:0:
+/etc/grub.d/00_header:background_image -m stretch `make_system_path_relative_to_its_root "$GRUB_BACKGROUND"`
+/etc/grub.d/00_header:. "${datarootdir}/grub/grub-mkconfig_lib"
+/etc/grub.d/00_header:datarootdir="/usr/share"
+/etc/grub.d/00_header:export TEXTDOMAINDIR="${datarootdir}/locale"
+/etc/grub.d/00_header:    font="`make_system_path_relative_to_its_root "${font_path}"`"
+/etc/grub.d/00_header:if loadfont `make_system_path_relative_to_its_root "${GRUB_FONT}"` ; then
+/etc/grub.d/00_header:loadfont (\$root)`make_system_path_relative_to_its_root $x`
+/etc/grub.d/00_header:set theme=(\$root)`make_system_path_relative_to_its_root $GRUB_THEME`
+/etc/grub.d/05_debian_theme:	echo "if background_image `make_system_path_relative_to_its_root "${1}"`; then"
+/etc/grub.d/10_linux:	bootfs="`make_system_path_relative_to_its_root / | sed -e "s,@$,,"`"
+/etc/grub.d/10_linux:. "${datarootdir}/grub/grub-mkconfig_lib"
+/etc/grub.d/10_linux:datarootdir="/usr/share"
+/etc/grub.d/10_linux:export TEXTDOMAINDIR="${datarootdir}/locale"
+/etc/grub.d/10_linux:	    GRUB_CMDLINE_LINUX="rootflags=subvol=${rootsubvol} ${GRUB_CMDLINE_LINUX}"
+/etc/grub.d/10_linux:	if [ "x${rootsubvol}" != x ]; then
+/etc/grub.d/10_linux:    if [ -z "${prepare_root_cache}" ]; then
+/etc/grub.d/10_linux:	linux	${rel_dirname}/${basename}.efi.signed root=${linux_root_device_thisversion} ro ${args}
+/etc/grub.d/10_linux:	linux	${rel_dirname}/${basename} root=${linux_root_device_thisversion} ro ${args}
+/etc/grub.d/10_linux:    linux_root_device_thisversion=${GRUB_DEVICE}
+/etc/grub.d/10_linux:  linux_root_device_thisversion="${LINUX_ROOT_DEVICE}"
+/etc/grub.d/10_linux:# loop-AES arranges things so that /dev/loop/X can be our root device, but
+/etc/grub.d/10_linux:prepare_root_cache=
+/etc/grub.d/10_linux:      prepare_root_cache="$(prepare_grub_to_access_device ${GRUB_DEVICE} | grub_add_tab)"
+/etc/grub.d/10_linux:    printf '%s\n' "${prepare_root_cache}" | sed "s/^/$submenu_indentation/"
+/etc/grub.d/10_linux:  rel_dirname=`make_system_path_relative_to_its_root $dirname`
+/etc/grub.d/10_linux:	rootsubvol="`make_system_path_relative_to_its_root /`"
+/etc/grub.d/10_linux:	rootsubvol="${rootsubvol#/}"
+/etc/grub.d/20_linux_xen:	bootfs="`make_system_path_relative_to_its_root / | sed -e "s,@$,,"`"
+/etc/grub.d/20_linux_xen:. "${datarootdir}/grub/grub-mkconfig_lib"
+/etc/grub.d/20_linux_xen:datarootdir="/usr/share"
+/etc/grub.d/20_linux_xen:export TEXTDOMAINDIR="${datarootdir}/locale"
+/etc/grub.d/20_linux_xen:	    GRUB_CMDLINE_LINUX="rootflags=subvol=${rootsubvol} ${GRUB_CMDLINE_LINUX}"
+/etc/grub.d/20_linux_xen:	if [ "x${rootsubvol}" != x ]; then
+/etc/grub.d/20_linux_xen:	    linux_root_device_thisversion=${GRUB_DEVICE}
+/etc/grub.d/20_linux_xen:	linux_root_device_thisversion="${LINUX_ROOT_DEVICE}"
+/etc/grub.d/20_linux_xen:# loop-AES arranges things so that /dev/loop/X can be our root device, but
+/etc/grub.d/20_linux_xen:	module	${rel_dirname}/${basename} placeholder root=${linux_root_device_thisversion} ro ${args}
+/etc/grub.d/20_linux_xen:	rel_dirname=`make_system_path_relative_to_its_root $dirname`
+/etc/grub.d/20_linux_xen:    rel_xen_dirname=`make_system_path_relative_to_its_root $xen_dirname`
+/etc/grub.d/20_linux_xen:	rootsubvol="`make_system_path_relative_to_its_root /`"
+/etc/grub.d/20_linux_xen:	rootsubvol="${rootsubvol#/}"
+/etc/grub.d/20_memtest86+:  MEMTESTPATH=$( make_system_path_relative_to_its_root "/boot/memtest86+.bin" )
+/etc/grub.d/20_memtest86+:  MEMTESTPATH=$( make_system_path_relative_to_its_root "/boot/memtest86+.elf" )
+/etc/grub.d/20_memtest86+:#  MEMTESTPATH=$( make_system_path_relative_to_its_root "/boot/memtest86+_multiboot.bin" )
+/etc/grub.d/30_os-prober:. "${datarootdir}/grub/grub-mkconfig_lib"
+/etc/grub.d/30_os-prober:datarootdir="/usr/share"
+/etc/grub.d/30_os-prober:	drivemap -s (hd0) \${root}
+/etc/grub.d/30_os-prober:			--exec-server-task='\${exec-task}' -T typed '\${root}' \\
+/etc/grub.d/30_os-prober:export TEXTDOMAINDIR="${datarootdir}/locale"
+/etc/grub.d/30_os-prober:	multiboot /boot/gnumach.gz root=device:${mach_device}
+/etc/grub.d/30_os-prober:	parttool \${root} hidden-
+/etc/grub.d/30_uefi-firmware:. "${datarootdir}/grub/grub-mkconfig_lib"
+/etc/grub.d/30_uefi-firmware:datarootdir="/usr/share"
+/etc/grub.d/30_uefi-firmware:export TEXTDOMAINDIR="${datarootdir}/locale"
+/etc/hdparm.conf:## the keyword 'command_line' are not run until after the root filesystem
+/etc/hdparm.conf:## to run hdparm to set parameters for your root disk, please use the 
+/etc/inetd.conf:#daytime		stream	tcp	nowait	root	internal
+/etc/inetd.conf:#discard		dgram	udp	wait	root	internal
+/etc/inetd.conf:#discard		stream	tcp	nowait	root	internal
+/etc/inetd.conf:#<off>#kermit      stream  tcp     nowait  root    /usr/sbin/tcpd  /usr/sbin/iksd -A --initfile:/etc/kermit/iksd-anon.conf --dbfile:/var/run/iksd.db --syslog:5 --root:/home/ftp --anonymous:off
+/etc/inetd.conf:#time		stream	tcp	nowait	root	internal
+/etc/init/checkfs.sh.conf:# This job runs once the root filesystem is mounted, to avoid running the
+/etc/init/checkroot-bootclean.sh.conf:# checkroot-bootclean.sh - compatibility job for sysvinit dependencies
+/etc/init/checkroot-bootclean.sh.conf:# Dummy job to prevent checkroot-bootclean.sh from being run on upstart
+/etc/init/checkroot.sh.conf:description "Signal sysvinit that the rootfs is mounted"
+/etc/init/checkroot.sh.conf:# that other rcS jobs relying on the historic checkroot.sh
+/etc/init/checkroot.sh.conf:# This job runs once the root filesystem is mounted, to signal startpar
+/etc/init.d/kmod:# Should-Start:      checkroot
+/etc/init.d/networking:	if ! chown root:netdev "$RUN_DIR" ; then
+/etc/init.d/networking:	log_warning_msg "not deconfiguring network interfaces: iSCSI root is mounted."
+/etc/init.d/nmbd:			install -o root -g root -m 755 -d $PIDDIR
+/etc/init.d/rsyslog:		chown root:adm $XCONSOLE
+/etc/init.d/samba-ad-dc:		install -o root -g root -m 755 -d $PIDDIR
+/etc/init.d/smbd:		install -o root -g root -m 755 -d $PIDDIR
+/etc/init.d/udev:    if start-stop-daemon --stop --name udevd --user root --quiet --oknodo --retry 5; then
+/etc/init.d/udev:    if start-stop-daemon --stop --name udevd --user root --quiet --oknodo --retry 5; then
+/etc/init.d/umountfs:# Required-Stop:     umountroot
+/etc/init.d/umountnfs.sh:# Short-Description: Unmount all network filesystems except the root fs.
+/etc/init.d/umountroot:	# it won't hold open files on the root filesystem (lp:#672177).
+/etc/init.d/umountroot:# Provides:          umountroot
+/etc/init.d/umountroot:	# See #339023 and the comment in checkroot.sh
+/etc/init.d/umountroot:# Short-Description: Mount the root filesystem read-only.
+/etc/init.d/umountroot:	[ "$VERBOSE" = no ] || log_action_begin_msg "Mounting root filesystem read-only"
+/etc/init.d/x11-common:        # as it is owned by root, cannot be replaced with a symlink:
+/etc/init.d/x11-common:# assumes /tmp has a sticky bit set (or is only writeable by root)
+/etc/init.d/x11-common:        chown -h root:root "$DIR" || error=$((error + 1))
+/etc/init/mounted-debugfs.conf:# this makes sure that the tree is kept accessible only by root.
+/etc/init/mounted-proc.conf:# only by root slightly reduces the chances of these kinds of attacks
+/etc/init/networking.conf:            log_warning_msg "not deconfiguring network interfaces: iSCSI root is mounted."
+/etc/init/nmbd.conf:	install -o root -g root -m 755 -d /var/run/samba
+/etc/init/plymouth-log.conf:exec /bin/plymouth update-root-fs --read-write
+/etc/initramfs-tools/initramfs.conf:# nfs - Boot using an NFS drive as the root of the drive.
+/etc/init/samba-ad-dc.conf:	install -o root -g root -m 755 -d /var/log/samba
+/etc/init/samba-ad-dc.conf:	install -o root -g root -m 755 -d /var/run/samba
+/etc/init/smbd.conf:	install -o root -g root -m 755 -d /var/run/samba
+/etc/init/udev-finish.conf:    # Copy any rules generated while the root filesystem was read-only
+/etc/init/udev-finish.conf:# these out of /dev and onto the root filesystem.
+/etc/kermit/iksd.conf:; place them in etc/kermit/iksd-anon.conf under the anonymous chroot
+/etc/ld.so.conf.d/fakeroot-x86_64-linux-gnu.conf:/usr/lib/x86_64-linux-gnu/libfakeroot
+/etc/libnl-3/classid:ffff:ffff		root
+/etc/login.defs:# (examples: 022 -> 002, 077 -> 007) for non-root users, if the uid is
+/etc/logrotate.conf:    create 0660 root utmp
+/etc/logrotate.conf:    create 0664 root utmp
+/etc/logrotate.conf:su root syslog
+/etc/logrotate.d/apache2:	create 640 root adm
+/etc/logrotate.d/dpkg:	create 644 root root
+/etc/logrotate.d/dpkg:	create 644 root root
+/etc/ltrace.conf:int   SYS_chroot(string);
+/etc/mailcap.order:#  After modifying this file, be sure to run /usr/sbin/update-mime (as root)
+/etc/netscsid.conf:# If no USER= entry is present, only root is allowed to run rscsi.
+/etc/netscsid.conf:# Note that rscsi runs as root and thus may be able to overwrite any file.
+/etc/newt/palette.ubuntu:root=,magenta
+/etc/newt/palette.ubuntu:roottext=,magenta
+/etc/pam.d/chfn:auth		sufficient	pam_rootok.so
+/etc/pam.d/chfn:# This allows root to change user infomation without being
+/etc/pam.d/chsh:auth		sufficient	pam_rootok.so
+/etc/pam.d/chsh:# This allows root to change user shell without being
+/etc/pam.d/login:# as possibly being root on insecure lines), but root passwords may be
+/etc/pam.d/login:# Disallows other than root logins when /etc/nologin exists
+/etc/pam.d/login:# Disallows root logins except on tty's listed in /etc/securetty
+/etc/pam.d/login:# root will not be prompted for a password on insecure lines.
+/etc/pam.d/login:# You can change it to a "requisite" module if you think root may mis-type
+/etc/pam.d/sshd:# Disallow non-root logins when /etc/nologin exists.
+/etc/pam.d/su:auth       sufficient pam_rootok.so
+/etc/pam.d/su:# denying "root" user, unless she's a member of "foo" or explicitly
+/etc/pam.d/su:# permitted earlier by e.g. "sufficient pam_rootok.so").
+/etc/pam.d/su:# than the default "root" (but this may have side effect of
+/etc/pam.d/su:# This allows root to su without passwords (normal operation)
+/etc/pam.d/su:# Uncomment this to force users to be a member of group root
+/etc/passwd:root:x:0:0:root:/root:/bin/bash
+/etc/ppp/ip-up.d/0dns-up:# Is resolv.conf a non-symlink on a ro root? If so give up.
+/etc/pulse/default.pa:### Publish connection data in the X11 root window
+/etc/resolvconf/update.d/dnscache:# back to the root nameservers listed in /etc/dnsroots.global
+/etc/resolvconf/update.d/dnscache:	cp "$TMPFILE" "$CACHE/root/servers/@"
+/etc/resolvconf/update.d/dnscache:DEFAULTROOTS="${ETC}/dnsroots.global"
+/etc/resolvconf/update.d/dnscache:				&& [ -d "$SVC/root" ] \
+/etc/resolvconf/update.d/dnscache:				&& [ -d "$SVC/root/ip" ] \
+/etc/resolvconf/update.d/dnscache:				&& [ -d "$SVC/root/servers" ] \
+/etc/resolvconf/update.d/dnscache:# If no nameservers were present, use the default root nameservers
+/etc/resolvconf/update.d/libc:		# Remove the root domain suffix
+/etc/samba/smb.conf:# Setup usershare options to enable non-root users to share folders
+/etc/samba/smb.conf.ucf-dist:# Setup usershare options to enable non-root users to share folders
+/etc/samba/smb.conf.ucf-dist:;   write list = root, @lpadmin
+/etc/samba/smb.conf:;   write list = root, @lpadmin
+/etc/securetty:# /etc/securetty: list of terminals on which root is allowed to login.
+/etc/security/access.conf:#-:ALL EXCEPT root:tty1
+/etc/security/access.conf:# Disallow non-root logins on tty1
+/etc/security/access.conf:#+ : root : 127.0.0.1
+/etc/security/access.conf:#+ : root : 192.168.200.1 192.168.200.4 192.168.200.9
+/etc/security/access.conf:#+ : root : 192.168.201.
+/etc/security/access.conf:#- : root : ALL
+/etc/security/access.conf:#+ : root : cron crond :0 tty1 tty2 tty3 tty4 tty5 tty6
+/etc/security/access.conf:#+ : root : .foo.bar.org
+/etc/security/access.conf:# User "root" should be able to have access from domain.
+/etc/security/access.conf:# User "root" should be allowed to get access from hosts with ip addresses.
+/etc/security/access.conf:# User "root" should be allowed to get access via cron .. tty5 tty6.
+/etc/security/access.conf:# User "root" should be denied to get access from all other sources.
+/etc/security/access.conf:# User "root" should get access from network 192.168.201.
+/etc/security/capability.conf:## set'. That is, if you look at a random process, even one run by root,
+/etc/security/group.conf:# 1. to run an application as root
+/etc/security/limits.conf:#        - chroot - change root to directory (Debian-specific)
+/etc/security/limits.conf:#ftp             -       chroot          /ftp
+/etc/security/limits.conf:#        - NOTE: group and wildcard limits are not applied to root.
+/etc/security/limits.conf:#root            hard    core            100000
+/etc/security/limits.conf:#          the literal username root.
+/etc/security/limits.conf:#          To apply a limit to the root user, <domain> must be
+/etc/security/namespace.conf:# name, Polyinstantion will not be performed for user root and adm for directories
+/etc/security/namespace.conf:#/tmp     /tmp-inst/       	level      root,adm
+/etc/security/namespace.conf:#/var/tmp /var/tmp/tmp-inst/   	level      root,adm
+/etc/security/time.conf:# Another silly example, user 'root' is denied xsh access
+/etc/security/time.conf:#xsh;ttyp*;root;!WdMo0000-2400
+/etc/selinux/default/contexts/files/file_contexts:/	-d	system_u:object_r:root_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/etc/named\.root\.hints	--	system_u:object_r:named_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/etc/sysconfig/readonly-root	--	system_u:object_r:bin_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:# Home Context for user root
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/home	-d	system_u:object_r:home_root_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/home	-l	system_u:object_r:home_root_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.adobe(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/a?quota\.(user|group)	--	unconfined_u:object_r:quota_db_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.asoundrc	--	unconfined_u:object_r:alsa_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.cache/\.mc_connections	--	unconfined_u:object_r:telepathy_mission_control_cache_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.cache/telepathy/avatars/gabble(/.*)?	unconfined_u:object_r:telepathy_gabble_cache_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.cache/telepathy/gabble(/.*)?	unconfined_u:object_r:telepathy_gabble_cache_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.cache/telepathy/logger(/.*)?	unconfined_u:object_r:telepathy_logger_cache_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.cache/telepathy(/.*)?	unconfined_u:object_r:telepathy_cache_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.cache/wocky(/.*)?	unconfined_u:object_r:telepathy_gabble_cache_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.camel_certs(/.*)?	unconfined_u:object_r:evolution_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/cxoffice/bin/wine.+	--	unconfined_u:object_r:wine_exec_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.dbus(/.*)?	unconfined_u:object_r:session_dbusd_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/dead\.letter	--	unconfined_u:object_r:mail_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root	-d	unconfined_u:object_r:user_home_dir_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.esd_auth	--	unconfined_u:object_r:pulseaudio_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.esmtp_queue	--	unconfined_u:object_r:mail_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.evolution(/.*)?	unconfined_u:object_r:evolution_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.fetchmailrc	--	unconfined_u:object_r:fetchmail_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.fonts/auto(/.*)?	unconfined_u:object_r:user_fonts_cache_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.fonts\.cache-.*	--	unconfined_u:object_r:user_fonts_cache_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.fonts\.conf	--	unconfined_u:object_r:user_fonts_config_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.fonts(/.*)?	unconfined_u:object_r:user_fonts_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.forbidden	--	unconfined_u:object_r:polipo_config_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.forward[^/]*	--	unconfined_u:object_r:mail_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.galeon(/.*)?	unconfined_u:object_r:mozilla_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gcjwebplugin(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gconfd(/.*)?	unconfined_u:object_r:gconf_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gconf(/.*)?	unconfined_u:object_r:gconf_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.giFT(/.*)?	unconfined_u:object_r:gift_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gnash(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gnome2/keyrings(/.*)?	unconfined_u:object_r:gnome_keyring_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gnome2_private(/.*)?	unconfined_u:object_r:gnome_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gnome2(/.*)?	unconfined_u:object_r:gnome_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gnome(/.*)?	unconfined_u:object_r:gnome_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gnupg/log-socket	-s	unconfined_u:object_r:gpg_agent_tmp_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.gnupg(/.+)?	unconfined_u:object_r:gpg_secret_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.ICAClient(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.ICEauthority.*	--	unconfined_u:object_r:iceauth_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.icedteaplugin(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/irclogs(/.*)?	unconfined_u:object_r:irc_log_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.ircmotd	--	unconfined_u:object_r:irc_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.irssi(/.*)?	unconfined_u:object_r:irc_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.java(/.*)?	unconfined_u:object_r:java_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.k5login	--	unconfined_u:object_r:krb5_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.kismet(/.*)?	unconfined_u:object_r:kismet_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.libvirt/qemu(/.*)?	unconfined_u:object_r:svirt_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.libvirt(/.*)?	unconfined_u:object_r:virt_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.local/share/telepathy/mission-control(/.*)?	unconfined_u:object_r:telepathy_mission_control_data_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.local/share/telepathy(/.*)?	unconfined_u:object_r:telepathy_data_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.local/share/TpLogger(/.*)?	unconfined_u:object_r:telepathy_logger_data_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.macromedia(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.maildir(/.*)?	unconfined_u:object_r:mail_home_rw_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/Maildir(/.*)?	unconfined_u:object_r:mail_home_rw_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.mailrc	--	unconfined_u:object_r:mail_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.mission-control(/.*)?	unconfined_u:object_r:telepathy_mission_control_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.mozilla/plugins(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.mozilla(/.*)?	unconfined_u:object_r:mozilla_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.mplayer(/.*)?	unconfined_u:object_r:mplayer_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.my\.cnf	--	unconfined_u:object_r:mysqld_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.netscape(/.*)?	unconfined_u:object_r:mozilla_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.oidentd\.conf	--	unconfined_u:object_r:oidentd_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.phoenix(/.*)?	unconfined_u:object_r:mozilla_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.polipo-cache(/.*)?	unconfined_u:object_r:polipo_cache_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.polipo	--	unconfined_u:object_r:polipo_config_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.ppprc	--	unconfined_u:object_r:ppp_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.procmailrc	--	unconfined_u:object_r:procmail_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/public_git(/.*)?	unconfined_u:object_r:git_user_content_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.pulse-cookie	--	unconfined_u:object_r:pulseaudio_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.pulse(/.*)?	unconfined_u:object_r:pulseaudio_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.pyzor(/.*)?	unconfined_u:object_r:pyzor_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.razor(/.*)?	unconfined_u:object_r:razor_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.rhosts	--	unconfined_u:object_r:rlogind_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.rlogin	--	unconfined_u:object_r:rlogind_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.screenrc	--	unconfined_u:object_r:screen_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.screen(/.*)?	unconfined_u:object_r:screen_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.serverauth.*	--	unconfined_u:object_r:xauth_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.spamassassin(/.*)?	unconfined_u:object_r:spamassassin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.spamd(/.*)?	unconfined_u:object_r:spamd_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.spicec(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.ssh(/.*)?	unconfined_u:object_r:ssh_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.telepathy-sunshine(/.*)?	unconfined_u:object_r:telepathy_sunshine_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.thunderbird(/.*)?	unconfined_u:object_r:thunderbird_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.tmux\.conf	--	unconfined_u:object_r:screen_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.tvtime(/.*)?	unconfined_u:object_r:tvtime_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.uml(/.*)?	unconfined_u:object_r:uml_rw_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/.+	unconfined_u:object_r:user_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.virtinst(/.*)?	unconfined_u:object_r:virt_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/VirtualMachines/isos(/.*)?	unconfined_u:object_r:virt_content_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/VirtualMachines(/.*)?	unconfined_u:object_r:virt_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.vmware[^/]*/.*\.cfg	--	unconfined_u:object_r:vmware_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.vmware(/.*)?	unconfined_u:object_r:vmware_file_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/vmware(/.*)?	unconfined_u:object_r:vmware_file_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.wine(/.*)?	unconfined_u:object_r:wine_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.wireshark(/.*)?	unconfined_u:object_r:wireshark_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/((www)|(web)|(public_html))/cgi-bin(/.+)?	unconfined_u:object_r:httpd_user_script_exec_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/((www)|(web)|(public_html))(/.*)?/\.htaccess	--	unconfined_u:object_r:httpd_user_htaccess_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/((www)|(web)|(public_html))(/.*)?/logs(/.*)?	unconfined_u:object_r:httpd_user_ra_content_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/((www)|(web)|(public_html))(/.+)?	unconfined_u:object_r:httpd_user_content_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.Xauthority.*	--	unconfined_u:object_r:xauth_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/\.xauth.*	--	unconfined_u:object_r:xauth_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/root/zimbrauserdata(/.*)?	unconfined_u:object_r:mozilla_plugin_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/tmp/\.exchange-root(/.*)?	unconfined_u:object_r:evolution_exchange_tmp_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/tmp/gconfd-root	-d	unconfined_u:object_r:user_tmp_t:s0
+/etc/selinux/default/contexts/files/file_contexts.homedirs:/tmp/gconfd-root/.*	--	unconfined_u:object_r:gconf_tmp_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/initrd	-d	system_u:object_r:root_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/root/\.default_contexts	--	system_u:object_r:default_context_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/root/\.k5login	--	system_u:object_r:krb5_home_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/root/restore	-d	system_u:object_r:amanda_recover_dir_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/usr/lib/courier/rootcerts(/.*)?	system_u:object_r:courier_etc_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/usr/libexec/rssh_chroot_helper	--	system_u:object_r:rssh_chroot_helper_exec_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/usr/share/awstats/wwwroot/cgi-bin(/.*)?	system_u:object_r:httpd_awstats_script_exec_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/usr/share/awstats/wwwroot(/.*)?	system_u:object_r:httpd_awstats_content_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/usr/share/mojomojo/root(/.*)?	system_u:object_r:httpd_mojomojo_content_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/axfrdns/root(/.*)?	system_u:object_r:djbdns_axfrdns_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/dnscache/root(/.*)?	system_u:object_r:djbdns_dnscache_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/etc/named\.caching-nameserver\.conf	--	system_u:object_r:named_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/etc/named\.conf	--	system_u:object_r:named_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/etc/named\.rfc1912\.zones	--	system_u:object_r:named_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/etc/named\.root\.hints	--	system_u:object_r:named_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/etc/pki(/.*)?	system_u:object_r:cert_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/etc/rndc\.key	--	system_u:object_r:dnssec_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/proc(/.*)?	<<none>>
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot(/.*)?	system_u:object_r:named_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/log/named.*	--	system_u:object_r:named_log_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/named/data(/.*)?	system_u:object_r:named_cache_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/named/dynamic(/.*)?	system_u:object_r:named_cache_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/named/named\.ca	--	system_u:object_r:named_conf_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/named/slaves(/.*)?	system_u:object_r:named_cache_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/named(/.*)?	system_u:object_r:named_zone_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/run/dbus(/.*)?	system_u:object_r:system_dbusd_var_run_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/run/named.*	system_u:object_r:named_var_run_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/named/chroot/var/tmp(/.*)?	system_u:object_r:named_cache_t:s0
+/etc/selinux/default/contexts/files/file_contexts:/var/tinydns/root(/.*)?	system_u:object_r:djbdns_tinydns_conf_t:s0
+/etc/selinux/default/seusers:root:unconfined_u:s0-s0:c0.c1023
+/etc/selinux/default/users/system.users:user root roles { sysadm_r staff_r  system_r } level s0 range s0 - s0:c0.c1023;
+/etc/selinux/restorecond.conf:/root/*
+/etc/selinux/restorecond.conf:/root/.ssh/*
+/etc/services:rootd		1094/tcp
+/etc/services:rootd		1094/udp
+/etc/skel/.bashrc:    debian_chroot=$(cat /etc/debian_chroot)
+/etc/skel/.bashrc:if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+/etc/skel/.bashrc:    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+/etc/skel/.bashrc:    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+/etc/skel/.bashrc:    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+/etc/skel/.bashrc:# set variable identifying the chroot you work in (used in the prompt below)
+/etc/ssh/ssh_host_dsa_key.pub:ssh-dss AAAAB3NzaC1kc3MAAACBAJjfOHfTS6IHiMlGYEQMgqwHy8xnRF8dAatDeRlHRJkFWcm+ToqxeZoQGVDi+K6/H5IeffQebDA3T7R5ck9dEy3i4t8jLSm2cV+65WK2gJdGi1eIoyv04VnJUTJN6Z4AUEIIM0pC7alzlsnf1jo0qH2H2bGNgfszP3WNqDI2Q8KlAAAAFQCo0EUQfKDmd/p6Ge9L5qbVQNRh+wAAAIBdU/+BwMv0Vk2t3TGrESncftmbpByDeeuqKfFhzpxwvxfvNULW0+5d9NuLFg/HkaYMRXrAm6y68kzxoavJjMl8KVVJzeuFLAorMaFHthbsvAq0eaNX9lvYeA+bENR97P2E/QH0ThYCKy6GtD0RaOq9FdTt0gsgRZqgTZ+tq3Wg7wAAAIBQt0rwrp3gd6ZjSZP+Hcbn7KMBiQTV1XC7Ll/GK+mrJAqJEqHwyEMLIez0sErDOJ/OT9zsZGtcWxfd/Mwfv9lpVO/m1Pvmf8zezRkPB3OjJCfCoUNu8OFlEADrWv3US5rP6eB4J4gx4OKTSq/bsi+syQ4q8P8JRxQmf8Xw5WMlBA== root@sileadinc
+/etc/ssh/ssh_host_ecdsa_key.pub:ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJoTwpG1Jae04PQfVQXTtUl/tj8Xo1wx/HEs3xSBMfg1GeGwgaTHQdbJ7pPS5hquXzRjuUcmQWFxmhXnHbfzon8= root@sileadinc
+/etc/ssh/ssh_host_ed25519_key.pub:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJcFZof2Y75rgChJ4jq+zDn51Ny24BnPgmeh0H+kDMO9 root@sileadinc
+/etc/ssh/ssh_host_rsa_key.pub:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDa3LxBTb/CX5G7d5MHC2Eci8X13AG8P+rXcGQNF3fKRz6I42phCh63Fi3wzZSVTLXxiPDQWgt3sDiwSftiRL4BJscDSWRQ2L9/EzcPgfZzkQOZanxHXAI87c2JkZ3aAHIob3Jz3tFSEfQiglCzeljwPO/y+dnhRHI9M4n4U6m7yTyZ1U4pFvJfK5XBGtqM+rY7vx9SJTGP4Q9wO/UBvZCnhL7FjmQ4MRPwrPt2iwDtoIP2v8EZUcTlOGhz1ebYazw1MY/5Ux+XGbhj3PNidw0prqAfkzm9KtEj4CwUPsIyP7FOoSKFvGzXxpgfBj6wJ9jPLaCopoWL1VyHxTHy2ImF root@sileadinc
+/etc/ssl/openssl.cnf:dir		= ./demoCA		# TSA root directory
+/etc/sysctl.d/10-kernel-hardening.conf:# limits visibility to the root user, and "2" blocks even the root user.
+/etc/systemd/logind.conf:#KillExcludeUsers=root
+/etc/texmf/texdoctk/texdocrc.defaults:# root of doc directory (from $TEXMFMAIN)
+/etc/texmf/texdoctk/texdocrc.defaults:# root of local doc directory (from $TEXMFLOCAL)
+/etc/wodim.conf:# or wodim runs with suid-root permissions.
+/etc/X11/Xreset.d/README:# Scripts in this directory are executed as root when a user log out from
+/etc/X11/Xwrapper.config:# again, run the following command as root:
