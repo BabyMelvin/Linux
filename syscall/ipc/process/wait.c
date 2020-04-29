@@ -3,7 +3,7 @@
  *
  *       Filename:  wait.c
  *
- *    Description: 等待子进程改变状态
+ *    Description: 等待子进程改变状态,SIGCHLD信号发送给父进程
  *                 子进程改变：
  *                      1.子进程正常结束(释放相关的资源,如果没有wait将进入僵尸状态zombie)
  *                      2.子进程被信号停止
@@ -83,32 +83,3 @@ int main(int argc,char* argv[]){
     }
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

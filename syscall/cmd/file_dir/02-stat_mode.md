@@ -58,6 +58,3 @@ ______________________________________
 |Ｓ_IRUSER/S_IRGRP/S_IROTH|用户/组/其他读|
 |S_IWUSER/S_IWGRP/S_IWOTH|用户/组/其他写|
 |S_IXUSER/S_IXGRP/S_IXOTH|用户/组/其他执行|
-
-
-
