@@ -1,6 +1,7 @@
 #ifndef __CHTBL_H__
 #define __CHTBL_H__
 
+/* 链式哈希表 头文件*/
 typedef struct CHTbl_ {
 	int buckets;
 	int (*h)(const void *key);
