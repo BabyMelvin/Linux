@@ -1,0 +1,146 @@
+#include <stdlib.h>
+#include <string.h>
+#include "bistree.h"
+
+static void destroy_left (BisTree *tree, BisTreeNode *node);
+static void destroy_right(BisTree *tree, BisTreeNode *node)
+{
+    BiTreeNode **position;
+
+    /*Do not allo destruction of an empty tree*/
+    if (bistree_size(tree) == 0)
+        return;
+
+    /*Determine where to destroy nodes*/
+    if (node == NULL)
+        position = &tree->root;
+    else
+        position = &node->right;
+
+    /*Destroy the nodes*/
+    if (*position != NULL) {
+        destroy_left(tree, *position);
+        destroy_right(tree, *position);
+
+        if (tree->destroy != NULL) {
+            /*Call a user-defined function to free dynamically allocated data*/
+            tree->destroy(((AvlNode *)(*position)->data)->data);
+        }
+
+        /*Free the AVL data in the node, then free the node itself*/
+        free((*position)->data);
+        free(*position);
+        *position = NULL;
+
+        /*Adjust the size of the tree to account for the destroyed node*/
+        tree->size --;
+    }
+
+    return;
+}
+
+static void destroy_left (BisTree *tree, BisTreeNode *node)
+{
+    BiTreeNode **position;
+
+    /*Do not allow destruction of an empty tree*/
+    if (bitree_size(tree) == 0)
+        return;
+
+    /*Determine where to destroy nodes*/
+    if (node == NULL)
+        position = &tree->root;
+    else
+        position = &node->left;
+
+    /*Destroy the nodes*/
+    if (*position != NULL) {
+        destroy_left(tree, *position);
+        destroy_right(tree, *position);
+
+        if (tree->destroy != NULL) {
+            /*Call a user-defined function to free dynamically allocated data*/
+            tree->destroy(((AvlNode *)(*position)->data)->data);
+        }
+
+        /*Free the AVL data in the node, then free the node itself*/
+        free((*position)->data);
+        free(*position);
+        *position = NULL;
+
+        /*Adjust the size of the tree to account for the destroyed node*/
+        tree->size --;
+    }
+    return;
+}
+
+static int insert (BisTree *tree, BiTreeNode **node,
+        const void *data, int *balanced)
+{
+    AvlNode *avl_data;
+    int cmpval, retval;
+
+    /*Insert the data into the tree*/
+    if (bitree_is_eob(*node)) {
+        /*Handle insertion into an empty tree*/
+        if ((avl_data = (AvlNode *)malloc(sizeof(AvlNode))) == NULL)
+            return -1;
+
+        avl_data->factor = AVL_BALANCED;
+        avl_data->hidden = 0;
+        avl_data->data = (void *)data;
+
+        return bitree_ins_left(tree, *node, avl_data);
+    } else {
+        /*Handle insertion into a tree that is not empty*/
+        cmpval = tree->compare(data, ((AvlNode *)bitree_data(*node))->data);
+        if (cmpval < 0) {
+            /*move to the left*/
+            if (bitree_is_eob(bitree_left(*node))) {
+                if ((avl_data = (AvlNode *)malloc(sizeof(AvlNode))) == NULL) {
+                    return -1;
+
+                    avl_data->factor = AVL_BALANCED;
+                    avl_data->hidden = 0;
+                    avl_data->data = (void *)data;
+
+                    if (bitree_ins_left(tree, *node, avl_data) != 0)
+                        return -1;
+                    *balanced = 0;
+                }
+            } else {
+                if ((retval = insert(tree, &bitree_left(*node), data, balanced))
+                        != 0)
+                    return retval;
+            }
+
+            /*Ensure that the tree remains balanced*/
+            if (!(*balanced)) {
+            }
+        } else {
+        }
+    }
+}
+
+void bistree_init(BisTree *tree, int (*compare)(const void *key1, const void *key2),
+        void (*destroy)(void *data))
+{
+    bitree_init(tree, destroy);
+    tree->compare = compare;
+    return;
+}
+
+void bistree_destroy(BisTree *tree)
+{
+    /*Destroy all nodes in the tree*/
+    destroy_left(tree, NULL);
+    
+    memset(tree, 0, sizeof(BisTree));
+    return;
+}
+
+int bistree_insert (BisTree *tree, const void *data)
+{
+    int balanced = 0;
+    return insert(tree, &bitree_root(tree), data, &balanced);
+}
