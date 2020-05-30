@@ -1,0 +1,2773 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0056)http://www.baiheee.com/Documents/090518/090518112619.htm -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+
+		<title>USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室</title>
+
+		
+
+		<link href="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/forum.css" type="text/css" rel="stylesheet">
+
+			<link href="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/Article.css" type="text/css" rel="stylesheet">
+
+				<link href="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/Products.css" type="text/css" rel="stylesheet">
+
+					<link href="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/SyntaxHighlighter.css" type="text/css" rel="stylesheet">
+
+						
+
+						<style type="text/css">
+
+<!--
+
+.STYLE2 {color: #666666}
+
+.STYLE7 {font-size: 14px; font-weight: bold; }
+
+-->
+
+                        </style>
+
+</head>
+
+	<body>
+
+	
+
+		<table id="Table1" cellspacing="1" cellpadding="1" width="990" align="center" border="0">
+
+			<tbody><tr>
+
+				<td>
+
+					<div id="header">
+
+						<ul>
+
+							<li>
+
+								<a href="http://www.baiheee.com/Products/Index/index.htm">产品</a>							</li>
+
+							<li class="active">
+
+								设计参考							</li>
+
+							<li>
+
+								<a href="http://www.baiheee.com/OpenSource/Kai-Yuan-Index.htm">开源项目</a>							</li>
+
+							<li>
+
+								<a href="http://usb.baiheee.com/usb_bbs/">论坛 </a>							</li>
+
+							<li>
+
+								<a href="http://www.baiheee.com/index.htm">首页</a>							</li>
+
+						</ul>
+
+					<img src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/logo.gif">					</div>
+
+										
+
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">						
+
+						<tbody><tr>
+
+							<td width="69%"><font face="宋体">网站导航：</font> <a href="http://www.baiheee.com/index.htm">首页</a> ＞&nbsp;<a href="http://www.baiheee.com/documents/index/index_0.htm">设计参考</a>
+
+								＞ 正文 </td>
+
+								<td>									
+
+																	
+
+								</td>
+
+							<td width="31%" align="right"><a href="http://www.baiheee.com/Documents/DocumentSearch.aspx" target="_blank">文章搜索
+
+								</a>							</td>
+
+						</tr>
+
+					</tbody></table>
+
+				</td>
+
+			</tr>
+
+		</tbody></table>
+
+
+
+		<table width="990" border="0" align="center" cellpadding="0" cellspacing="0">
+
+			<tbody><tr>
+
+				<td valign="top"><table id="table33" style="TABLE-LAYOUT: fixed" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+						<tbody><tr height="3" width="100%">
+
+							<td><table id="table34" style="TABLE-LAYOUT: fixed" height="3" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+									<tbody><tr height="1">
+
+										<td width="1"></td>
+
+										<td width="1"></td>
+
+										<td width="1"></td>
+
+										<td bgcolor="#e5ada7"></td>
+
+										<td width="1"></td>
+
+										<td width="1"></td>
+
+										<td width="1"></td>
+
+									</tr>
+
+									<tr height="1">
+
+										<td></td>
+
+										<td bgcolor="#e5ada7" colspan="2"></td>
+
+										<td bgcolor="#fed6d2"></td>
+
+										<td bgcolor="#e5ada7" colspan="2"></td>
+
+										<td></td>
+
+									</tr>
+
+									<tr height="1">
+
+										<td></td>
+
+										<td bgcolor="#e5ada7"></td>
+
+										<td bgcolor="#fed6d2" colspan="3"></td>
+
+										<td bgcolor="#e5ada7"></td>
+
+										<td></td>
+
+									</tr>
+
+								</tbody></table>
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td><table id="table35" style="TABLE-LAYOUT: fixed" height="100%" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+									<tbody><tr>
+
+										<td width="1" bgcolor="#e5ada7"></td>
+
+										<td width="2" bgcolor="#fed6d2"></td>
+
+										<td id="td6" bgcolor="#fed6d2"><font face="宋体">
+
+												<table id="table36" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+													<tbody><tr>
+
+														<td bgcolor="#fed6d2"><table width="100%" height="24" border="0" cellpadding="0" cellspacing="0">
+
+																<tbody><tr>
+
+																	<td width="24" align="center"><font face="宋体"><img alt="" src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/Flag.gif"></font></td>
+
+																	<td align="left" valign="middle"><div id="Article_Content_Title">USB开发基础－－USB命令（请求）和USB描述符</div>
+
+																	</td>
+
+																	<td width="5">&nbsp;</td>
+
+																</tr>
+
+															</tbody></table>
+
+														</td>
+
+													</tr>
+
+												</tbody></table>
+
+											</font>
+
+											<table id="table37" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+												<tbody><tr>
+
+													<td bgcolor="white"><table width="100%" border="0" cellpadding="1" cellspacing="1" id="Table2">
+
+															<tbody><tr>
+
+																<td width="15" height="16"></td>
+
+																<td valign="top" width="67" height="16"><span class="STYLE2">文章编号：</span></td>
+
+																<td width="185" height="16" align="left"><div class="STYLE2" id="divAID" name="divAID">090518112619</div>																</td>
+
+																<td width="62"><span class="STYLE2">文章分类：</span></td>
+
+																<td width="395" align="left"><span class="ArticleClass STYLE2"><a href="http://www.baiheee.com/Documents/Index/40_0.htm">接口技术                             </a> ＞ <a href="http://www.baiheee.com/Documents/Index/4003_0.htm">USB                                          </a></span></td>
+
+															</tr>
+
+															<tr>
+
+																<td height="16"></td>
+
+																<td height="16" valign="top"><span class="STYLE2">点 击：</span></td>
+
+																<td height="16" align="left"><div class="STYLE2" id="lblClickCount" name="lblClickCount" ms_positioning="FlowLayout">
+
+																		<table cellspacing="0" cellpadding="0" width="100" border="0" ms_1d_layout="TRUE">
+
+																			<tbody><tr>
+
+																				<td>...</td>
+
+																			</tr>
+
+																		</tbody></table>
+
+																	</div>																</td>
+
+																<td height="16"><span class="STYLE2">关 键 词：</span></td>
+
+																<td height="16" align="left"><span class="ArticleKeyWord STYLE2">USB开发基础 USB入门 USB命令请求 USB描述符</span></td>
+
+															</tr>
+
+															<tr>
+
+																<td width="15" height="16"></td>
+
+																<td width="67" height="16" valign="top"><span class="STYLE2">文章来源：</span></td>
+
+																<td height="16" colspan="3" align="left"><div class="ArticleOrigin STYLE2">百合电子工作室（www.baiheee.com）</div>																</td>
+
+															</tr>
+
+															<tr>
+
+																<td width="15" height="16"></td>
+
+																<td width="67" height="16" valign="top"><span class="STYLE2">摘 要：</span></td>
+
+																<td height="16" colspan="3" align="left"><div class="ArticleAbstract STYLE2">USB开发基础之USB命令和USB描述符</div>																</td>
+
+															</tr>
+
+														</tbody></table>
+
+														<hr width="100%" color="#fed6d2" size="1">
+
+														<table id="Table3" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+															<tbody><tr>
+
+																<td width="7"></td>
+
+																<td align="left">
+
+																
+
+<div class="ArticleContent"><p><strong>一、USB命令</strong></p>
+<p><strong>　　</strong>在USB规范里，对命令一词提供的单词为“Request”，但这里为了更好的理解主机与设备之间的主从关系，将它定义成“命令”。</p>
+<p>　　所有的USB设备都要求对主机发给自己的控制命令作出响应，USB规范定义了11个标准命令，它们分别是：Clear_Feature、Get_Configuration、Get_Descriptor、Get_Interface、Get_Status、Set_Address、Set_Configuration、Set_Descriptor、Set_Interface、Set_Feature、Synch_Frame。所有USB设备都必须支持这些命令（个别命令除外，如Set_Descriptor、Synch_Frame）。</p>
+<p>　　不同的命令虽然有不同的数据和使用目的，但所有的USB命令结构是一样的。下表所示为USB命令的结构：&nbsp;
+</p><table id="Table42" bordercolor="#000000" cellspacing="0" cellpadding="2" width="100%" border="1">
+    <tbody>
+        <tr>
+            <td align="center" bgcolor="#000000" colspan="5"><font face="宋体"><strong><font color="#ffffff">表1、USB命令的</font></strong><span style="color: #ffffff"><strong>结构</strong></span></font></td>
+        </tr>
+        <tr>
+            <td align="center" style="width: 59px">偏移量</td>
+            <td align="center">域</td>
+            <td align="center" style="width: 69px">&nbsp;长度（字节）</td>
+            <td align="center">值</td>
+            <td>描述</td>
+        </tr>
+        <tr>
+            <td align="center" style="width: 59px">0</td>
+            <td align="center">bmRequestType</td>
+            <td align="center" style="width: 69px">1</td>
+            <td align="center">位图</td>
+            <td>请求特征：<br>
+            D7：传输方向 <br>
+            0=主机至设备 <br>
+            1=设备至主机 <br>
+            D6..5：种类 <br>
+            0=标准 <br>
+            1=类 <br>
+            2=厂商 <br>
+            3=保留 <br>
+            D4..0：接受者 <br>
+            0=设备 <br>
+            1=接口 <br>
+            2=端点 <br>
+            3=其他 <br>
+            4..31 保留</td>
+        </tr>
+        <tr>
+            <td align="center" style="width: 59px">1</td>
+            <td align="center">bRequest</td>
+            <td align="center" style="width: 69px">1</td>
+            <td align="center">值</td>
+            <td>命令类型编码值（见表3）</td>
+        </tr>
+        <tr>
+            <td align="center" style="width: 59px">2</td>
+            <td align="center">wValue</td>
+            <td align="center" style="width: 69px">2</td>
+            <td align="center">值</td>
+            <td>根据不同的命令，含义也不同</td>
+        </tr>
+        <tr>
+            <td align="center" style="width: 59px">4</td>
+            <td align="center">wIndex</td>
+            <td align="center" style="width: 69px">2</td>
+            <td align="center">索引或偏移</td>
+            <td>根据不同的命令，含义也不同，主要用于传送索引或偏　移</td>
+        </tr>
+        <tr>
+            <td align="center" style="width: 59px">6</td>
+            <td align="center">wLength</td>
+            <td align="center" style="width: 69px">2</td>
+            <td align="center">&nbsp;</td>
+            <td>如有数据传送阶段，此为数据字节数。</td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>下表列出了USB的11种标准命令</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" border="1">
+    <tbody>
+        <tr>
+            <td valign="top" align="center" bgcolor="#333333" colspan="7"><span style="color: #ffffff"><strong>表2、USB的11种标准命令</strong></span></td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">命令</td>
+            <td valign="top" width="112">
+            <p>bmRequestType</p>
+            </td>
+            <td valign="top" width="128">
+            <p>bRequest</p>
+            </td>
+            <td valign="top" width="84">
+            <p>wValue</p>
+            </td>
+            <td valign="top" width="72">
+            <p>wIndex</p>
+            </td>
+            <td valign="top" width="72">
+            <p>wLength</p>
+            </td>
+            <td valign="top" width="108">
+            <p>Data</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Clear_Feature</td>
+            <td valign="top" width="112">
+            <p>00000000B<br>
+            00000001B<br>
+            00000010B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>CLEAR_FEATURE</p>
+            </td>
+            <td valign="top" width="84">
+            <p>特性选择符</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零 <br>
+            接口号 <br>
+            端点号</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零</p>
+            </td>
+            <td valign="top" width="108">
+            <p>无</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Get_Configuration</td>
+            <td valign="top" width="112">
+            <p>10000000B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>GET_CONFIGURATION</p>
+            </td>
+            <td valign="top" width="84">
+            <p>零</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零</p>
+            </td>
+            <td valign="top" width="72">
+            <p>一</p>
+            </td>
+            <td valign="top" width="108">
+            <p>配置值</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Get_Descriptor</td>
+            <td valign="top" width="112">
+            <p>10000000B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>GET_DESCRIPTOR</p>
+            </td>
+            <td valign="top" width="84">
+            <p>描述表种类(高字节，见表5）和索引（低字节）</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零或语言标志</p>
+            </td>
+            <td valign="top" width="72">
+            <p>描述表长</p>
+            </td>
+            <td valign="top" width="108">
+            <p>描述表</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Get_Interface</td>
+            <td valign="top" width="112">
+            <p>10000001B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>GET_INTERFACE</p>
+            </td>
+            <td valign="top" width="84">
+            <p>零</p>
+            </td>
+            <td valign="top" width="72">
+            <p>接口号</p>
+            </td>
+            <td valign="top" width="72">
+            <p>一</p>
+            </td>
+            <td valign="top" width="108">
+            <p>可选设置</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Get_Status</td>
+            <td valign="top" width="112">
+            <p>10000000B<br>
+            10000001B<br>
+            10000010B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>GET_STATUS</p>
+            </td>
+            <td valign="top" width="84">
+            <p>零</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零（返回设备状态）<br>
+            接口号（对像时接口时）<br>
+            端点号（对象是端点时）</p>
+            </td>
+            <td valign="top" width="72">
+            <p>二</p>
+            </td>
+            <td valign="top" width="108">
+            <p>设备,<br>
+            接口 ,或 <br>
+            端点状态</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Set_Address</td>
+            <td valign="top" width="112">
+            <p>00000000B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>SET_ADDRESS</p>
+            </td>
+            <td valign="top" width="84">
+            <p>设备地址</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零</p>
+            </td>
+            <td valign="top" width="108">
+            <p>无</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Set_Configuration</td>
+            <td valign="top" width="112">
+            <p>00000000B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>SET_CONFIGURATION</p>
+            </td>
+            <td valign="top" width="84">
+            <p>配置值（高字节为0，低字节表示要设置的配置值）</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零</p>
+            </td>
+            <td valign="top" width="108">
+            <p>无</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Set_Descriptor</td>
+            <td valign="top" width="112">
+            <p>00000000B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>SET_DESCRIPTOR</p>
+            </td>
+            <td valign="top" width="84">
+            <p>描述表种类（高字节，见表5）和索引（低字节）</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零或语言标志</p>
+            </td>
+            <td valign="top" width="72">
+            <p>描述表长</p>
+            </td>
+            <td valign="top" width="108">
+            <p>描述表</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Set_Feature</td>
+            <td valign="top" width="112">
+            <p>00000000B<br>
+            00000001B<br>
+            00000010B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>SET_FEATURE</p>
+            </td>
+            <td valign="top" width="84">
+            <p>特性选择符(1表示设备，0表示端点）</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零 <br>
+            接口号 <br>
+            端点号</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零</p>
+            </td>
+            <td valign="top" width="108">
+            <p>无</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Set_Interface</td>
+            <td valign="top" width="112">
+            <p>00000001B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>SET_INTERFACE</p>
+            </td>
+            <td valign="top" width="84">
+            <p>可选设置</p>
+            </td>
+            <td valign="top" width="72">
+            <p>接口号</p>
+            </td>
+            <td valign="top" width="72">
+            <p>零</p>
+            </td>
+            <td valign="top" width="108">
+            <p>无</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="112">Synch_Frame</td>
+            <td valign="top" width="112">
+            <p>100000010B</p>
+            </td>
+            <td valign="top" width="128">
+            <p>SYNCH_FRAME</p>
+            </td>
+            <td valign="top" width="84">
+            <p>零</p>
+            </td>
+            <td valign="top" width="72">
+            <p>端点号</p>
+            </td>
+            <td valign="top" width="72">
+            <p>二</p>
+            </td>
+            <td valign="top" width="108">
+            <p>帧号</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>其中bRequest为命令编码值，含意见表3：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" border="1">
+    <tbody>
+        <tr>
+            <td valign="top" bgcolor="#333333" colspan="2">
+            <div class="STYLE1" align="center"><strong><span style="color: #ffffff">表3、USB标准命令的编码值</span></strong></div>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">bRequest</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">Value</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">GET_STATUS</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">0</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">CLEAR_FEATURE</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">1</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">为将来保留</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">2</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">SET_FEATURE</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">3</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">为将来保留</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">4</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">SET_ADDRESS</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">5</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">GET_DESCRIPTOR</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">6</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">SET_DESCRIPTOR</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">7</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">GET_CONFIGURATION</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">8</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">SET_CONFIGURATION</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">9</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">GET_INTERFACE</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">10</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">SET_INTERFACE</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">11</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="154">
+            <p align="center">SYNCH_FRAME</p>
+            </td>
+            <td valign="top" width="294">
+            <p align="center">12</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>&nbsp;</p>
+<p><strong>二、USB描述符</strong></p>
+<p><strong>　　</strong>USB协议为USB设备定义了一套描述设备功能和属性的有固定结构的描述符，包括标准的描述符即设备描述符、配置描述符、接口描述符、端点描述符和字符串描述符，还有百标准描述符，如类描述符。USB设备通过这些描述符向USB主机汇报设备的各种各样属性，主机通过对这些描述符的访问对设备进行类型识别、配置并为其提供相应的客户端驱动程序。</p>
+<p>　　USB设备通过描述符反映自己的设备特性。USB描述符是由特定格式排列的一组数据结构组成。</p>
+<p>　　在USB设备枚举过程中，主机端的协义软件需要解析从USB设备读取的所有描述符信息。在USB主向设备发送读取描述符的请求后，USB设备将所有的描述符以连续的数据流方式传输给USB主机。主机从第一个读到的字符开始，根据双方规定好的数据格式，顺序地解析读到的数据流。</p>
+<p>　　USB描述符包含标准描述符、类描述符和厂商特定描述３种形式。任何一种设备必须USB标准描述符（队字符串描述符可选外）。</p>
+<p>　　在USB1.X中，规定了5种标准描述符：设备描述符（Device Descriptor)、配置描述符（Configuration Descriptor）、接口描述符（Interface Descriptor）、端点描述符（Endpoint Descriptor）和字符串描述符（String Descriptor）。</p>
+<p>　　每个USB设备只有一个设备描述符，而一个设备中可包含一个或多个配置描述符，即USB设备可以有多种配置。设备的每一个配置中又可以包含一个或多个接口描述符，即USB设备可以支持多种功能（接口），接口的特性通过描述符提供。</p>
+<p>　　在USB主机访问USB设备的描述符时，USB设备依照设备描述符、配置描述符、接口描述符、端点描述符、字符串描述符顺序将所有描述符传给主机。一设备至少要包含设备描述符、配置描述符和接口描述符，如果USB设备没有端点描述符，则它仅仅用默认管道与主机进行数据传输。</p>
+<p>１、设备描述符</p>
+<p>　　设备描述符给出了USB设备的一般信息，包括对设备及在设备配置中起全程作用的信息，包括制造商标识号ID、产品序列号、所属设备类号、默认端点的最大包长度和配置描述符的个数等。一个USB设备必须有且仅有一个设备描述符。设备描述符是设备连接到总线上时USB主机所读取的第一个描述符，它包含了14个字段，结构如下：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" border="1">
+    <tbody>
+        <tr>
+            <td valign="top" bgcolor="#333333" colspan="5">
+            <div align="center"><span style="color: #ffffff"><strong><span style="color: #ffffff">表4、</span>USB设备描述符的结构</strong></span></div>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">偏移量</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">域</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">大小</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">值</p>
+            </td>
+            <td valign="top" width="277">
+            <p align="center">描述</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">0</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bLength</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="277">
+            <p>此描述表的字节数</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bDecriptorType</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">常量</p>
+            </td>
+            <td valign="top" width="277">
+            <p>描述符的类型（此处应为0x01，即设备描述符）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bcdUSB</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">BCD码</p>
+            </td>
+            <td valign="top" width="277">
+            <p>此设备与描述表兼容的USB设备说明版本号（BCD 码）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">4</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bDeviceClass</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">类</p>
+            </td>
+            <td valign="top" width="277">
+            <p>设备类码：<br>
+            如果此域的值为0则一个设置下每个接口指出它自己的类，各个接口各自独立工作。 <br>
+            如果此域的值处于1~FEH之间，则设备在不同的接口上支持不同的类。并这些接口可能不能独立工作。此值指出了这些接口集体的类定义。 <br>
+            如果此域设为FFH，则此设备的类由厂商定义。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">5</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bDeviceSubClass</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">子类</p>
+            </td>
+            <td valign="top" width="277">
+            <p>子类挖码 <br>
+            这些码值的具体含义根据bDeviceClass 域来看。 <br>
+            如bDeviceClass 域为零，此域也须为零 <br>
+            如bDeviceClass 域为FFH，此域的所有值保留。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">6</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bDevicePortocol</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">协议</p>
+            </td>
+            <td valign="top" width="277">
+            <p>协议码 <br>
+            这些码的值视bDeviceClass 和 bDeviceSubClass 的值而定。 <br>
+            如果设备支持设备类相关的协议，此码标志了设备类的值。如果此域的值为零，则此设备不支持设备类相关的协议，然而，可能它的接口支持设备类相关的协议。如果此域的值为FFH，此设备使用厂商定义的协议。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">7</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bMaxPacketSize0</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="277">
+            <p>端点0的最大包大小（仅8,16,32,64<br>
+            为合法值）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">8</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">idVendor</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">ID</p>
+            </td>
+            <td valign="top" width="277">
+            <p>厂商标志（由USB-IF组织赋值）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">10</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">idProduct</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">ID</p>
+            </td>
+            <td valign="top" width="277">
+            <p>产品标志（由厂商赋值）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">12</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bcdDevice</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">BCD 码</p>
+            </td>
+            <td valign="top" width="277">
+            <p>设备发行号（BCD 码）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">14</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">iManufacturer</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">索引</p>
+            </td>
+            <td valign="top" width="277">
+            <p align="left">描述厂商信息的字符串描述符的索引值。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">15</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">iProduct</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">索引</p>
+            </td>
+            <td valign="top" width="277">
+            <p align="left">描述产品信息的字串描述符的索引值。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">16</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">iSerialNumber</p>
+            </td>
+            <td valign="top" width="35">
+            <div align="center">1</div>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">索引</p>
+            </td>
+            <td valign="top" width="277">
+            <p align="left">描述设备序列号信息的字串描述符的索引值。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="62">
+            <p align="center">17</p>
+            </td>
+            <td valign="top" width="145">
+            <p align="center">bNumConfigurations</p>
+            </td>
+            <td valign="top" width="35">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="277">
+            <p align="left">可能的配置描述符数目</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>其中bDescriptorType为描述符的类型，其含义可查下表（此表也适用于标准命令Get_Descriptor中wValue域高字节的取值含义）：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" width="100%" border="1">
+    <tbody>
+        <tr>
+            <td bgcolor="#333333" colspan="3">
+            <div align="center"><span style="color: #ffffff"><strong>表5、USB描述符的类型值</strong></span></div>
+            </td>
+        </tr>
+        <tr>
+            <td>类型</td>
+            <td>描述符</td>
+            <td>描述符值</td>
+        </tr>
+        <tr>
+            <td rowspan="5">标准描述符</td>
+            <td>设备描述符（Device Descriptor)</td>
+            <td>0x01</td>
+        </tr>
+        <tr>
+            <td>配置描述符（Configuration Descriptor）</td>
+            <td>0x02</td>
+        </tr>
+        <tr>
+            <td>字符串描述符（String Descriptor）</td>
+            <td>0x03</td>
+        </tr>
+        <tr>
+            <td>接口描述符（Interface Descriptor）</td>
+            <td>0x04</td>
+        </tr>
+        <tr>
+            <td>端点描述符（EndPont Descriptor）</td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td rowspan="2">类描述符</td>
+            <td>集线器类描述符（Hub Descriptor）</td>
+            <td>0x29</td>
+        </tr>
+        <tr>
+            <td>人机接口类描述符（HID）</td>
+            <td>0x21</td>
+        </tr>
+        <tr>
+            <td>厂商定义的描述符</td>
+            <td>&nbsp;</td>
+            <td>0xFF</td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>设备类代码bDeviceClass可查下表：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" width="100%" border="1">
+    <tbody>
+        <tr>
+            <td bgcolor="#333333" colspan="3">
+            <div align="center"><span style="color: #ffffff"><strong><span style="color: #ffffff"><strong><span style="color: #ffffff">表6、</span></strong></span>设备的类别（bDeviceClass）</strong></span></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <div align="center">值（十进制）</div>
+            </td>
+            <td>
+            <div align="center">值（十六进制）</div>
+            </td>
+            <td>说明</td>
+        </tr>
+        <tr>
+            <td>
+            <div align="center">0</div>
+            </td>
+            <td>
+            <div align="center">0x00</div>
+            </td>
+            <td>接口描述符中提供类的值</td>
+        </tr>
+        <tr>
+            <td>
+            <div align="center">2</div>
+            </td>
+            <td>
+            <div align="center">0x02</div>
+            </td>
+            <td>通信类</td>
+        </tr>
+        <tr>
+            <td>
+            <div align="center">9</div>
+            </td>
+            <td>
+            <div align="center">0x09</div>
+            </td>
+            <td>集线器类</td>
+        </tr>
+        <tr>
+            <td>
+            <div align="center">220</div>
+            </td>
+            <td>
+            <div align="center">0xDC</div>
+            </td>
+            <td>用于诊断用途的设备类</td>
+        </tr>
+        <tr>
+            <td>
+            <div align="center">224</div>
+            </td>
+            <td>
+            <div align="center">0xE0</div>
+            </td>
+            <td>无线通信设备类</td>
+        </tr>
+        <tr>
+            <td>
+            <div align="center">255</div>
+            </td>
+            <td>
+            <div align="center">0xFF</div>
+            </td>
+            <td>厂商定义的设备类</td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>下表列出了一个USB鼠标的设备描述符的例子，供大家分析一下：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" width="600" border="1">
+    <tbody>
+        <tr>
+            <td bgcolor="#333333" colspan="2">
+            <div align="center"><strong><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表7、</span></strong></span>一种鼠标的设备描述符示例 </span></strong></div>
+            </td>
+        </tr>
+        <tr>
+            <td>字段</td>
+            <td>描述符值（十六制）</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bLength</p>
+            </td>
+            <td>0x12</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bDecriptorType</p>
+            </td>
+            <td>0x01</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bcdUSB</p>
+            </td>
+            <td>x0110</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bDeviceClass</p>
+            </td>
+            <td>0x00</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bDeviceSubClass</p>
+            </td>
+            <td>0x00</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bDevicePortocol</p>
+            </td>
+            <td>0x00</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bMaxPacketSize0</p>
+            </td>
+            <td>0x08</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">idVendor</p>
+            </td>
+            <td>0x045E(Microsoft Corporation）</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">idProduct</p>
+            </td>
+            <td>0x0047</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bcdDevice</p>
+            </td>
+            <td>0x300</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">iManufacturer</p>
+            </td>
+            <td>0x01</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">iProduct</p>
+            </td>
+            <td>0x03</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">iSerialNumber</p>
+            </td>
+            <td>0x00</td>
+        </tr>
+        <tr>
+            <td valign="top" width="145">
+            <p align="left">bNumConfigurations</p>
+            </td>
+            <td>0x01</td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>2、配置描述符</p>
+<p>　　配置描述符中包括了描述符的长度（属于此描述符的所有接口描述符和端点描述符的长度的和）、供电方式（自供电/总线供电）、最大耗电量等。主果主机发出USB标准命令Get_Descriptor要求得到设备的某个配置描述符，那么除了此配置描述符以外，此配置包含的所有接口描述符与端点描述符都将提供给USB主机。</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" border="1">
+    <tbody>
+        <tr>
+            <td valign="middle" align="center" bgcolor="#333333" colspan="5"><strong><span style="color: #ffffff"><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表8、</span></strong></span></span>USB配置描述符的结构</span></strong></td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp; 偏移量</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp; 域</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">&nbsp;大小</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp; 值</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">&nbsp;&nbsp; 描述</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">bLength</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp; 数字</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">此描述表的字节数长度。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">bDescriptorType</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp; 常量</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">配置描述表类型（此处为0x02）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">wTotalLength</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp; 数字</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">此配置信息的总长（包括配置，接口，端点和设备类及厂商定义的描述符）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">bNumInterfaces</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp; 数字</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">此配置所支持的接口个数</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">bCongfigurationValue</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp; 数字</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">在SetConfiguration（）请求中用作参数来选定此配置。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">iConfiguration</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp; 索引</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">描述此配置的字串描述表索引</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">bmAttributes</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp; 位图</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">配置特性： <br>
+            D7： 保留（设为一） <br>
+            D6： 自给电源 <br>
+            D5： 远程唤醒 <br>
+            D4..0：保留（设为一） <br>
+            一个既用总线电源又有自给电源的设备会在MaxPower域指出需要从总线取的电量。并设置D6为一。运行时期的实际电源模式可由GetStatus(DEVICE) 请求得到。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="91">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">MaxPower</p>
+            </td>
+            <td valign="top" width="63">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="70">
+            <p align="left">&nbsp;&nbsp;&nbsp; mA</p>
+            </td>
+            <td valign="top" width="232">
+            <p align="left">在此配置下的总线电源耗费量。以 2mA 为一个单位。</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>下面是一种硬盘的配置描述符示例：</p>
+<p>
+</p><table bordercolor="#333333" cellspacing="0" cellpadding="2" width="600" border="1">
+    <tbody>
+        <tr>
+            <td align="center" bgcolor="#333333" colspan="2"><strong><span style="color: #ffffff"><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表9、</span></strong></span></span>一种硬盘的配置描述符示例</span></strong></td>
+        </tr>
+        <tr>
+            <td>字段</td>
+            <td width="421">描述符值（十六进制）</td>
+        </tr>
+        <tr>
+            <td valign="top" bordercolor="#000000" width="165">
+            <p align="left">bLength</p>
+            </td>
+            <td>0x09</td>
+        </tr>
+        <tr>
+            <td valign="top" bordercolor="#000000" width="165">
+            <p align="left">bDescriptorType</p>
+            </td>
+            <td>0x02</td>
+        </tr>
+        <tr>
+            <td valign="top" bordercolor="#000000" width="165">
+            <p align="left">wTotalLength</p>
+            </td>
+            <td>0x01F</td>
+        </tr>
+        <tr>
+            <td valign="top" bordercolor="#000000" width="165">
+            <p align="left">bNumInterfaces</p>
+            </td>
+            <td>0x01</td>
+        </tr>
+        <tr>
+            <td valign="top" bordercolor="#000000" width="165">
+            <p align="left">bCongfigurationValue</p>
+            </td>
+            <td>0x01</td>
+        </tr>
+        <tr>
+            <td valign="top" bordercolor="#000000" width="165">
+            <p align="left">iConfiguration</p>
+            </td>
+            <td>0x00</td>
+        </tr>
+        <tr>
+            <td valign="top" bordercolor="#000000" width="165">
+            <p align="left">bmAttributes</p>
+            </td>
+            <td>0x0C</td>
+        </tr>
+        <tr>
+            <td valign="top" bordercolor="#000000" width="165">
+            <p align="left">MaxPower</p>
+            </td>
+            <td>0x32</td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>3、接口描述符</p>
+<p>　　配置描述符中包含了一个或多个接口描述符，这里的“接口”并不是指物理存在的接口，在这里把它称之为“功能”更易理解些，例如一个设备既有录音的功能又有扬声器的功能，则这个设备至少就有两个“接口”。</p>
+<p>　　如果一个配置描述符不止支持一个接口描述符，并且每个接口描述符都有一个或多个端点描述符，那么在响应USB主机的配置描述符命令时，USB设备的端点描述符总是紧跟着相关的接口描述符后面，作为配置描述符的一部分被返回。接口描述符不可直接用Set_Descriptor和Get_Descriptor来存取。</p>
+<p>　　如果一个接口仅使用端点0，则接口描述符以后就不再返回端点描述符，并且此接口表现的是一个控制接口的特性，它使用与端点0相关联的默认管道进行数据传输。在这种情况下bNumberEndpoints域应被设置成0。接口描述符在说明端点个数并不把端点0计算在内。</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" border="1">
+    <tbody>
+        <tr>
+            <td valign="top" align="center" bgcolor="#333333" colspan="5"><strong><span style="color: #ffffff"><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表10、</span></strong></span></span>USB接口描述符的结构</span></strong></td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="center"><strong>偏移量</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="153">
+            <p align="center"><strong>域</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center"><strong>大小</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="147">
+            <p align="center"><strong>值</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="148">
+            <p align="center"><strong>说明</strong><strong> </strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">bLength</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">此表的字节数</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">bDescriptorType</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">常量</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">接口描述表类（此处应为0x04）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">bInterfaceNumber</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">接口号，当前配置支持的接口数组索引（从零开始）。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">bAlternateSetting</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">可选设置的索引值。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">bNumEndpoints</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">此接口用的端点数量，如果是零则说明此接口只用缺省控制管道。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">bInterfaceClass</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">类</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">接口所属的类值： <br>
+            零值为将来的标准保留。 <br>
+            如果此域的值设为FFH，则此接口类由厂商说明。 <br>
+            所有其它的值由USB 说明保留。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">bInterfaceSubClass</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">子类</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">子类码 <br>
+            这些值的定义视bInterfaceClass域而定。 <br>
+            如果bInterfaceClass域的值为零则此域的值必须为零。 <br>
+            bInterfaceClass域不为FFH则所有值由USB 所保留。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">bInterfaceProtocol</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">协议</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">协议码：bInterfaceClass 和bInterfaceSubClass 域的值而定.如果一个接口支持设备类相关的请求此域的值指出了设备类说明中所定义的协议.</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="118">
+            <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8</p>
+            </td>
+            <td valign="top" width="153">
+            <p align="left">iInterface</p>
+            </td>
+            <td valign="top" width="56">
+            <p align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1</p>
+            </td>
+            <td valign="top" align="center" width="147">
+            <p align="center">索引</p>
+            </td>
+            <td valign="top" width="148">
+            <p align="left">描述此接口的字串描述表的索引值。</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>对于bInterfaceClass字段，表示接口所属的类别，USB协议根据功能将不同的接口划分成不的类，其具体含义如下表所示：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" width="600" border="1">
+    <tbody>
+        <tr>
+            <td align="center" bgcolor="#333333" colspan="2"><strong><span style="color: #ffffff"><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表11、</span></strong></span></span>USB协议定义的接口类别（bInterfaceClass）</span></strong></td>
+        </tr>
+        <tr>
+            <td>值（十六进制）</td>
+            <td>类别</td>
+        </tr>
+        <tr>
+            <td>0x01</td>
+            <td>音频类</td>
+        </tr>
+        <tr>
+            <td>0x02</td>
+            <td>CDC控制类</td>
+        </tr>
+        <tr>
+            <td>0x03</td>
+            <td>人机接口类（HID）</td>
+        </tr>
+        <tr>
+            <td>0x05</td>
+            <td>物理类</td>
+        </tr>
+        <tr>
+            <td>0x06</td>
+            <td>图像类</td>
+        </tr>
+        <tr>
+            <td>0x07</td>
+            <td>打印机类</td>
+        </tr>
+        <tr>
+            <td>0x08</td>
+            <td>大数据存储类</td>
+        </tr>
+        <tr>
+            <td>0x09</td>
+            <td>集线器类</td>
+        </tr>
+        <tr>
+            <td>0x0A</td>
+            <td>CDC数据类</td>
+        </tr>
+        <tr>
+            <td>0x0B</td>
+            <td>智能卡类</td>
+        </tr>
+        <tr>
+            <td>0x0D</td>
+            <td>安全类</td>
+        </tr>
+        <tr>
+            <td>0xDC</td>
+            <td>诊断设备类</td>
+        </tr>
+        <tr>
+            <td>0xE0</td>
+            <td>无线控制器类</td>
+        </tr>
+        <tr>
+            <td>0xFE</td>
+            <td>特定应用类（包括红外的桥接器等）</td>
+        </tr>
+        <tr>
+            <td>0xFF</td>
+            <td>厂商定义的设备</td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>4、端点描述符</p>
+<p>　　端点是设备与主机之间进行数据传输的逻辑接口，除配置使用的端点0（控制端点，一般一个设备只有一个控制端点）为双向端口外，其它均为单向。端点描述符描述了数据的传输类型、传输方向、数据包大小和端点号（也可称为端点地址）等。</p>
+<p>　　除了描述符中描述的端点外，每个设备必须要有一个默认的控制型端点，地址为0，它的数据传输为双向，而且没有专门的描述符，只是在设备描述符中定义了它的最大包长度。主机通过此端点向设备发送命令，获得设备的各种描述符的信息，并通过它来配置设备。</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" border="1">
+    <tbody>
+        <tr>
+            <td align="center" bgcolor="#333333" colspan="5"><strong><span style="color: #ffffff"><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表12、</span></strong></span></span>USB端点描述符的结构</span></strong></td>
+        </tr>
+        <tr>
+            <td valign="top" width="115">
+            <p align="center"><strong>偏移量</strong></p>
+            </td>
+            <td valign="top" width="132">
+            <p align="center"><strong>域</strong></p>
+            </td>
+            <td valign="top" width="70">
+            <p align="center"><strong>大小</strong></p>
+            </td>
+            <td valign="top" width="49">
+            <p align="center"><strong>值</strong></p>
+            </td>
+            <td valign="top" width="241">
+            <p align="left"><strong>说明</strong><strong> </strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" width="115">
+            <p align="center">0</p>
+            </td>
+            <td valign="middle" width="132">
+            <p align="center">bLength</p>
+            </td>
+            <td valign="middle" width="70">
+            <p align="center">1</p>
+            </td>
+            <td valign="middle" align="center" width="49">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="241">
+            <p align="left">此描述表的字节数长度</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" width="115">
+            <p align="center">1</p>
+            </td>
+            <td valign="middle" width="132">
+            <p align="center">bDescriptorType</p>
+            </td>
+            <td valign="middle" width="70">
+            <p align="center">1</p>
+            </td>
+            <td valign="middle" align="center" width="49">
+            <p align="center">常量</p>
+            </td>
+            <td valign="top" width="241">
+            <p align="left">端点描述表类（此处应为0x05）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="center" width="115">
+            <p align="center">2</p>
+            </td>
+            <td valign="middle" width="132">
+            <p align="center">bEndpointAddress</p>
+            </td>
+            <td valign="middle" width="70">
+            <p align="center">1</p>
+            </td>
+            <td valign="middle" width="49">
+            <p align="center">端点</p>
+            </td>
+            <td valign="top" width="241">
+            <p>此描述表所描述的端点的地址、方向： <br>
+            Bit 3..0 : 端点号.<br>
+            Bit 6..4 : 保留,为零 <br>
+            Bit 7:&nbsp;&nbsp;&nbsp; 方向,如果控制端点则略。 <br>
+            0：输出端点（主机到设备） <br>
+            1：输入端点（设备到主机）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="center" width="115">
+            <p align="center">3</p>
+            </td>
+            <td valign="middle" width="132">
+            <p align="center">bmAttributes</p>
+            </td>
+            <td valign="middle" width="70">
+            <p align="center">1</p>
+            </td>
+            <td valign="middle" width="49">
+            <p align="center">位图</p>
+            </td>
+            <td valign="top" width="241">
+            <p align="left">此域的值描述的是在bConfigurationValue域所指的配置下端点的特性。 <br>
+            Bit 1..0 :传送类型 <br>
+            00=控制传送 <br>
+            01=同步传送 <br>
+            10=批传送 <br>
+            11=中断传送 <br>
+            所有其它的位都保留。</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="center" width="115">
+            <p align="center">4</p>
+            </td>
+            <td valign="middle" width="132">
+            <p align="center">wMaxPacketSize</p>
+            </td>
+            <td valign="middle" width="70">
+            <p align="center">2</p>
+            </td>
+            <td valign="middle" width="49">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="241">
+            <p align="left">当前配置下此端点能够接收或发送的最大数据包的大小。 <br>
+            对于实进传输，此值用于为每帧的数据净负荷预留时间。在实际运行时，管道可能不完全需要预留的带宽，实际带宽可由设备通过一种非USB定义的机制汇报给主机。对于中断传输，批量传输和控制传输，端点可能发送比之短的数据包<br>
+            &nbsp;</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="center" width="115">
+            <p align="center">6</p>
+            </td>
+            <td valign="middle" width="132">
+            <p align="center">bInterval</p>
+            </td>
+            <td valign="middle" width="70">
+            <p align="center">1</p>
+            </td>
+            <td valign="middle" width="49">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="241">
+            <p align="left">周期数据传输端点的时间间隙。 <br>
+            此域的值对于批传送的端点及控制传送的端点无意义。对于同步传送的端点此域必需为1，表示周期为1ms。对于中断传送的端点此域值的范围为1ms到255ms。</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>下表是一种鼠标的端点描述符的示例，该端点是一个中断端点：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" width="468" border="1">
+    <tbody>
+        <tr>
+            <td align="center" bgcolor="#333333" colspan="2"><strong><span style="color: #ffffff"><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表13、</span></strong></span></span>一种鼠标的端点描述符示例</span></strong></td>
+        </tr>
+        <tr>
+            <td>域</td>
+            <td width="229">值（十六进制）</td>
+        </tr>
+        <tr>
+            <td valign="middle" width="225">
+            <p align="left">bLength</p>
+            </td>
+            <td>0x07</td>
+        </tr>
+        <tr>
+            <td valign="middle" width="225">
+            <p align="left">bDescriptorType</p>
+            </td>
+            <td>0x05</td>
+        </tr>
+        <tr>
+            <td valign="middle" width="225">
+            <p align="left">bEndpointAddress</p>
+            </td>
+            <td>0x81</td>
+        </tr>
+        <tr>
+            <td valign="middle" width="225">
+            <p align="left">bmAttributes</p>
+            </td>
+            <td>0x03</td>
+        </tr>
+        <tr>
+            <td valign="middle" width="225">
+            <p align="left">wMaxPacketSize</p>
+            </td>
+            <td>0x04</td>
+        </tr>
+        <tr>
+            <td valign="middle" width="225">
+            <p align="left">bInterval</p>
+            </td>
+            <td>0x0A</td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>5、字符串描述符</p>
+<p>　　字符串描述符是一种可选的USB标准描述符，描述了如制商、设备名称或序列号等信息。如果一个设备无字符串描述符，则其它描述符中与字符串有关的索引值都必须为0。字符串使用的是Unicode编码。</p>
+<p>　　主机请示得到某个字符串描述符时一般分成两步：首先主机向设备发出USB标准命令Get_Descriptor，其中所使用的字符串的索引值为0，设备返回一个字符串描述符，此描述符的结构如下：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" border="1">
+    <tbody>
+        <tr>
+            <td valign="top" align="center" bgcolor="#333333" colspan="5"><span style="color: #ffffff"><strong><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表14、</span></strong></span></span>USB字符串描述符（响应主机请求时返回的表示语言ID的字符串描述符）</strong></span></td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center"><strong>偏移量</strong></p>
+            </td>
+            <td valign="top" width="104">
+            <p align="center"><strong>域</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="129">
+            <p align="center"><strong>大小</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center"><strong>值</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left"><strong>&nbsp;&nbsp;&nbsp;&nbsp; </strong><strong>描述</strong><strong> </strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center">0</p>
+            </td>
+            <td valign="top" width="104">
+            <p align="center">bLength</p>
+            </td>
+            <td valign="top" width="129">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">N+2</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">此描述表的字节数</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="104">
+            <p align="center">bDescriptorType</p>
+            </td>
+            <td valign="top" width="129">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">常量</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">字串描述表类型（此处应为0x03）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="104">
+            <p align="center">wLANGID[0]</p>
+            </td>
+            <td valign="top" width="129">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">语言标识（LANGID） <br>
+            码0</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+            <strong>…</strong></p>
+            </td>
+            <td valign="top" width="104">
+            <p align="center"><strong>…</strong></p>
+            </td>
+            <td valign="top" width="129">
+            <p align="center"><strong>…</strong></p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center"><strong>…</strong></p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left"><strong>…</strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center">N</p>
+            </td>
+            <td valign="top" width="104">
+            <p align="center">wLANGID[x]</p>
+            </td>
+            <td valign="top" width="129">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">语言标识（LANGID） <br>
+            码X</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>该字符串描述符双字节的语言ID的数组，wLANGID[0]~wLANGID[x]指明了设备支持的语言，具体含义可查看<span lang="EN-US"><a href="http://www.baiheee.com/Documents/090518/090518112619/USB_LANGIDs.pdf">USB_LANGIDs.pdf</a>。</span></p>
+<p>　　主机根据自己需要的语言，再次向设备发出USB标准命令Get_Descriptor，指明所要求得到的字符串的索引值和语言。这次设备所返回的是Unicode编号的字符串描述符，其结构如下：</p>
+<p>
+</p><table bordercolor="#000000" cellspacing="0" cellpadding="2" border="1">
+    <tbody>
+        <tr>
+            <td valign="top" align="center" bgcolor="#333333" colspan="5"><strong><span style="color: #ffffff"><span style="color: #ffffff"><span style="color: #ffffff"><strong><span style="color: #ffffff">表15、</span></strong></span></span>Unicode字符串描述符（响应主机请求时真正表示字符串编码的字符串描述符）</span></strong></td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center"><strong>偏移量</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center"><strong>域</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center"><strong>大小</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center"><strong>值</strong><strong> </strong></p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left"><strong>描述</strong><strong> </strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center">0</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">bLength</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">此描述表的字节数（bString域的数值N＋2）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">bDescriptorType</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">1</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">常量</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">字串描述表类型（此处应为0x03）</p>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" width="116">
+            <p align="center">2</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">bString</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">N</p>
+            </td>
+            <td valign="top" width="116">
+            <p align="center">数字</p>
+            </td>
+            <td valign="top" width="135">
+            <p align="left">UNICODE 编码的字串</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<p>bString域为设备实际返回的以UNICODE编码的字符串流，我们在编写设备端硬件驱动的时候需要将字符串转换为UNICODE编码，您可以通过一些UNICODE转换工具进行转换。这里推荐由<a href="http://www.baiheee.com/"><span style="color: #000000; text-decoration: none">百合电子工作室</span></a>开发的一款USB描述符生成工具“<a href="http://www.baiheee.com/Documents/090518/090518112619/USB%20Unicode%20%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8F%8F%E8%BF%B0%E7%AC%A6%E7%94%9F%E6%88%90%E5%99%A8.rar">USB Unicode 字符串描述符生成器</a>”，它专门为编写设备端驱动程序的需要而定制，可以非常方便将您需要的字符串转换成UNICODE格式，进而导入您的C或汇编程序代码中，以下是它的界面：</p>
+<p style="text-align: center"><img height="426" alt="" width="613" src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/USB Unicode StringDescriptor Generator1.jpg"></p>
+<p style="text-align: center">USB Unicode 字符串描述符生成器－生成C语言格式</p>
+<p style="text-align: center"><img height="426" alt="" width="613" src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/USB Unicode StringDescriptor Generator2.jpg"></p>
+<p style="text-align: center">USB Unicode 字符串描述符生成器－生成汇编格式</p>
+<p><span style="color: #ff0000">温馨提示：</span></p>
+<p>　　<a style="color: #000000; text-decoration: none" href="http://www.baiheee.com/">百合电子工作室</a>有一个关于USB开发方面的开源项目－<a href="http://www.baiheee.com/OpenSource/Easy%20USB%2051%20Programer/Easy%20USB%2051%20Programer1.htm"><font color="#2c5fb2">Easy USB 51 Programer</font></a>，整个开发过程写得非常详细，不防参考一下，您还可以进入她的论坛参与此项目的讨论。</p>
+<p style="text-align: left">注：本篇文章部分内容摘自《USB协议》和《USB技术及应用设计》</p></div>
+
+																</td>
+
+															</tr>
+
+														</tbody></table>
+
+														<table id="Table5" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+															<tbody><tr>
+
+																<td width="57"></td>
+
+																<td><font face="宋体">&nbsp;</font></td>
+
+																<td width="5"></td>
+
+															</tr>
+
+															<tr>
+
+																<td width="57"></td>
+
+																<td align="left"><span class="STYLE7">相关文章:</span></td>
+
+																<td width="5"></td>
+
+															</tr>
+
+															<tr>
+
+																<td width="57"></td>
+
+																<td>
+
+																	<div style="padding-left:5px;">
+
+<a style="text-decoration: underline" href="http://www.baiheee.com/Documents/081126/081126104439.htm">USB入门系列之一 —— USB概述</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/081126/081126105547.htm">USB入门系列之二 —— USB的连接模型[图]</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/081126/081126105912.htm">USB入门系列之三 —— USB的电气特性</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/081126/081126110100.htm">USB入门系列之四 —— USB的线缆以及插头、插座[图]</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/081126/081126112737.htm">USB入门系列之七 —— USB的描述符及各种描述符之间的依赖关系</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/081126/081126115257.htm">USB HID报告及报告描述符简介</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/090506/090506143935.htm">USB开发基础－－USB接口芯片（USB控制器）的选择</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/090506/090506165909.htm">USB开发基础－－USB设备的开发流程</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/090507/090507105437.htm">USB开发基础－－了解USB的通讯过程</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/090507/090507153901.htm">USB开发基础－－实例讲解USB的枚举（配置）过程</a><br><a style="text-decoration: underline" href="http://www.baiheee.com/Documents/090917/090917133914.htm">USB简介</a><br>														
+
+																	</div>
+
+																</td>
+
+																<td width="5"></td>
+
+															</tr>
+
+															<tr>
+
+															  <td></td>
+
+															  <td>			  
+
+																
+
+																																
+
+															
+
+															  </td>
+
+															  <td></td>
+
+														  </tr>
+
+														</tbody></table>
+
+														<br>
+
+														<table id="Table4" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+															<tbody><tr>
+
+																<td align="center">  </td>
+
+															</tr>
+
+															
+
+														</tbody></table>
+
+													</td>
+
+												</tr>
+
+											</tbody></table>
+
+										</td>
+
+										<td width="2" bgcolor="#fed6d2"></td>
+
+										<td width="1" bgcolor="#e5ada7"></td>
+
+									</tr>
+
+								</tbody></table>
+
+							</td>
+
+						</tr>
+
+						<tr height="3" width="100%">
+
+							<td><table id="table38" style="TABLE-LAYOUT: fixed" height="3" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+									<tbody><tr height="1">
+
+										<td width="1"></td>
+
+										<td width="1" bgcolor="#e5ada7"></td>
+
+										<td width="1" bgcolor="#fed6d2"></td>
+
+										<td bgcolor="#fed6d2"><font face="宋体"></font></td>
+
+										<td width="1" bgcolor="#fed6d2"></td>
+
+										<td width="1" bgcolor="#e5ada7"></td>
+
+										<td width="1"></td>
+
+									</tr>
+
+									<tr height="1">
+
+										<td></td>
+
+										<td bgcolor="#e5ada7" colspan="2"></td>
+
+										<td bgcolor="#fed6d2"></td>
+
+										<td bgcolor="#e5ada7" colspan="2"></td>
+
+										<td></td>
+
+									</tr>
+
+									<tr height="1">
+
+										<td colspan="3"></td>
+
+										<td bgcolor="#e5ada7"></td>
+
+										<td colspan="3"><font face="宋体"></font></td>
+
+									</tr>
+
+								</tbody></table>
+
+							</td>
+
+						</tr>
+
+					</tbody></table>
+
+				</td>
+
+				<td width="5">&nbsp;</td>
+
+				<td width="235" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+						
+
+						
+
+						<tbody><tr>
+
+							<td><table id="bluerndtable" style="TABLE-LAYOUT: fixed" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+									<tbody><tr height="3" width="100%">
+
+										<td><table id="table17" style="TABLE-LAYOUT: fixed" height="3" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+												<tbody><tr height="1">
+
+													<td width="1"></td>
+
+													<td width="1"></td>
+
+													<td width="1"></td>
+
+													<td bgcolor="#a5da94"></td>
+
+													<td width="1"></td>
+
+													<td width="1"></td>
+
+													<td width="1"></td>
+
+												</tr>
+
+												<tr height="1">
+
+													<td></td>
+
+													<td bgcolor="#a5da94" colspan="2"></td>
+
+													<td bgcolor="#dbf1d4"></td>
+
+													<td bgcolor="#a5da94" colspan="2"></td>
+
+													<td></td>
+
+												</tr>
+
+												<tr height="1">
+
+													<td></td>
+
+													<td bgcolor="#a5da94"></td>
+
+													<td bgcolor="#dbf1d4" colspan="3"></td>
+
+													<td bgcolor="#a5da94"></td>
+
+													<td></td>
+
+												</tr>
+
+											</tbody></table>
+
+										</td>
+
+									</tr>
+
+									<tr>
+
+										<td><table id="table18" style="TABLE-LAYOUT: fixed" height="100%" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+												<tbody><tr>
+
+													<td width="1" bgcolor="#a5da94"></td>
+
+													<td width="2" bgcolor="#dbf1d4"></td>
+
+													<td id="td3" bgcolor="#dbf1d4"><font face="宋体">
+
+															<table id="table19" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+																<tbody><tr>
+
+																	<td height="24" align="center" bgcolor="#dbf1d4"><strong><font face="宋体">最新开源项目</font></strong></td>
+
+																</tr>
+
+															</tbody></table>
+
+														</font>
+
+														<table id="table20" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+															<tbody><tr>
+
+																<td bgcolor="white">
+
+																	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+																		<tbody><tr>
+
+																			<td width="5">&nbsp;</td>
+
+																			<td><font face="宋体"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td width="200px"><table width="100%" style="TABLE-LAYOUT: fixed; OVERFLOW: hidden" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><div class="ProductListMiniature"><a href="http://www.baiheee.com/OpenSource/Easy%20USB%2051%20Programer/Easy%20USB%2051%20Programer1.htm" target="_blank"><img src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/eup51.jpg"></a></div></td></tr></tbody></table><div align="center"><a href="http://www.baiheee.com/OpenSource/Easy%20USB%2051%20Programer/Easy%20USB%2051%20Programer1.htm" target="_blank">USB开源项目：Easy USB 51 Programer</a></div></td></tr></tbody></table></font></td>
+
+																			<td width="5">&nbsp;</td>
+
+																		</tr>
+
+																		<tr>
+
+																			<td width="5">&nbsp;</td>
+
+																			<td align="right"><a href="http://www.baiheee.com/OpenSource/Kai-Yuan-Index.htm">查看更多...</a>
+
+																			</td>
+
+																			<td width="5">&nbsp;</td>
+
+																		</tr>
+
+																	</tbody></table>
+
+																</td>
+
+															</tr>
+
+														</tbody></table>
+
+													</td>
+
+													<td width="2" bgcolor="#dbf1d4"></td>
+
+													<td width="1" bgcolor="#a5da94"></td>
+
+												</tr>
+
+											</tbody></table>
+
+										</td>
+
+									</tr>
+
+									<tr height="3" width="100%">
+
+										<td><table id="table21" style="TABLE-LAYOUT: fixed" height="3" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+												<tbody><tr height="1">
+
+													<td width="1"></td>
+
+													<td width="1" bgcolor="#a5da94"></td>
+
+													<td width="1" bgcolor="#dbf1d4"></td>
+
+													<td bgcolor="#dbf1d4"><font face="宋体"></font></td>
+
+													<td width="1" bgcolor="#dbf1d4"></td>
+
+													<td width="1" bgcolor="#a5da94"></td>
+
+													<td width="1"></td>
+
+												</tr>
+
+												<tr height="1">
+
+													<td></td>
+
+													<td bgcolor="#a5da94" colspan="2"></td>
+
+													<td bgcolor="#dbf1d4"></td>
+
+													<td bgcolor="#a5da94" colspan="2"></td>
+
+													<td></td>
+
+												</tr>
+
+												<tr height="1">
+
+													<td colspan="3"></td>
+
+													<td bgcolor="#a5da94"></td>
+
+													<td colspan="3"><font face="宋体"></font></td>
+
+												</tr>
+
+											</tbody></table>
+
+										</td>
+
+									</tr>
+
+								</tbody></table>
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td>&nbsp;
+
+							
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td><table id="bluerndtable" style="TABLE-LAYOUT: fixed" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+									<tbody><tr height="3" width="100%">
+
+										<td><table id="table17" style="TABLE-LAYOUT: fixed" height="3" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+												<tbody><tr height="1">
+
+													<td width="1"></td>
+
+													<td width="1"></td>
+
+													<td width="1"></td>
+
+													<td bgcolor="#a5da94"></td>
+
+													<td width="1"></td>
+
+													<td width="1"></td>
+
+													<td width="1"></td>
+
+												</tr>
+
+												<tr height="1">
+
+													<td></td>
+
+													<td bgcolor="#a5da94" colspan="2"></td>
+
+													<td bgcolor="#dbf1d4"></td>
+
+													<td bgcolor="#a5da94" colspan="2"></td>
+
+													<td></td>
+
+												</tr>
+
+												<tr height="1">
+
+													<td></td>
+
+													<td bgcolor="#a5da94"></td>
+
+													<td bgcolor="#dbf1d4" colspan="3"></td>
+
+													<td bgcolor="#a5da94"></td>
+
+													<td></td>
+
+												</tr>
+
+											</tbody></table>
+
+										</td>
+
+									</tr>
+
+									<tr>
+
+										<td><table id="table18" style="TABLE-LAYOUT: fixed" height="100%" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+												<tbody><tr>
+
+													<td width="1" bgcolor="#a5da94"></td>
+
+													<td width="2" bgcolor="#dbf1d4"></td>
+
+													<td id="td3" bgcolor="#dbf1d4"><font face="宋体">
+
+															<table id="table19" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+																<tbody><tr>
+
+																	<td height="24" align="right" bgcolor="#dbf1d4"><strong><font face="宋体">本站相关产品&nbsp;&nbsp;&nbsp;<a href="http://shop60158254.taobao.com/" target="_blank"><font color="#FF0000">淘宝网店</font></a></font></strong></td>
+
+																</tr>
+
+															</tbody></table>
+
+														</font>
+
+														<table id="table20" cellspacing="1" cellpadding="1" width="100%" border="0">
+
+															<tbody><tr>
+
+																<td bgcolor="white"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+																		<tbody><tr>
+
+																			<td width="5">&nbsp;</td>
+
+																			<td><font face="宋体"><table width="100%" style="TABLE-LAYOUT: fixed; OVERFLOW: hidden" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><div class="ProductListMiniature"><a href="http://www.baiheee.com/Products/51Dev_Pre/Introduce.htm" target="_blank"><img src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/51Dev_Pre_Mute.jpg"></a></div></td></tr></tbody></table><div align="center"><a href="http://www.baiheee.com/Products/51Dev_Pre/Introduce.htm" target="_blank">51单片机学习板BH51PRE</a></div><hr style="height:1px;width: 100%; color:#a5da94;"><table width="100%" style="TABLE-LAYOUT: fixed; OVERFLOW: hidden" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><div class="ProductListMiniature"><a href="http://www.baiheee.com/Products/Easy_USB_51_Programer/Easy_USB_51_Programer.htm" target="_blank"><img src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/EASY_USB_51_PROGRAMER_mb_ab.jpg"></a></div></td></tr></tbody></table><div align="center"><a href="http://www.baiheee.com/Products/Easy_USB_51_Programer/Easy_USB_51_Programer.htm" target="_blank">USB学习板/开发板：Easy USB 51 Programer</a></div><hr style="height:1px;width: 100%; color:#a5da94;"><table width="100%" style="TABLE-LAYOUT: fixed; OVERFLOW: hidden" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><div class="ProductListMiniature"><a href="http://www.baiheee.com/Products/PIC_Pro_K150/PIC_Pro_K150.htm" target="_blank"><img src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/pic_pro_k150_mini.jpg"></a></div></td></tr></tbody></table><div align="center"><a href="http://www.baiheee.com/Products/PIC_Pro_K150/PIC_Pro_K150.htm" target="_blank">PIC编程器：PIC Pro K150</a></div><hr style="height:1px;width: 100%; color:#a5da94;"><table width="100%" style="TABLE-LAYOUT: fixed; OVERFLOW: hidden" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><div class="ProductListMiniature"><a href="http://www.baiheee.com/Products/IDC2_PIC_EMULATOR/IDC2_PIC_EMULATOR_1.htm" target="_blank"><img src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/IDC2_PIC_EMULATOR_MINI.jpg"></a></div></td></tr></tbody></table><div align="center"><a href="http://www.baiheee.com/Products/IDC2_PIC_EMULATOR/IDC2_PIC_EMULATOR_1.htm" target="_blank">ICD2 PIC仿真烧写器</a></div><hr style="height:1px;width: 100%; color:#a5da94;"><table width="100%" style="TABLE-LAYOUT: fixed; OVERFLOW: hidden" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><div class="ProductListMiniature"><a href="http://www.baiheee.com/Products/M51/M51_1.htm" target="_blank"><img src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/M51_mini.jpg"></a></div></td></tr></tbody></table><div align="center"><a href="http://www.baiheee.com/Products/M51/M51_1.htm" target="_blank">M51微型仿真器</a></div></font></td>
+
+																			<td width="5">&nbsp;</td>
+
+																		</tr>
+
+																		<tr>
+
+																			<td width="5">&nbsp;</td>
+
+																			<td align="right"><a href="http://www.baiheee.com/Products/Index/index.htm">查看更多...</a>
+
+																			</td>
+
+																			<td width="5">&nbsp;</td>
+
+																		</tr>
+
+																	</tbody></table>
+
+																</td>
+
+															</tr>
+
+														</tbody></table>
+
+													</td>
+
+													<td width="2" bgcolor="#dbf1d4"></td>
+
+													<td width="1" bgcolor="#a5da94"></td>
+
+												</tr>
+
+											</tbody></table>
+
+										</td>
+
+									</tr>
+
+									<tr height="3" width="100%">
+
+										<td><table id="table21" style="TABLE-LAYOUT: fixed" height="3" cellspacing="0" cellpadding="0" width="100%" border="0">
+
+												<tbody><tr height="1">
+
+													<td width="1"></td>
+
+													<td width="1" bgcolor="#a5da94"></td>
+
+													<td width="1" bgcolor="#dbf1d4"></td>
+
+													<td bgcolor="#dbf1d4"><font face="宋体"></font></td>
+
+													<td width="1" bgcolor="#dbf1d4"></td>
+
+													<td width="1" bgcolor="#a5da94"></td>
+
+													<td width="1"></td>
+
+												</tr>
+
+												<tr height="1">
+
+													<td></td>
+
+													<td bgcolor="#a5da94" colspan="2"></td>
+
+													<td bgcolor="#dbf1d4"></td>
+
+													<td bgcolor="#a5da94" colspan="2"></td>
+
+													<td></td>
+
+												</tr>
+
+												<tr height="1">
+
+													<td colspan="3"></td>
+
+													<td bgcolor="#a5da94"></td>
+
+													<td colspan="3"><font face="宋体"></font></td>
+
+												</tr>
+
+											</tbody></table>
+
+										</td>
+
+									</tr>
+
+								</tbody></table>
+
+							</td>
+
+						</tr>
+
+					</tbody></table>
+
+				</td>
+
+			</tr>
+
+		</tbody></table>
+
+		<table width="990" border="0" align="center" cellpadding="0" cellspacing="0">
+
+			<tbody><tr>
+
+				<td><div align="center">
+
+						<p>&nbsp;</p>
+
+						<p>本站程序由百合电子工作室开发和维护<br>
+
+							Copyright @ baihe electric studio<br>
+
+							渝ICP备09006681号
+
+							<script type="text/javascript" src="./USB开发基础－－USB命令（请求）和USB描述符-百合电子工作室_files/tongji.js.下载"></script>
+
+							<noscript>
+
+								<a href="http://www.linezing.com"><img src="http://img.tongji.linezing.com/1089741/tongji.gif" /></a></noscript>
+
+					</p></div>
+
+					
+
+					
+
+				</td>
+
+			</tr>
+
+			<tr>
+
+			<td>			
+
+			</td>
+
+			</tr>
+
+		</tbody></table>
+
+	
+
+
+
+
+</body></html>

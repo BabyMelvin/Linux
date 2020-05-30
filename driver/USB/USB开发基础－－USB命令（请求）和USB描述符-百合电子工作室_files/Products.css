@@ -1,0 +1,72 @@
+/* CSS Document */
+
+.OpenSourceTitle
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 12px;
+	font-weight:bold;
+}
+
+
+.ProductContent
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 16px;
+	line-height:26px;
+}
+
+.ProductContent P
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 16px;
+	line-height:26px;
+}
+
+
+.ProductListMiniature img
+{
+
+	max-width: 200px; 
+	max-height: 150px; 
+	width: expression(this.width>200 && this.width>this.height ? 200 : true); 
+	height: expression(this.height > 150 ? 150 : true);
+	border:0;
+}
+
+/*.OpenSourceList
+{
+	margin:auto,0;
+	
+}*/
+
+
+.ProductListTitle
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 12px;
+	font-weight:bold;
+	padding-left:10px;
+	
+}
+.ProductListPrice
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 12px;
+	padding-left:10px;
+	
+}
+
+.ProductListAbstract
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 12px;	
+	padding-left:10px;
+}
+
+.ProductListAbstract a
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 12px;	
+	padding-left:10px;
+}
+

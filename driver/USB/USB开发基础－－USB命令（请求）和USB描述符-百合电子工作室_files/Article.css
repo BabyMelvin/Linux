@@ -1,0 +1,114 @@
+/* CSS Document */
+
+/*Article content*/
+.ArticleContent
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 14px;
+	line-height:26px;
+}
+
+/*Article likeness link*/
+.ArticleLikeness
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 16px;
+}
+
+/*Article index -> Title*/
+.ArticleList_Title a
+{
+	font-size: 16px;
+	font-weight:bold;
+}
+
+.ArticleList_Title a:visited
+{ 
+	color:#777777; 
+	font-weight:bold;
+}
+
+/*Article index -> Node image*/
+.ArticleList_Title img
+{
+	margin: 0 auto;
+}
+
+/*Article index -> Abstract*/
+.ArticleList_Abstract
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 14px;
+	color:#999999;
+}
+
+/*likeness -> xiang guan weng zhang*/
+#Article_xgwz
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 16px;
+}
+
+/*Article content Page link list -> PrePage*/
+.Article_Content_UpPage a
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 16px;
+	margin:0 2px;
+	padding:2px;
+	text-align:center;
+}
+
+/*Article content Page link list -> NextPage*/
+.Article_Content_DownPage a
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 16px;
+	margin:0 2px;
+	padding:2px;
+	text-align:center;
+}
+
+/*Article content Page link list -> Current Page*/
+.Article_Content_CurPage
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-weight:bold;
+	color:#2C5FB2;
+	font-size: 16px;
+	margin:0 2px;
+	padding:2px;
+	text-align:center;
+	background:#aaa;
+}
+
+
+.Article_Content_PageLinkNum a
+{
+	font-family: Verdana,Tahoma ,Courier New;
+	font-size: 16px;
+	margin:0 2px;
+	padding:2px;
+	text-align:center;
+}
+
+
+.Article_Content_PageLinkNum a:hover
+{
+	font-size: 16px;
+	margin:0 2px;
+	padding:2px;
+	text-decoration: none
+	text-align:center;
+	background:#aaa;
+}
+
+#Article_Content_Title
+{
+	font-family:Verdana,Tahoma ,Courier New;
+	font-size: 12px;
+	font-weight:bold;
+	color:#ff0000;
+	margin:0,auto;
+}
+

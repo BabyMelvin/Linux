@@ -1,0 +1,196 @@
+a:link{ color:#2C5FB2;text-decoration : none}
+a:visited{ color:#2C5FB2; text-decoration: none}
+a:hover{ color:#ff0000;text-decoration: none}
+a:active{ color:#00ff00;text-decoration: none}
+
+/*.T{LINE-HEIGHT: 1.4}*/
+
+/*body{
+background:#fff; 
+color:#0F0F0F; 
+font:15px/20px Verdana,Verdana,Courier New, sans-serif; 
+margin:0; 
+padding:10 0 10 0;
+}*/
+
+TD{FONT-FAMILY: Verdana,Tahoma ,Courier New; FONT-SIZE: 9pt}
+DIV{FONT-FAMILY: Verdana,Tahoma ,Courier New; FONT-SIZE: 9pt}
+FORM{FONT-FAMILY: Verdana,Tahoma ,Courier New; FONT-SIZE: 9pt}
+OPTION{FONT-FAMILY: Verdana,Tahoma ,Courier New; FONT-SIZE: 9pt}
+BR{FONT-FAMILY: Verdana,Tahoma ,Courier New; FONT-SIZE: 9pt}
+
+/*textarea {border-width: 1; border-color: #000000; background-color: #efefef; font-family:Verdana ; font-size: 9pt; font-style: bold;}*
+/*select {border-width: 1; border-color: #000000; background-color: #efefef; font-family: Verdana; font-size: 9pt; font-style: bold;}*/
+/*UL {
+	FONT-SIZE: 12px; CURSOR: default; FONT-FAMILY:Verdana
+}*/
+
+
+/*----------------align-----------------*/
+/*header*/
+body
+{
+	background: #fff;
+	color: #0F0F0F;
+	font: 15px/20px Verdana,Tahoma ,Courier New;
+	margin: 32px 5px; 
+	padding: 0;
+}
+/*
+div, h1, h2, h3, li, p, img
+{
+	margin: 0; 
+	padding: 0;
+}*/
+
+
+/* frame work of header*/
+#header
+{
+	width: 100%;
+	height: 90px;
+	position: relative;
+	margin: 0 auto;	  /*align center*/
+	padding: 0;
+	clear: both; 
+	z-index: 0;
+}
+/*logo*/
+#header img
+{
+	width: 220px;
+	height: 77px;
+	z-index: 2;
+	padding: 0;
+	position: absolute;
+	margin: 0 0 0 40px;
+	left: 2px;
+	top: 7px;
+}
+
+/* header link menu*/
+#header ul
+{
+	width: 100%;
+	display: block;
+	height: 36px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 19px 0 0 0; 
+	padding: 0;
+	border-bottom: 1px solid #AEAEAE;
+	z-index: 1;
+}
+#header ul li
+{
+	float: right;
+	font: 12px/36px "Trebuchet MS" ,Verdana,Tahoma ,Courier New;
+	font-weight: bold;
+	list-style-type:none;
+}
+#header ul li a
+{
+	width: 74px;
+	height: 36px;
+	display: block;
+	padding: 0;
+	color: #555;
+	background: #fff;
+	text-decoration: none;
+	text-align: center;
+	margin: 0 1px 0 0;
+	top: 0px;
+	left: 0px;
+}
+#header ul li a:hover
+{
+	width: 74px;
+	height: 36px;
+	text-decoration: none;
+	background: url(/image/button.gif) no-repeat 0 0 #AEAEAE;
+	color: #fff;
+}
+#header ul li.active
+{
+	width: 74px;
+	display: block;
+	height: 36px;
+	background: url(/image/button.gif) no-repeat 0 0 #AEAEAE;
+	color: #fff;
+	text-align: center;
+	margin: 0 1px 0 0; 
+}
+
+/*page main body(except header and footer)*/
+#mainbody
+{
+	width: 780px;
+	height: auto;
+	border:solid 1px #f00;
+	margin: 0 auto;	  /*align center*/
+	padding:2px;
+}
+
+#footer
+{
+	width:780px;
+	height:auto;
+	border-top: solid 1px #999;
+	margin:10px auto;
+	text-align:center;	
+}
+
+.clear
+{
+	clear:both;
+}
+
+/*Current page of page num link£¨example 1 2 3 4 5...)*/
+.PageLinkCur
+{	
+	height:16px;
+	margin:2px 2px;
+	padding:3px;
+	text-align:center;
+	background:#aaa;
+	border:solid 1px #888;
+}
+
+/*page number link£¨example:1 2 3 4 5...)*/
+.PageLink a
+{
+	height:16px;
+	margin:2px 2px;
+	padding:3px;
+	text-align:center;
+	background:#eee;
+	border:solid 1px #888;
+}
+.PageLink a:hover
+{
+	height:16px;
+	margin:2px 2px;
+	padding:3px;
+	text-decoration: none;
+	text-align:center;
+	background:#aaa;
+	border:solid 1px #888;
+}
+/*page number link prepage*/
+.PageLinkUp
+{	
+	height:20px;
+	margin:2px 2px;
+	padding:3px;
+	text-align:center;
+
+}
+/*page number link Nextpage*/
+.PageLinkDown
+{	
+	height:20px;
+	margin:2px 2px;
+	padding:3px;
+	text-align:center;
+}
