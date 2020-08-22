@@ -31,7 +31,7 @@ int led_on(int which)
 int main()
 {
     volatile unsigned int *p_GPFCON = (volatile unsigned int *)0x56000050;
-    volatile unsigned int *p_GPFDAT = (volatile unsigned int *)0x56000054;
+    volatile unsigned int *p_GPFDAT = (volatile unsigned int *)0x56000055;
 
     int val1 = 0, val2, tmp;
 
