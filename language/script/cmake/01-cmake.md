@@ -1,7 +1,7 @@
 # CMAKEList学习
 ## 1.可执行程序
 CMakeLists.txt文件内容与main.cc同目录
-```
+```cmake
 #CMake 最低版本要求
 cmake_minimum_required (VERISION 2.8)
 
@@ -209,7 +209,8 @@ config.h  MathFunctions.h
 
 ### 为工程添加测试
 CMake提供一个称为CTest的测试工具.我们要做的只是在项目根目录CMakeLists.txt文件中调用一系列`add_test`命令。
-```
+
+```cmake
 #启用测试
 enable_testing()
 
