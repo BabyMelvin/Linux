@@ -13,10 +13,11 @@ ARM汇编语言源程序语句,一般由指令,伪操作,宏指令和伪指令�
 
 Linux下ARM汇编语法尽管在Linux下使用C或C++编写程序很方便，但汇编源程序用于系统最基本的初始化，如初始化堆栈指针、设置页表、操作 ARM的协处理器等。初始化完成后就可以跳转到C代码执行。需要注意的是，GNU的汇编器遵循AT&T的汇编语法，可以从GNU的站点 （www.gnu.org）上下载有关规范。
 
-## 一. Linux汇编行结构
+## 1.1. Linux汇编行结构
+
 任何汇编行都是如下结构：
 
-```
+```asm
 [:] [} @ comment //注释用@，[]中的内容为可选，可有可无。
 [:] [} @ 注释
 ```
@@ -25,27 +26,29 @@ Linux ARM 汇编中，任何以冒号结尾的标识符都被认为是一个`标
 
 【例1】定义一个"add"的函数，返回两个参数的和。
 
-```
-.section .text, “x”
+```asm
+.section .text, "x"
 .global add @ give the symbol add external linkage
 add:
-ADD r0, r0, r1 @ add input arguments
-MOV pc, lr @ return from subroutine
+    ADD r0, r0, r1 @ add input arguments
+    MOV pc, lr     @ return from subroutine
 @ end of program
 ```
 
 ## 二. Linux 汇编程序中的标号
 
-标号只能由`a～z`，`A～Z`，`0～9`，“`.`”，`_`等字符组成。当标号为`0～9`的数字时为局部标号，局部标号可以重复出现,使用方法如下：
+标号只能由`a～z`，`A～Z`，`0～9`，“`.`”，`_`等字符组成。
 
-* 标号f: 在引用的地方向前的标号
-* 标号b: 在引用的地方向后的标号
+当标号为`0～9`的数字时为**局部标号**，局部标号可以重复出现,使用方法如下：
+
+* 标号f: 在引用的地方向前的标号 forward
+* 标号b: 在引用的地方向后的标号 backward
 
 【例2】使用局部符号的例子，一段循环程序
 
-```
+```asm
 1:
-  subs r0,r0,#1 @每次循环使r0=r0-1
+  subs r0, r0, #1 @每次循环使r0=r0-1
   bne 1f        @跳转到1标号去执行
 ```
 局部标号代表它所在的地址,因此也可以当作变量或者函数来使用。
@@ -58,7 +61,9 @@ MOV pc, lr @ return from subroutine
 
 `.section section_name [, "flags"[, %type[,flag_specific_arguments]]]`
 
-每一个段以段名为开始, **以下一个段名或者文件结尾为结束**。这些段都有缺省的标志（flags）,**连接器**可以识别这些标志。(与armasm中的AREA相同)。
+每一个段以段名为开始, **以下一个段名或者文件结尾为结束**。
+
+这些段都有缺省的标志（flags）,**连接器**可以识别这些标志。(与armasm中的AREA相同)。
 
 下面是ELF格式允许的段标志含义
 
@@ -68,7 +73,7 @@ MOV pc, lr @ return from subroutine
 
 【例3】定义段
 
-```
+```asm
 .section .mysection @自定义数据段，段名为 “.mysection”
 .align 2
 strtemp:
@@ -77,7 +82,7 @@ strtemp:
 
 ###（2）汇编系统预定义的段名
 
-```
+```asm
 .text @代码段
 .data @初始化数据段
 .bss @未初始化数据段
@@ -93,17 +98,17 @@ strtemp:
 
 【例4】定义入口点
 
-```
-.section.data
-< initialized data here>
+```asm
+.section .data
+    < initialized data here>
 
 .section .bss
-< uninitialized data here>
+    < uninitialized data here>
 
 .section .text
 .globl _start @ give the symbol add external linkage
 _start:
-<instruction code goes here>
+    <instruction code goes here>
 ```
 
 ## 五. Linux汇编程序中的宏定义
@@ -119,7 +124,7 @@ _start:
 
 【例5】宏定义
 
-```
+```asm
 .macro SHIFTLEFT a, b
 .if \b < 0
 MOV \a, \a, ASR #-\b
@@ -135,12 +140,13 @@ MOV \a,\a, LSL #\b
 （2）二进制数以0b开头,其中字母也可以为大写；
 （3）八进制数以0开始,如:0456,0123；
 （4）十六进制数以0x开头,如:0xabcd,0X123f；
-（5）字符串常量需要用引号括起来,中间也可以使用转义字符,如: “You are welcome!\n”；
+（5）字符串常量需要用引号括起来,中间也可以使用转义字符,如: "You are welcome!\n"；
 （6）当前地址以“`.`”表示,在汇编程序中可以使用这个符号代表当前指令的地址；
 
-例如:  "`.long .`"    //这里"`.`"是链接地址，如果**开启MMU**，就是虚拟地址
+例如:  "`.long .`"    //这里"`.`"是**链接地址**，如果**开启MMU**，就是虚拟地址
 
-（7）表达式:在汇编程序中的表达式可以使用常数或者数值, “-”表示取负数,“~”表示取补,“<>”表示不相等,其他的符号如:`+`、`-`、`*`、`/`、`%`、`<`、`<<`、`>`、`>>`、`|`、`&`、`^`、`!`、`==`、`>=`、`<=`、`&&`、`||`跟C语言中的用法相似。
+（7）表达式:在汇编程序中的表达式可以使用常数或者数值, “-”表示取负数,“~”表示取补,`<>` 表示不相等,其他的符号如:`+`、`-`、`*`、`/`、`%`、
+`<`、`<<`、`>`、`>>`、`|`、`&`、`^`、`!`、`==`、`>=`、`<=`、`&&`、`||`跟C语言中的用法相似。
 
 ## 七. Linux下ARM汇编的常用伪操作
 在前面已经提到过了一些伪操作，还有下面一些伪操作：
@@ -176,7 +182,7 @@ MOV \a,\a, LSL #\b
   * `.endr` @结束重复定义
 
 例如:
-```
+```asm
   .rept 3
   .byte 0x23
   .endr
@@ -190,7 +196,7 @@ MOV \a,\a, LSL #\b
 
 （1）函数的定义,格式如下:
 
-```
+```asm
   函数名:
   函数体
   返回语句
@@ -210,7 +216,7 @@ MOV \a,\a, LSL #\b
 
 (1)`.align`:用来指定数据的对齐方式,格式如下:
 
-```
+```asm
   .align [absexpr1, absexpr2]
 ```
 以某种对齐方式,在未使用的存储区域填充值. 第一个值表示对齐方式,4, 8,16或 32. 第二个表达式值表示填充的值。
@@ -221,7 +227,8 @@ MOV \a,\a, LSL #\b
   .include "myarmasm.h"
 ```
 （4）`.incbin`伪操作可以将原封不动的一个二进制文件编译到当前文件中,使用方法如下:
-```
+
+```asm
   .incbin "file"[,skip[,count]]
 ```
 
@@ -257,18 +264,18 @@ MOV \a,\a, LSL #\b
 
 【例6】
 
-```
+```asm
 .globl a
 .data
 .align 4
 .type a, @object
 .size a, 4
 a:
-.long 10
+    .long 10
 ```
 【例7】
 
-```
+```asm
 .section .text
 .type asmfunc, @function
 .globl asmfunc
@@ -297,7 +304,7 @@ asmfunc:
 
 例如：
 
-```
+```asm
 Start:
 valueOfStart:
   .word Start
