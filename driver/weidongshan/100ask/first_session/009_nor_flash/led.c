@@ -30,7 +30,7 @@ int led_on(int which)
 
 int led_init (void)
 {
-    puts("led init \n");
+    puts("led init \n\r");
 
     //将4/5/6配置为输出引脚
     GPFCON &= ~((3 << 8) | (3 << 10) | (3 << 12));
