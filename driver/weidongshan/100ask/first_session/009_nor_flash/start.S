@@ -55,6 +55,7 @@ und_string:
     .string "undefined instruction exception!"
 
 .align 4
+
 do_swi:
     @ sp_svc未设置，先设置它
     ldr sp, =0x33e00000
@@ -79,6 +80,7 @@ swi_string:
     .string "swi exception"
 
 .align 4
+
 do_irq:
     @ sp_irq未设置，先设置它
     ldr sp, =0x33d00000
