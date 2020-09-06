@@ -8,6 +8,7 @@
 /**
  * 比如：55H 98
  * 本意是：往(0+(0x55)<<1) 写入0x98 
+ * offset: 基于NOR角度看的
  */
 void nor_write_word(unsigned int base, unsigned int offset, unsigned int val)
 {
@@ -32,16 +33,128 @@ unsigned int nor_dat(unsigned int offset)
     return nor_read_word(NOR_FLASH_BASE, offset);
 }
 
+
+void wait_ready(unsigned int addr)
+{
+    unsigned int val;
+    unsigned int pre;
+
+    pre = nor_dat(addr >> 1);
+    val = nor_dat(addr >> 1);
+
+    while ((val & (1 << 6)) != (pre & (1 << 6))) {
+        pre = val;
+        val = nor_dat(addr >> 1);
+    }
+}
+
 void do_read_nor_flash(void)
 {
+    unsigned int  addr;
+    volatile unsigned char *p;
+    int i, j;
+    unsigned char c;
+    unsigned char str[16];
+
+    // 获得地址
+    printf("Enter the address to read:");
+    addr = get_uint();
+
+    p = (volatile unsigned char*) addr;
+
+    printf("Data : \n\r");
+    
+    // 固定长度为64
+    for (i = 0; i < 4; i++) {
+        // 每行打印16个数据
+        for (j = 0; j < 16; j++) {
+            // 先打印数值
+            c = *p++;
+            str[j] = c;
+            printf("%02x ", c);
+        }
+
+        printf(" ;");
+        for (j = 0; j < 16; j++) {
+            // 后打印字符
+            if (str[j] < 0x20 || str[j] > 0x7e) // 不可视字符
+                putchar('.');
+            else
+                putchar(str[j]);
+        }
+
+        printf("\n\r");
+    }
 }
 
 void do_write_nor_flash(void)
 {
+    unsigned int addr;
+    unsigned char str[100];
+    int i, j;
+    unsigned int val;
+
+    // 获得地址
+    printf("Enter the address of sector to write:");
+    addr = get_uint();
+    
+    printf("Enter the string to write:");
+    gets(str);
+
+    printf("writing ...\n\r");
+    /**
+     * str[0],str[1] ===>16bit
+     * str[2],str[3] ===>16bit
+     * */
+    i = 0;
+    j = 1;
+    while (str[i] && str[j]) {
+        val = str[i] + (str[j] << 8);
+
+        // 烧写
+        nor_cmd (0x555, 0xaa);  // 解锁
+        nor_cmd (0x2aa, 0xa55); 
+        
+        nor_cmd (0x555, 0xa0);  // program
+        nor_cmd (addr >> 1, val); 
+
+        // 等待烧写完成:读数据，Q6无变化时表示结束
+        wait_ready(addr);
+
+        i += 2;
+        j += 2;
+        addr += 2;
+    }
+    // 烧写
+    nor_cmd (0x555, 0xaa);  // 解锁
+    nor_cmd (0x2aa, 0xa55); 
+        
+    nor_cmd (0x555, 0xa0);  // program
+    nor_cmd (addr >> 1, val); 
+
+    // 等待烧写完成:读数据，Q6无变化时表示结束
+    wait_ready(addr);
 }
 
 void do_erase_nor_flash (void)
 {
+    unsigned int addr;
+
+    // 获得地址
+    printf("Enter the address of sector to erase:");
+    addr = get_uint();
+
+    printf("eraseing ..\n\r");
+    nor_cmd (0x555, 0xaa);  // 解锁
+    nor_cmd (0x2aa, 0xa55); 
+
+    nor_cmd (0x555, 0x80); // erase sector
+
+    nor_cmd(0x555, 0xaa); // 解锁
+    nor_cmd(0x2aa, 0x55);
+
+    nor_cmd(addr >> 1, 0x30); // 发出扇区地址
+    wait_ready(addr);
 }
 
 /**
