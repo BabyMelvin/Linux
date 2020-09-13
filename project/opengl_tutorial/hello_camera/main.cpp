@@ -51,6 +51,12 @@ const char *fragmentShaderSource =
     "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);\n"
     "}\0";
 using namespace std;
+
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 int main(int argc, char *argv[])
 {
 
@@ -330,13 +336,14 @@ int main(int argc, char *argv[])
         // glm::vec3 up = glm::vec3(0.0f, 1.0f,0.0f);
         // glm::vec3 cameraRight  = glm::normalize(glm::cross(up, cameraDirection));
         // glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-        float radius = 10.0f;
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
-        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ),
-                           glm::vec3(0.0f, 0.0f, 0.0f),
-                           glm::vec3(0.0f, 1.0f, 0.0f));
+        // float radius = 10.0f;
+        // float camX = sin(glfwGetTime()) * radius;
+        // float camZ = cos(glfwGetTime()) * radius;
+        // view = glm::lookAt(glm::vec3(camX, 0.0f, camZ),
+        //                    glm::vec3(0.0f, 0.0f, 0.0f),
+        //                    glm::vec3(0.0f, 1.0f, 0.0f));
 
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         //retrieve the matrix uniform locations
         //unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
         //glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
@@ -385,6 +392,28 @@ void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    float currentTime = glfwGetTime();
+    deltaTime = currentTime - lastFrame;
+    lastFrame = currentTime;
+
+    float cameraSpeed = 2.5f * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_W))
+    {
+        cameraPos += cameraSpeed * cameraFront;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_S))
+    {
+        cameraPos -= cameraSpeed * cameraFront;
+    }
+    if (glfwGetKey(window, GLFW_KEY_A))
+    {
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 // 当用户改变窗口的大小的时候，视口也应该被调整
