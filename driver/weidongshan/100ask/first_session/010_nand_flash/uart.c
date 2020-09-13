@@ -31,6 +31,8 @@ int putchar (int c)
     while (!(UTRSTAT0 & (1 << 2)));
 
     UTXH0 = (unsigned char)c;
+
+    return 0;
 }
 
 int getchar (void)
@@ -46,6 +48,8 @@ int puts(const char *s)
         putchar (*s);
         s ++;
     }
+
+    return 0;
 }
 
 /**
@@ -54,7 +58,7 @@ int puts(const char *s)
 void printHex(unsigned int val)
 {
     int i;
-    unsigned char arry[8];
+    unsigned int arry[8];
 
     /* 先取出每一位的值 */
     for (i = 0; i < 8; i++) {

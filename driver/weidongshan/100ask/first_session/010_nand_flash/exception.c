@@ -2,7 +2,7 @@
 
 void printException(unsigned int cpsr, char *str)
 {
-    puts("Exception ! cpsr = ");
+    puts("test:Exception ! cpsr = ");
     printHex(cpsr);
     puts(" ");
     puts(str);
@@ -11,12 +11,13 @@ void printException(unsigned int cpsr, char *str)
 
 void print1(void)
 {
-    puts("abc\n\r");
+    puts("abc test\n\r");
 }
 
 void print2(void)
 {
     puts("123\nr\r");
+    puts("my test\nr\r");
 }
 
 void  printSWIVal(unsigned int *pSWI)

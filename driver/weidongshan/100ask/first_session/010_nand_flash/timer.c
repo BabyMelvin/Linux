@@ -1,6 +1,7 @@
 #include "s3c2440_soc.h"
+#include "interrupt.h"
 
-void timer_irq(void)
+void timer_irq(int unused)
 {
     // 点灯计数
     static int cnt = 0;

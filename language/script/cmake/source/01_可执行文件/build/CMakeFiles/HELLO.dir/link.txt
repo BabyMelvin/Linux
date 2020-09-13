@@ -1,0 +1,1 @@
+/usr/bin/cc     CMakeFiles/HELLO.dir/main.c.o  -o HELLO -rdynamic math/libMathFuncs.a 

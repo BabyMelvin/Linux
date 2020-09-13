@@ -1,4 +1,5 @@
 #include "s3c2440_soc.h"
+#include "uart.h"
 
 void delay(volatile int d)
 {

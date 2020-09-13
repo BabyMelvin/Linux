@@ -1,7 +1,8 @@
 #include "s3c2440_soc.h"
+#include "uart.h"
+#include "interrupt.h"
 
 void key_eint_irq (int irq);
-typedef void (*irq_func)(int);
 
 static irq_func irq_array[32];
 /**

@@ -36,8 +36,8 @@ cmake ..
 
 when `cmake ..`:
 
-* `PRODUCT_SRC_DIR`:still with the same with CMakeLists.txt file
-* `PRODUCT_BINARY_DIR`:watch out ,which is the cmake execute location,such as "out"
+* `PROJECT_SOURCE_DIR`:still with the same with CMakeLists.txt file
+* `PROJECT_BINARY_DIR`:watch out ,which is the cmake execute location,such as "out"
 
 * 2.`make`命令
 

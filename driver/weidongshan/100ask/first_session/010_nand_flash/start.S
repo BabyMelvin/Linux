@@ -202,6 +202,7 @@ und_code:
     @ 使用BL命令相对跳转，程序仍然在NOR/SRAM执行
     //bl main
 
+    ldr lr, =halt
     @ 绝对跳转，跳转到SDRAM
     ldr pc, =main
 

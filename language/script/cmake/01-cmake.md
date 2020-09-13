@@ -12,9 +12,10 @@ project (Demo1)
 add_executable(Demo main.cc)
 ```
 **编译**：当前目录执行 `cmake .`,得到Makefile后再使用`make`命令编译得到Demo可执行文件。
+
 ## 2.多个源文件
 ### 同一个目录，多个源文件
-```
+```cmake
 # CMake 最低版本要求
 cmake_minimum_required (vERSION 2.8)
 
@@ -26,7 +27,8 @@ add_executable(Demo main.cc MathFunctions.cc)
 ```
 把所有源文件添加进去简便写法`aux_source_directory(<dir> <variable>)`,查找指定目录下所有源文件。
 改成CMakeList.txt：
-```
+
+```cmake
 #CMake 最低版本要求
 cmake_minmum_required (VERSION 2.8)
 
@@ -39,13 +41,15 @@ aux_source_directory(. DIR_SRCS)
 add_executable(Demo ${DIR_SRCS})
 ```
 CMake会将所有源文件的文件名赋值给变量DIR_SRCS,再指示变量DIR_SRCS中源文件需要编译成一个名称为Dem可执行文件.
+
 ### 多个目录，多个源文件
 目录结构./main.cc,math/MathFunctions.cc,
 这种情况需要分别在项目根目录.和math目录中个编写一个CMakeLists.txt文件。方便可将math目录编译成静态库再由main
 函数调用.
 
 根目录的CMakeLists.txt:
-```
+
+```cmake
 # CMake 最低版本号要求
 cmake_minimum_required （VERSION 2.8）
 
@@ -67,7 +71,7 @@ add_subdirectory(math)
 命令`target_link_libraries`指明可执行文件main需要一个名为MathFuncitons的链接库
 
 子目录中的CMakeLists.txt文件:
-```
+```cmake
 # 查找当前目录下的所有文件，并保存名称到DIR_LIB_SRC 变量
 aux_source_directory(. DIR_LIB_SRCS)
 
@@ -75,6 +79,7 @@ aux_source_directory(. DIR_LIB_SRCS)
 add_library (MathFunctions ${DIR_LIB_SRCS})
 ```
 在该文件中使用命令`add_library`将src目录中的源文件编译为静态链接库.
+
 ## 3.自定义编译选项
 > CMAKE允许项目增加编译选项，从而可以根据用户环境和需求选择最适合的编译方案。
 
@@ -316,19 +321,19 @@ check_function_exists (pow HAVE_POW)
 ## 7.添加版本号
 
 顶层CMakeLists文件，在`project`命令之后加入两行:
-```
+```cmake
 set (Demo_VERSION_MAJOR 1)
 set (Demo_VERSION_MINOR 0)
 ```
 之后为了代码获取版本信息，可以修改config.h.in文件，添加两个预定义变量:
-```
+```cmake
 // the configured options and settings for Tutorial
 #define Demo_VERSION_MAJOR @Demo_VERSION_MAJOR@
 #define Demo_VERSION_MINOR @Demo_VERSION_MINOR@
 ```
 在代码中使用，打印版本信息：
 
-```
+```cmake
 #include <stdio.h>
 
 int main(int argc,char *argv[]){
@@ -340,29 +345,3 @@ int main(int argc,char *argv[]){
         return 1;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

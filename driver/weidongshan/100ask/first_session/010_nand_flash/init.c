@@ -1,5 +1,7 @@
 #include "s3c2440_soc.h"
 #include "init.h"
+//#include "nand_flash.h"
+
 void sdram_init(void)
 {
     BWSCON = 0x22000000;
@@ -102,6 +104,25 @@ void clean_bss(void)
     }
 }
 
+#if 0
+int is_boot_from_nor_flash(void)
+{
+    volatile int *p = (volatile int *)0;
+    int val;
+
+    val = *p;
+    *p = 0x12345678;
+    if (*p == 0x12345678) {
+        // 写成功，是nand 启动(4k sram)
+        *p = val;
+        return 0;
+    } else {
+        // nor 启动，不能直接写入
+        return 1;
+    }
+}
+#endif
+
 void copy2sdram(void)
 {
     /**
@@ -118,4 +139,14 @@ void copy2sdram(void)
     while (dest < end) {
         *dest ++ = *src++;
     }
+#if 0
+    if (is_boot_from_nor_flash()) {
+        while (dest < end) {
+            *dest ++ = *src++;
+        }
+    } else {
+        nand_init();
+        nand_read((unsigned int)src, dest, len);
+    }
+#endif
 }

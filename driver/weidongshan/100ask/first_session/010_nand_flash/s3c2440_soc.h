@@ -8,6 +8,7 @@
 #define  __S3C2440_SOC_H
 
 #define     __REG(x)					(*(volatile unsigned int *)(x)) 
+#define     __REG_BYTE(x)               (*(volatile unsigned char *)(x))
 
 /*Memory Controllers*/
 #define     BWSCON                   __REG(0x48000000)   //Bus width & wait status control   
@@ -129,13 +130,13 @@
 
 #define     NFCONF                   __REG(0x4E000000)  //NAND flash configuration             
 #define     NFCONT                   __REG(0x4E000004)  //NAND flash control                   
-#define     NFCMD                    __REG(0x4E000008)  //NAND flash command                   
-#define     NFADDR                   __REG(0x4E00000C)  //NAND flash address                   
-#define     NFDATA                   __REG(0x4E000010)  //NAND flash data                      
+#define     NFCMD                    __REG_BYTE(0x4E000008)  //NAND flash command                   
+#define     NFADDR                   __REG_BYTE(0x4E00000C)  //NAND flash address                   
+#define     NFDATA                   __REG_BYTE(0x4E000010)  //NAND flash data                      
 #define     NFMECC0                  __REG(0x4E000014)  //NAND flash main area ECC0/1          
 #define     NFMECC1                  __REG(0x4E000018)  //NAND flash main area ECC2/3          
 #define     NFSECC                   __REG(0x4E00001C)  //NAND flash spare area ECC            
-#define     NFSTAT                   __REG(0x4E000020)  //NAND flash operation status          
+#define     NFSTAT                   __REG_BYTE(0x4E000020)  //NAND flash operation status          
 #define     NFESTAT0                 __REG(0x4E000024)  //NAND flash ECC status for I/O[7:0]   
 #define     NFESTAT1                 __REG(0x4E000028)  //NAND flash ECC status for I/O[15:8]  
 #define     NFMECC0_STATUS           __REG(0x4E00002C)  //NAND flash main area ECC0 status     
@@ -189,8 +190,8 @@
 #define     UERSTAT0                 __REG(0x50000014)  //UART 0 Rx error status   
 #define     UFSTAT0                  __REG(0x50000018)  //UART 0 FIFO status       
 #define     UMSTAT0                  __REG(0x5000001C)  //UART 0 modem status    
-#define     UTXH0                    __REG(0x50000020)  //UART 0 transmission hold 
-#define     URXH0                    __REG(0x50000024)  //UART 0 receive buffer    
+#define     UTXH0                    __REG_BYTE(0x50000020)  //UART 0 transmission hold 
+#define     URXH0                    __REG_BYTE(0x50000024)  //UART 0 receive buffer    
 #define     UBRDIV0                  __REG(0x50000028)  //UART 0 baud rate divisor 
 #define     ULCON1                   __REG(0x50004000)  //UART 1 line control      
 #define     UCON1                    __REG(0x50004004)  //UART 1 control           
@@ -404,6 +405,3 @@
 #define     SDIDAT   		         __REG(0x5A000040)  //SDI data               
 
 #endif
-
-
-

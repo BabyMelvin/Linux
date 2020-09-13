@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+.././math/math_func.h
+
+/home/book/100ask/Linux/language/script/cmake/source/01_可执行文件/main.c
+stdio.h
+-
+stdlib.h
+-
+math_func.h
+/home/book/100ask/Linux/language/script/cmake/source/01_可执行文件/math_func.h
+
