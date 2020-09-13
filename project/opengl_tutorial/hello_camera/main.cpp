@@ -14,6 +14,8 @@
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height); //回调函数原型声明
 void processInput(GLFWwindow *window);
+void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -57,6 +59,12 @@ glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+float lastX = 400, lastY = 300;
+bool firstMouse = true;
+float yaw = -90.0f; // yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+float pitch = 0.0f;
+float fov = 45.0f;
+
 int main(int argc, char *argv[])
 {
 
@@ -77,6 +85,9 @@ int main(int argc, char *argv[])
     glfwMakeContextCurrent(window);
     //对窗口注册一个回调函数,每当窗口改变大小，GLFW会调用这个函数并填充相应的参数供你处理
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
     //初始化GLAD用来管理OpenGL的函数指针
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -302,9 +313,8 @@ int main(int argc, char *argv[])
     glm::mat4 projection = glm::mat4(1.0f);
     //注意，我们将矩阵向我们要进行移动场景的反方向移动。
     //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    int projectLoc = glGetUniformLocation(shaderProgram, "projection");
-    glUniformMatrix4fv(projectLoc, 1, GL_FALSE, &projection[0][0]);
+    //projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
     while (!glfwWindowShouldClose(window))
     {
         // 输入
@@ -325,6 +335,10 @@ int main(int argc, char *argv[])
 
         // draw our first triangle
         glUseProgram(shaderProgram);
+        // pass projection matrix to shader (note that in this case it could change every frame)
+        glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        int projectLoc = glGetUniformLocation(shaderProgram, "projection");
+        glUniformMatrix4fv(projectLoc, 1, GL_FALSE, &projection[0][0]);
         glm::mat4 view = glm::mat4(1.0f);
 
         //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -421,4 +435,47 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
     // 注意：对于视网膜(Retina)显示屏，width和height都会明显比原输入值更高一点。
     glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.05;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(front);
+}
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    if (fov >= 1.0f && fov <= 45.0f)
+        fov -= yoffset;
+    if (fov <= 1.0f)
+        fov = 1.0f;
+    if (fov >= 45.0f)
+        fov = 45.0f;
 }
