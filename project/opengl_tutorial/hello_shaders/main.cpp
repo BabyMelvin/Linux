@@ -47,35 +47,36 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
+#include "Shader.h"
 
 using namespace std;
 
-const char *vertexShaderSource =
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec3 aColor;\n"
-    "out vec3 ourColor;\n"
-    //"out vec4 vertexColor;" //为片段着色器指定一个颜色输出
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-    // "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" // 把输出变量设置为暗红色
-    "   ourColor = aColor;\n" // 将ourColor设置为我们从顶点数据那里得到的输入颜色
-    "}\0";
+// const char *vertexShaderSource =
+//     "#version 330 core\n"
+//     "layout (location = 0) in vec3 aPos;\n"
+//     "layout (location = 1) in vec3 aColor;\n"
+//     "out vec3 ourColor;\n"
+//     //"out vec4 vertexColor;" //为片段着色器指定一个颜色输出
+//     "void main()\n"
+//     "{\n"
+//     "   gl_Position = vec4(aPos, 1.0);\n"
+//     // "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" // 把输出变量设置为暗红色
+//     "   ourColor = aColor;\n" // 将ourColor设置为我们从顶点数据那里得到的输入颜色
+//     "}\0";
 
-const char *fragmentShaderSource =
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    //"in vec4 vertexColor;\n"// 从顶点着色器传来的输入变量（名称相同、类型相同）
-    //"uniform vec4 ourColor;\n" // 在OpenGL程序代码中设定这个变量
-    "in vec3 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    // "   FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
-    //"   FragColor = vertexColor;\n"
-    //" FragColor = ourColor;\n"
-    "   FragColor = vec4(ourColor, 1.0f);\n"
-    "}\0";
+// const char *fragmentShaderSource =
+//     "#version 330 core\n"
+//     "out vec4 FragColor;\n"
+//     //"in vec4 vertexColor;\n"// 从顶点着色器传来的输入变量（名称相同、类型相同）
+//     //"uniform vec4 ourColor;\n" // 在OpenGL程序代码中设定这个变量
+//     "in vec3 ourColor;\n"
+//     "void main()\n"
+//     "{\n"
+//     // "   FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+//     //"   FragColor = vertexColor;\n"
+//     //" FragColor = ourColor;\n"
+//     "   FragColor = vec4(ourColor, 1.0f);\n"
+//     "}\0";
 
 //输入控制，检查用户是否按下了返回键(Esc)
 void processInput(GLFWwindow *window)
@@ -122,51 +123,8 @@ int main()
     int nAttributes;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nAttributes);
     std::cout << "Maximum nr of vertex attributes supported: " << nAttributes << std::endl;
-    // 顶点着色器
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
-    }
-
-    //片段着色器
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
-    }
-    // 着色器程序：着色器程序是多个着色器合并最终链接完成版本
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
-    }
-    //在把着色器对象链接到程序对象以后，记得删除着色器对象，我们不再需要它们了
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    
+    Shader outShader("shader.vs","shader.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -226,9 +184,7 @@ int main()
         //GL_DEPTH_BUFFER_BIT,(模板，蜡纸)GL_STENCIL_BUFFER_BIT
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //激活程序
-        // draw our first triangle
-        glUseProgram(shaderProgram);
+        outShader.use();
 
         // // 更新uniform颜色
         // float timeValue = glfwGetTime();
@@ -251,7 +207,6 @@ int main()
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
     glfwTerminate();
     return 0;
 }
