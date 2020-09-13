@@ -53,23 +53,28 @@ using namespace std;
 const char *vertexShaderSource =
     "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
+    "layout (location = 1) in vec3 aColor;\n"
+    "out vec3 ourColor;\n"
     //"out vec4 vertexColor;" //为片段着色器指定一个颜色输出
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-   // "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" // 把输出变量设置为暗红色
+    "   gl_Position = vec4(aPos, 1.0);\n"
+    // "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" // 把输出变量设置为暗红色
+    "   ourColor = aColor;\n" // 将ourColor设置为我们从顶点数据那里得到的输入颜色
     "}\0";
 
 const char *fragmentShaderSource =
     "#version 330 core\n"
     "out vec4 FragColor;\n"
     //"in vec4 vertexColor;\n"// 从顶点着色器传来的输入变量（名称相同、类型相同）
-    "uniform vec4 ourColor;\n" // 在OpenGL程序代码中设定这个变量
+    //"uniform vec4 ourColor;\n" // 在OpenGL程序代码中设定这个变量
+    "in vec3 ourColor;\n"
     "void main()\n"
     "{\n"
     // "   FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
     //"   FragColor = vertexColor;\n"
-    " FragColor = ourColor;\n"
+    //" FragColor = ourColor;\n"
+    "   FragColor = vec4(ourColor, 1.0f);\n"
     "}\0";
 
 //输入控制，检查用户是否按下了返回键(Esc)
@@ -166,9 +171,11 @@ int main()
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f};
+        // 位置              // 颜色
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // 右下
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // 左下
+        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // 顶部
+    };
     /**
          * 顶点数据作为输入发送给图形渲染管线的第一个处理阶段：顶点着色器。
          * 顶点着色器会在GPU上创建内存用于储存我们的顶点数据，还要配置OpenGL如何解释这些内存，并且指定其如何发送给显卡。
@@ -197,9 +204,13 @@ int main()
     //调用glBufferData函数，它会把之前定义的顶点数据复制到缓冲的内存中
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    //链接顶点属性
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    //位置属性
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
+    // 颜色属性
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
     // note that this is allowed, the call to glVertexAttribPointer
     //registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -219,11 +230,11 @@ int main()
         // draw our first triangle
         glUseProgram(shaderProgram);
 
-        // 更新uniform颜色
-        float timeValue = glfwGetTime();
-        float greenValue = sin(timeValue) / 2.0f + 0.5f;
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        // // 更新uniform颜色
+        // float timeValue = glfwGetTime();
+        // float greenValue = sin(timeValue) / 2.0f + 0.5f;
+        // int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time,
                                 //but we'll do so to keep things a bit more organized
