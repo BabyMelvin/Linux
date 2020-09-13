@@ -293,6 +293,12 @@ int main(int argc, char *argv[])
     // trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
     // trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
     //渲染循环
+    glm::mat4 projection = glm::mat4(1.0f);
+    //注意，我们将矩阵向我们要进行移动场景的反方向移动。
+    //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    int projectLoc = glGetUniformLocation(shaderProgram, "projection");
+    glUniformMatrix4fv(projectLoc, 1, GL_FALSE, &projection[0][0]);
     while (!glfwWindowShouldClose(window))
     {
         // 输入
@@ -313,35 +319,44 @@ int main(int argc, char *argv[])
 
         // draw our first triangle
         glUseProgram(shaderProgram);
-        glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
+
         //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-        //注意，我们将矩阵向我们要进行移动场景的反方向移动。
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+
+        // glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+        // glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f,0.0f);
+        // glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+        // glm::vec3 up = glm::vec3(0.0f, 1.0f,0.0f);
+        // glm::vec3 cameraRight  = glm::normalize(glm::cross(up, cameraDirection));
+        // glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+        float radius = 10.0f;
+        float camX = sin(glfwGetTime()) * radius;
+        float camZ = cos(glfwGetTime()) * radius;
+        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ),
+                           glm::vec3(0.0f, 0.0f, 0.0f),
+                           glm::vec3(0.0f, 1.0f, 0.0f));
 
         //retrieve the matrix uniform locations
         //unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
         //glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
-        int modelLoc = glGetUniformLocation(shaderProgram, "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        //int modelLoc = glGetUniformLocation(shaderProgram, "model");
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         int viewLoc = glGetUniformLocation(shaderProgram, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-        int projectLoc = glGetUniformLocation(shaderProgram, "projection");
-        glUniformMatrix4fv(projectLoc, 1, GL_FALSE, &projection[0][0]);
 
         // seeing as we only have a single VAO
         //there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glBindVertexArray(VAO);
         for (unsigned int i = 0; i < 10; i++)
         {
-            glm::mat4 model;
+            glm::mat4 model = glm::mat4(1.0f);
+            //glm::mat4 model;
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            int modelLoc = glGetUniformLocation(shaderProgram, "model");
             glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
