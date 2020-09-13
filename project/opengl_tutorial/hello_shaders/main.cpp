@@ -52,17 +52,21 @@ using namespace std;
 const char *vertexShaderSource =
     "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
+    "out vec4 vertexColor;" //为片段着色器指定一个颜色输出
     "void main()\n"
     "{\n"
-    "gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"// 把输出变量设置为暗红色
     "}\0";
 
 const char *fragmentShaderSource =
     "#version 330 core\n"
     "out vec4 FragColor;\n"
+    "in vec4 vertexColor;\n"//// 从顶点着色器传来的输入变量（名称相同、类型相同）
     "void main()\n"
     "{\n"
-    "FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+   // "   FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+    "   FragColor = vertexColor;\n"
     "}\0";
 
 //输入控制，检查用户是否按下了返回键(Esc)
