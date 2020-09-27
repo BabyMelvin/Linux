@@ -6,3 +6,8 @@ int math_add(int a, int b)
     printf("match_add in MathFuncs lib\n");
     return a + b;
 }
+
+double power(int a, int b)
+{
+    return a * b;
+}

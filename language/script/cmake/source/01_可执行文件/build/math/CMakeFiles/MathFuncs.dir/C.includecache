@@ -6,9 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/book/100ask/Linux/language/script/cmake/source/01_可执行文件/math/math_func.c
+/home/caohang/code/melvin/git/Linux/language/script/cmake/source/01_可执行文件/math/math_func.c
 stdio.h
 -
 math_func.h
-/home/book/100ask/Linux/language/script/cmake/source/01_可执行文件/math/math_func.h
+/home/caohang/code/melvin/git/Linux/language/script/cmake/source/01_可执行文件/math/math_func.h
+
+/home/caohang/code/melvin/git/Linux/language/script/cmake/source/01_可执行文件/math/math_func.h
 

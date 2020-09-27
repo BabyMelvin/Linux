@@ -2,7 +2,7 @@
 
 全局静态变量只会进行一次初始化
 
-```
+```c
 #include <stdio.h>
 
 int get_static() {

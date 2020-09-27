@@ -86,7 +86,7 @@ add_library (MathFunctions ${DIR_LIB_SRCS})
 如：可将MathFunctions库设为一个可选的库，如果该选项为ON，就使用该库的数学函数，否则调用标准库的数学函数库。
 修改CMakeLists文件。
 
-```
+```cmake
 # CMake 最低版号要求
 cmake_minimum_required　（VERSION 2.8)
 

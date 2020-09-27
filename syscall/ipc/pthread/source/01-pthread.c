@@ -15,26 +15,29 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
-#include <stdio.h>
 #include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-static void *pthread_fun(void* arg){
-    int *p=(int *)arg;
-    printf("phread进程 id=%d\n",getpid());
-    printf("pthread 线程id=%x\n",(unsigned int)pthread_self());
-    printf("phtread *arg+%d\n",*p);
-    while(1);
+static void* pthread_fun(void* arg)
+{
+    int* p = (int*)arg;
+    printf("pthread进程 id=%d\n", getpid());
+    printf("pthread 线程id=%x\n", (unsigned int)pthread_self());
+    printf("pthread *arg+%d\n", *p);
+    while (1)
+        ;
 }
-int main(void){
+int main(void)
+{
     pthread_t tid;
-    int n=10;
-    pthread_create(&tid,NULL,pthread_fun,(void*)&n);
-    printf("主进程 id=%d\n",getpid());
-    printf("主线程 id=%x\n",(unsigned int)pthread_self());
-    printf("子线程 id=%x\n",(unsigned int)tid);
+    int n = 10;
+    pthread_create(&tid, NULL, pthread_fun, (void*)&n);
+    printf("主进程 id=%d\n", getpid());
+    printf("主线程 id=%x\n", (unsigned int)pthread_self());
+    printf("子线程 id=%x\n", (unsigned int)tid);
     //避免主线程退出导致子线程也结束
-    while(1);
+    while (1)
+        ;
     return 0;
 }
-

@@ -46,7 +46,7 @@ using uint_t = unsigned int;
 typedef std::map<std::string, int> map_int_t;
 using map_int_t = std::map<std::string, int>;
 
-typedef void *(func_t)(int, int);
+typedef void (*func_t)(int, int);
 using func_t = void(*)(int, int);
 ```
 
