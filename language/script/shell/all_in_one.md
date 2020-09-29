@@ -59,3 +59,6 @@ trap "echo 'error: Script failed: see failed command above'" ERR
   * 截断字符串：`${var%suffix}` 和 `${var#prefix}`。例如，假设 `var=foo.pdf`，那么 `echo ${var%.pdf}.txt` 将输出 `foo.txt`。
 * 使用括号扩展（`{...}`）来减少输入相似文本，并自动化文本组合。这在某些情况下会很有用，例如`mv foo.{txt,pdf} some-dir`（同时移动两个文件），`cp somefile{,.bak}`（会被扩展成`cp somefile somefile.bak`）或者 `mkdir -p test-{a,b,c}/subtest-{1,2,3}`（会被扩展成所有可能的组合，并创建一个目录树）。
 * 通过使用 `<(some command)` 可以将输出视为文件。例如，对比本地文件 `/etc/hosts` 和一个远程文件：` diff /etc/hosts <(ssh somehost cat /etc/hosts)`
+
+![explainshell](https://explainshell.com/)取相关命令、参数、管道等内容的解释
+![linux advanced guide](https://tldp.org/LDP/abs/html/)
