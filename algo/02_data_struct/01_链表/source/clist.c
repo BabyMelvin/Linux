@@ -2,7 +2,7 @@
 #include <string.h>
 #include "clist.h"
 
-void clist_init(CList *list, void (*destory)(void *data))
+void clist_init(clist_t *list, void (*destory)(void *data))
 {
     list->size = 0;
     list->destory = destory;
@@ -11,7 +11,7 @@ void clist_init(CList *list, void (*destory)(void *data))
     return;
 }
 
-void clist_destory (CList *list)
+void clist_destory (clist_t *list)
 {
     void *data;
 
@@ -21,16 +21,16 @@ void clist_destory (CList *list)
             list->destory(data);
     }
 
-    memset(list, 0, sizeof(CList));
+    memset(list, 0, sizeof(clist_t));
 
     return;
 }
 
-int clist_ins_next (CList *list, CListElmt *elemnt, const void *data)
+int clist_ins_next (clist_t *list, clist_elmt_t *element, const void *data)
 {
-    CListElmt *new_element;
+    clist_elmt_t *new_element;
 
-    if ((new_element = (CListElmt *)malloc(sizeof(CListElmt))) == NULL)
+    if ((new_element = (clist_t *)malloc(sizeof(clist_t))) == NULL)
         return -1;
 
     new_element->data = (void *)data;
@@ -47,9 +47,9 @@ int clist_ins_next (CList *list, CListElmt *elemnt, const void *data)
     return 0;
 }
 
-int clist_rem_next (CList *list, CListElmt *element, void **data)
+int clist_rem_next (clist_t *list, clist_elmt_t *element, void **data)
 {
-    CListElmt *old_element;
+    clist_elmt_t *old_element;
 
     if (clist_size(list) == 0)
         return -1;
@@ -66,7 +66,7 @@ int clist_rem_next (CList *list, CListElmt *element, void **data)
     }
 
     free(old_element);
-    list_size --;
+    list->size --;
 
     return 0;
 }

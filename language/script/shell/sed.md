@@ -18,11 +18,11 @@ sed [-hnV][-e<script>][-f<script文件>][文本文件]
 
 * 文件：指定待处理文本呢文件列表
 
-## sed命令（**不改变文本内容，除了-i选项**）
+## sed命令（不改变文本内容，除了-i选项）
 
-* `a\`：当前行下面插入文本
-* `i\`:在当前行上面插入文本
-* `c\`:把选定行为改为新的文本
+* `a`：当前行下面插入文本
+* `i`:在当前行上面插入文本
+* `c`:把选定行为改为新的文本
 * `d`:删除，删除选择的行
 * `D`: 删除莫板块的第一行
 * `s`:替换指定字符
@@ -35,12 +35,35 @@ sed [-hnV][-e<script>][-f<script文件>][文本文件]
 
 # 以行为单位
 ## 1.添加
-```
+
+```bash
 # 在第4行后添加新的字符串
+# -e 命令行中script
 sed -e 4a\newline testfile
 ```
-## 2.删除
+
 ```
+$cat testfile
+HELLO LINUX!  
+Linux is a free unix-type opterating system.  
+This is a linux testfile!  
+Linux test 
+```
+
+执行完命令
+
+```
+$sed -e 4a\newline testfile
+HELLO LINUX!  
+Linux is a free unix-type opterating system.  
+This is a linux testfile!  
+Linux test 
+newline
+```
+
+## 2.删除
+
+```bash
 # 删除2~5行(-e可省略),nl相当于cat加上序号
 nl /etc/passwd | sed '2,5d'
 
@@ -53,7 +76,7 @@ nl /etc/passwd | sed '3,$d'
 
 ## 3.插入
 
-```
+```bash
 # 第2行前加入 drink tea
 nl /etc/passwd | sed '2a drink tea'
 
@@ -63,13 +86,13 @@ nl /etc/passwd | sed '2i drink tea'
 
 # 4.替换
 
-```
+```bash
 # 将2~5行内容取代为No 2-5 Number
 nl /etc/passwd | sed '2,5c No 2-5 Number'
 ```
-# 5.打印
+## 5.打印
 
-```
+```bash
 # 仅列出/etc/passwd 文件内的第5~7行
 nl /etc/passwd | sed -n '5,7p'
 ```
@@ -87,7 +110,7 @@ nl /etc/passwd | sed -n '5,7p'
 
 # 数据的搜索并显示
 
-```
+```bash
 # 搜索/etc/passwd有root关键字的行(这个即输出结果，又输出所有的文件内容)
 nl /etc/passwd | sed '/root/p'
 

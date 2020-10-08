@@ -2,7 +2,7 @@
 #include "frames.h"
 #include "list.h"
 
-int alloc_frame (List *frames)
+int alloc_frame (list_t *frames)
 {
     int frame_number, *data;
     if (list_size(frames) == 0) {

@@ -1,8 +1,8 @@
 #include "clist.h"
 
-typedef struct Page_ {
+typedef struct page_ {
     int number;
     int reference;
-} Page;
+} page_t;
 
-int replace_page(CListElmt **current);
+int replace_page(clist_elmt_t **current);
