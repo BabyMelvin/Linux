@@ -6,7 +6,7 @@
 #include "lex.h"
 #include "symbol.h"
 
-Token lex (const char *istream, CHTbl *symtbl)
+Token lex (const char *istream, ch_tbl_t *symtbl)
 {
     Token token;
     Symbol *symtbl;

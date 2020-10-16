@@ -4,13 +4,13 @@
 #include "list.h"
 #include "chtbl.h"
 
-int chtbl_init (CHTbl *htbl, int buckets, int (*h)(const void *key),
+int chtbl_init (ch_tbl_t *htbl, int buckets, int (*h)(const void *key),
         int (*match)(const void *key1, const void *key2), void (*destory)(void *data))
 {
     int i;
 
     /* Allocate space for the hash table*/
-    if((htbl->table = (List *)malloc(buckets * sizeof(List))) == NULL)
+    if((htbl->table = (list_t *)malloc(buckets * sizeof(list_t))) == NULL)
         return -1;
 
     /*Initialize the buckets*/
@@ -29,7 +29,7 @@ int chtbl_init (CHTbl *htbl, int buckets, int (*h)(const void *key),
     return 0;
 }
 
-void chtbl_destory (CHTbl *htbl)
+void chtbl_destory (ch_tbl_t *htbl)
 {
     int i;
 
@@ -42,12 +42,12 @@ void chtbl_destory (CHTbl *htbl)
     free(htbl->table);
 
     /*No operations are allowed now, but clear the structure as a precaution*/
-    memset(htbl, 0, sizeof(CHTbl));
+    memset(htbl, 0, sizeof(ch_tbl_t));
 
     return;
 }
 
-int chtbl_insert (CHTbl *htbl, const void *data)
+int chtbl_insert (ch_tbl_t *htbl, const void *data)
 {
     void *temp;
     int bucket, retval;
@@ -67,9 +67,9 @@ int chtbl_insert (CHTbl *htbl, const void *data)
     return retval;
 }
 
-int chtbl_remove (CHTbl *htbl, void **data)
+int chtbl_remove (ch_tbl_t *htbl, void **data)
 {
-    ListElmt *element, *prev;
+    list_elmt_t *element, *prev;
     int bucket;
 
     /*Hash the key*/
@@ -95,9 +95,9 @@ int chtbl_remove (CHTbl *htbl, void **data)
     return -1;
 }
 
-int chtbl_lookup (const CHTbl *htbl, void **data)
+int chtbl_lookup (const ch_tbl_t *htbl, void **data)
 {
-    ListElmt *element;
+    list_elmt_t *element;
     int bucket;
 
     /*Hash the key*/

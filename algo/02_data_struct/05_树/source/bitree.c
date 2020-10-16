@@ -106,8 +106,8 @@ void bitree_rem_left (BiTree *tree, BiTreeNode *node)
 
     /*Remove the nodes*/
     if (*position != NULL)  {
-        bitree_rem_left(tree, *position);
-        bitree_rem_right(tree, *position);
+        bitree_rem_left (tree, *position);
+        bitree_rem_right (tree, *position);
 
         if (tree->destroy != NULL) {
             /*Call a user-defined function to free dynamically allocated data*/

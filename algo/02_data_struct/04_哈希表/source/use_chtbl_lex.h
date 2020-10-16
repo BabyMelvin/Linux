@@ -6,5 +6,5 @@
 /*Define the toke types recongnized by the lexical analyzer*/
 typedef enum Token_ {lexit, error, digit, other} Token;
 
-Token lex(const char *istream, CHTbl *symtbl);
+Token lex(const char *istream, ch_tbl_t *symtbl);
 #endif /*__LEX_H__*/

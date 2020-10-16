@@ -6,7 +6,7 @@
 
 /* Reserve a sentinel(哨兵) memory address for vacated elements*/
 static char vacated;
-int ohtbl_init(OHTbl *htbl, int positions, int (*h1)(const void *key),
+int ohtbl_init(OH_tbl_t *htbl, int positions, int (*h1)(const void *key),
         int (*h2)(const void *key), int (*match)(const void *key1,
             const void *key2), void (*destory)(void *data))
 {
@@ -36,7 +36,7 @@ int ohtbl_init(OHTbl *htbl, int positions, int (*h1)(const void *key),
     return 0;
 }
 
-void ohtbl_destroy(OHTbl *htbl)
+void ohtbl_destroy(OH_tbl_t *htbl)
 {
     int i;
     
@@ -52,12 +52,12 @@ void ohtbl_destroy(OHTbl *htbl)
     free(htbl->table);
 
     /*No operaitons are allowed now, but clear the structure as a precaution*/
-    memset(htbl, 0, sizeof(OHTbl));
+    memset(htbl, 0, sizeof(OH_tbl_t));
 
     return;
 }
 
-int ohtbl_insert (OHTbl *htbl, const void *data)
+int ohtbl_insert (OH_tbl_t *htbl, const void *data)
 {
     void *temp;
     int postion, i;
@@ -86,7 +86,7 @@ int ohtbl_insert (OHTbl *htbl, const void *data)
     return -1;
 }
 
-int ohtbl_remove (OHTbl *htbl, void **data)
+int ohtbl_remove (OH_tbl_t *htbl, void **data)
 {
     int postion, i;
 
@@ -113,7 +113,7 @@ int ohtbl_remove (OHTbl *htbl, void **data)
     return -1;
 }
 
-int ohtbl_lookup (const OHTbl *htbl, void **data)
+int ohtbl_lookup (const OH_tbl_t *htbl, void **data)
 {
     int postion, i;
 

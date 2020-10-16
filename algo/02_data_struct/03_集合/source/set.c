@@ -3,7 +3,7 @@
 #include "list.h"
 #include "set.h"
 
-void set_init(Set *set, int (*match)(const void *key1, const void *key2),
+void set_init(set_t *set, int (*match)(const void *key1, const void *key2),
         void (*destroy)(void *data))
 {
     list_init(set, destroy);
@@ -11,7 +11,7 @@ void set_init(Set *set, int (*match)(const void *key1, const void *key2),
     return;
 }
 
-int set_insert(Set *set, const void *data)
+int set_insert(set_t *set, const void *data)
 {
     /*Do not allow the insert of the duplicates*/
     if (set_is_member(set, data))
@@ -21,9 +21,9 @@ int set_insert(Set *set, const void *data)
     return list_ins_next(set, list_tail(set), data);
 }
 
-int set_remove(Set *set, void **data)
+int set_remove(set_t *set, void **data)
 {
-    ListElmt *member, *prev;
+    list_elmt_t *member, *prev;
 
     /*Find the memeber to remove*/
     prev = NULL;
@@ -41,9 +41,9 @@ int set_remove(Set *set, void **data)
     return list_rem_next(set, prev, data)
 }
 
-int set_union(Set *setu, const Set *set1, const Set *set2)
+int set_union(set_t *setu, const set_t *set1, const set_t *set2)
 {
-    ListElmt *member;
+    list_elmt_t *member;
     void *data;
 
     /*initialize the set for the union*/
@@ -74,9 +74,9 @@ int set_union(Set *setu, const Set *set1, const Set *set2)
     return 0;
 }
 
-int set_intersetion(Set *seti, const Set *set1, const set *set2)
+int set_intersetion(set_t *seti, const set_t *set1, const set_t *set2)
 {
-    ListElmt *memeber;
+    list_elmt_t *memeber;
     void *data;
 
     /*Initialize the set for the inersetion*/
@@ -93,9 +93,9 @@ int set_intersetion(Set *seti, const Set *set1, const set *set2)
     return 0;
 }
 
-int set_difference(Set *setd, const Set *set1, const Set *set2)
+int set_difference(set_t *setd, const set_t *set1, const set_t *set2)
 {
-    ListElmt *member;
+    list_elmt_t *member;
     void *data;
 
     /*initialize the set for the difference*/
@@ -115,9 +115,9 @@ int set_difference(Set *setd, const Set *set1, const Set *set2)
     return 0;
 }
 
-int set_is_member(const Set *set, const void *data)
+int set_is_member(const set_t *set, const void *data)
 {
-    ListElmt *member;
+    list_elmt_t *member;
 
     /*Determine if the data is a member of the set*/
     for (member = list_head(set); member != NULL; member = list_next(member)) {
@@ -128,9 +128,9 @@ int set_is_member(const Set *set, const void *data)
     return 0;
 }
 
-int set_is_subset (const Set *set1, const Set *set2)
+int set_is_subset (const set_t *set1, const set_t *set2)
 {
-    ListElmt *member;
+    list_elmt_t *member;
 
     /*Do a quick test to rule out some cases*/
     if (set_size(set1) > set_size(set2))
@@ -145,7 +145,7 @@ int set_is_subset (const Set *set1, const Set *set2)
     return 1;
 }
 
-int set_is_equal(const Set *set1, const Set *set2)
+int set_is_equal(const set_t *set1, const set_t *set2)
 {
     /*Do a quick test to rule out some cases*/
     if (set_size(set1) != set_size(set2))
