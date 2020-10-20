@@ -3,8 +3,8 @@
  *  进行部分替换
  * */
 #include <stdio.h>
-#define XNAME (n) x ## n
-#define PRINT_XN (n) printf("x " #n " = %d.\n", x ## n);
+#define XNAME(n) x##n
+#define PRINT_XN(n) printf("x"#n" = %d.\n", x##n);
 
 int main(void)
 {

@@ -666,7 +666,7 @@ struct usb_request* usb_request_new(struct usb_device* dev, const struct usb_end
     if (!urb)
         return NULL;
 
-    if ((ep_desc->bmAttributes & USB_ENDPOINT_XFERYPE_MASK) == USB_ENDPOINT_XFER_BULK) {
+    if ((ep_desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) == USB_ENDPOINT_XFER_BULK) {
         urb->type = USBDEVFS_URB_TYPE_BULK;
     } else if ((ep_desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) == USB_ENDPOINT_XFER_INT) {
         urb->type = USBDEVFS_URB_TYPE_INTERRUPT;
