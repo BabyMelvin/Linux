@@ -3,11 +3,11 @@
 这个工程建立好了。然后要同步下工程下的源代码。
 
 head.S 做的事情：
-（0）判断是否支持此CPU
-（1）如何比较机器ID是：（判断是否支持单板）
-（3）创建页表。
-（4）使能MMU。
-（5）跳转到 start_kernel (它就是内核的第一个 C 函数)
+* （0）判断是否支持此CPU
+* （1）如何比较机器ID是：（判断是否支持单板）
+* （3）创建页表。
+* （4）使能MMU。
+* （5）跳转到 start_kernel (它就是内核的第一个 C 函数)
 
 # 2.分析内核源代码
 
@@ -28,13 +28,14 @@ theKernel(0, bd->bi_arch_number, bd->bi_boot_params);
 ```
 theKernel 就是内核的入口地址。有3 个参数。
 
-* 参1为0
-* 参2为机器ID
-* 参3是上面那些参数所存放的地址。
+* 参1为0 r0
+* 参2为机器ID r1
+  * machine numbers:linux/arch/arm/tools/mach-types
+* 参3是上面那些参数所存放的地址。r2
 
 所以，内核一上来肯定要处理这些参数。
 
-# 3.内核启动：最终目标是就运行应用程序。对于Linux 来说应用程序在 根文件系统中。要挂接。
+# 3.内核启动：最终目标是就运行应用程序。对于Linux 来说应用程序在根文件系统中。要挂接。
 
 1.处理UBOOT 传入的参数
 
@@ -47,90 +48,62 @@ arch/arm/boot/compressed/head.S
 内核编译出来后比较大，可以压缩很小。在压缩过的内核前部加一段代码“自解压代码”。
 这样内核运行时，先运行“自解压代码”。然后再执行解压缩后的内核。
 
-2.我们看不用解压的head.S 文件
+2.我们看不用解压的head.S文件
 
-```
+```s
 	mrc p15, 0, r9, c0, c0 @get processor id
 	bl __lookup_processor_type @r5=procinfo r9=cpuid
 ```
-__lookup_processor_type 查找处理器类型内核能够支持哪些处理器，是在编译内核时定义下来的。内核启动时去读寄存器：获取ID。
 
-看处理器ID 后，看内核是否可以支持这个处理器。若能支持则继续运行，不支持则跳到
-“_error_p”中去：
+`__lookup_processor_type`查找处理器类型内核能够支持哪些处理器，是在编译内核时定义下来的。内核启动时去读寄存器：获取ID。
 
-```
-	beq __error_p @yes , error 'p'
-```
-
-这是个死循环
-
-```
-bl __lookup_machine_type @r5=machinfo
-movs r8, r5 @invalid machine(r5=0)?
-beq __error_a @yes, error 'a'
-bl __create_page_tables
-```
-`__lookup_machine_type` 机器ID。
-一个编译好的内核能支持哪些单板，都是定下来的。(`make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm vexpress_defconfig`编译内核时候制定)内核上电后会检测下看是否支持当前的
-单板。若可以支持则继续往下跑，不支持则 __error_a 跳到死循环。
-
-# 4.内核
-
-处理UBOOT 传入的参数
-1.首先判断是否支持这个CPU。
-2.判断是否支持这个单板（UBOOT 启动内核时传进来的：机器ID bd->bi_arch_number）
-查UBOOT 代码，对于这块开发板是：gd->bd->bi_arch_number = MACH_TYPE_SMDK2410)
-
-```
-__lookup_machine_type:
-	adr r3, 3b
-	ldmia r3, {r4, r5, r6}
-	sub r3, r3, r4	@ get offset between virt & phys
-	add r5, f5, r3  @ convert virt address to physical address space
-	add r6, r6, r3  @ physical address space
-1:	ldr r3, [r5, #MACHINFO_TYPE] @ get machine type
-	teq r3, r1 @machines loader nunber
-	beq 2f	   @found
-	add r5, r5, #SIZEOF_MACHINE_DESC @ next machine_desc
-	cmp r5, r6
-	blo 1b
-	mov r5, #0	@unkown machine
+```s
+__lookup_processor_type:
+    adr r3, __lookup_processor_type_data
+    ldmia   r3, {r4 - r6}   
+    sub r3, r3, r4          @ get offset between virt&phys
+    add r5, r5, r3          @ convert virt addresses to
+    add r6, r6, r3          @ physical address space 
+1:  ldmia   r5, {r3, r4}            @ value, mask
+    and r4, r4, r9          @ mask wanted bits
+    teq r3, r4
+    beq 2f
+    add r5, r5, #PROC_INFO_SZ       @ sizeof(proc_info_list)
+    cmp r5, r6
+    blo 1b
+    mov r5, #0              @ unknown processor
 2:  mov pc, lr
+ENDPROC(__lookup_processor_type)
 ```
 
-__lookup_machine_type:
+**注意**，前面的内容是连续的。能够对虚拟地址到物理地址进行线性映射。虚拟地址+虚拟到物理地址的偏移=物理地址
 
-adr r3, 3b
+首先 r3 等于`__lookup_processor_type_data`的地址如下。这是实际存在的地址。UBOOT 启动内核时，MMU 还没启动。所以这是物理地址。
+`ldmia   r3, {r4 - r6}`,将r3依次赋值给r4-r6,这是相当于long类型数组`r4=. ,r5=__proc_info_begin,r6=__proc_info_end,size = . - __lookup_processor_type_data`是虚拟地址
 
-首先 r3 等于3b 的地址。这是实际存在的地址。UBOOT 启动内核时，MMU 还没启动。
-所以这是物理地址。
+* `sub r3, r3, r4`:r4 等于“.”虚拟地址,r3是物理地址,得到virt和phys之间的偏移. r3最后等于offset
+* `add r5, r5, r3`和`add r6, r6, r3 `:它们加上这个偏差值后，就变成了`__proc_info_begin`和`__proc_info_end`的真正物理地址了。
 
-3b 就是：`3: .long`这个地址。则r3就等于这个地址的值
+* `__lookup_processor_type_data`内容
 
-ldmia r3, {4, r5, r6} r4就等于`3: .long .`这个`.`的当前地址的值.这是一个虚拟的地址，是标号3的指令的虚拟地址.
-
-r5等于`.long __arch_info_begin`中的__arch_info_begin
-
-r6等于`.long __arch_info_end`中的__arch_info_end
-
-sub r3, r3, r4  @get offset between virt & phys
-
-这两相地址相减就得到了偏移量offset,虚拟地址和物理地址间的偏差。r4 等于“.”虚拟地址；r3 等于3b 这个实际存在的地址。
-
-add r5, r5, r3 @ convert virt addresses to
-add r6, r6, r3 @ physical address space
-
-r5,r6 是加上这个偏差值。原来r5=__arch_info_begin;r6=__arch_info_end.它们加上这个偏差值后，就变成了__arch_info_begin
-和__arch_info_end 的真正物理地址了。
-
-__arch_info_begin
-__arch_info_end
-没有在内核源码中定义，是在 链接脚本 中定义的（vmlinux.lds）。
+```s
+/*  
+ * Look in <asm/procinfo.h> for information about the __proc_info structure.
+ */
+    .align  2
+    .type   __lookup_processor_type_data, %object
+__lookup_processor_type_data:
+    .long   .
+    .long   __proc_info_begin
+    .long   __proc_info_end
+    .size   __lookup_processor_type_data, . - __lookup_processor_type_data
+```
+其中`__proc_info_begin`,`__proc_info_end`没有在内核源码中定义，是在 链接脚本 中定义的（vmlinux.lds）。
 
 ```
-__arch_info_begin = .;
-*(.arch.info.init)
-__arch_info_end = .;
+	__proc_info_begin = .;
+	__arch_info_begin = .;
+	__proc_info_end = .;
 ```
 
 中间夹着 *(.arch .info .init)
@@ -160,9 +133,73 @@ __arch_info_end = .;
 	_tagtable_end = .;
 }
 ```
-知道上面这个关系后，我们则一定要知道在代码里面谁定义了.arch.info.init 这些东西。在内核中搜索它们。`grep *.arch.inof.init * -rR`
 
-查它们的定义：include/asm-arm/mach/Arch.h 53 行
+**详细看下节内核**：
+
+
+看处理器ID 后，看内核是否可以支持这个处理器。若能支持则继续运行，不支持则跳到
+“_error_p”中去：
+
+```s
+	beq __error_p @yes , error 'p'
+	adr r0, str_p1
+    bl  printascii
+    mov r0, r9
+    bl  printhex8
+    adr r0, str_p2
+    bl  printascii
+    b   __error 
+str_p1: .asciz  "\nError: unrecognized/unsupported processor variant (0x"
+str_p2: .asciz  ").\n"
+    .align
+__error:
+1:  mov r0, r0
+    b   1b
+```
+这是个死循环
+
+
+一个编译好的内核能支持哪些单板，都是定下来的。(`make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm vexpress_defconfig`编译内核时候制定)内核上电后会检测下看是否支持当前的
+单板。若可以支持则继续往下跑，不支持则 __error_a 跳到死循环。
+
+新内核：r2决定使用atags还是使用dtb（CONFIG_OF_FLATTREE）
+
+* ATAG_CORE：探测RAM前16k内存，要求指针对齐.
+* CONFIG_OF_FLATTR：如果使能，则接收dtb地址
+```S
+head.S->head_common.S __vet_atags:
+# r2 either valid atags pointer, valid dtb pointer, or zero
+
+__vet_atags:
+    tst r2, #0x3            @ aligned?
+    bne 1f
+
+    ldr r5, [r2, #0]
+#ifdef CONFIG_OF_FLATTREE
+    ldr r6, =OF_DT_MAGIC        @ is it a DTB?
+    cmp r5, r6
+    beq 2f
+#endif
+    cmp r5, #ATAG_CORE_SIZE     @ is first tag ATAG_CORE?
+    cmpne   r5, #ATAG_CORE_SIZE_EMPTY
+    bne 1f
+    ldr r5, [r2, #4]
+    ldr r6, =ATAG_CORE
+    cmp r5, r6
+    bne 1f
+
+2:  mov pc, lr              @ atag/dtb pointer is ok
+
+1:  mov r2, #0
+    mov pc, lr
+ENDPROC(__vet_atags)
+```
+
+# 4.内核
+
+知道上面这个关系后，我们则一定要知道在代码里面谁定义了.arch.info.init 这些东西。在内核中搜索它们。`grep *.arch.info.init * -rR`
+
+查它们的定义：include/asm-arm/mach/arch.h 53 行
 
 ```c
 /*
@@ -216,6 +253,53 @@ static const struct machine_desc __mach_desc_S3C2440
 **新内核**：
 
 ```c
+// init/main.c
+setup_arch(&cmd_line);
+
+// arch/arm/kernel/setup.c
+void __init setup_arch(char **cmd_line_p)
+{
+	mdesc = setup_machine_fdt(__atags_pointer);
+}
+
+//arch/arm/kernel/devtree.c
+struct machine_desc *__init setup_machine_fdt(unsigned int dt_phys)
+{
+	struct boot_param_header *devtree = phys_to_virt(dt_phys);
+	/* check device tree validity */
+    if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
+        return NULL;
+
+	/* Search the mdescs for the 'best' compatible value match */
+	initial_boot_params = devtree;
+	dt_root = of_get_flat_dt_root();
+	for_each_machine_desc(mdesc) {
+		score = of_flat_dt_match(dt_root, mdesc->dt_compat);
+		if (score > 0 && score < mdesc_score) {
+			mdesc_best = mdesc;
+			mdesc_score = score;
+		}
+	}
+}
+```
+
+* 其中:__atags_pointer r2 dtb地址
+* dt_root和initial_boot_params由__atags_pointer计算得到,即相当于从r2传入
+* for_each_machine_desc:对应宏
+
+```c
+/*        
+ * Machine type table - also only accessible during boot
+ */           
+extern struct machine_desc __arch_info_begin[], __arch_info_end[];
+#define for_each_machine_desc(p)            \
+    for (p = __arch_info_begin; p < __arch_info_end; p++)
+```
+
+这里mdesc对应lds中变量，即DT_MACHINE_START中的信息
+
+```c
+
 //linux\arch\arm\mach-at91\at91rm9200.c
 static void __init at91rm9200_dt_device_init(void)
 {
@@ -302,14 +386,14 @@ __arch_info_end = .;
 **下面就是比较机器ID了**。(内核中的和UBOOT 传进来的)看`arch\arm\kernel\head-common.S`
 从“__lookup_machine_type:”中可知 
 
-```c
+```s
 r5=__arch_info_begin
 1: ldr r3, [r5, #MACHINFO_TYPE] @ get machine type
 ```
 * r5 是： __arch_info_begin
 * r1 是UBOOT 传来的参数：bi_arch_number
 
-```c
+```s
 teq r3, r1 @ matches loader number?
 beq 2f @ found
 add r5, r5, #SIZEOF_MACHINE_DESC @ next machine_desc
@@ -321,7 +405,7 @@ mov r5, #0 @ unknown machine
 
 最后比较成功后，会回到：head.S
 
-```
+```s
 bl __lookup_machine_type @r5 = machinfo
 movs r8, r5 @invliad machine (r5=0)?
 ```
@@ -329,7 +413,7 @@ movs r8, r5 @invliad machine (r5=0)?
 
 3.创建页表
 
-```
+```s
 bl __create_page_tables
 ```
 内核的链接地址从虚拟地址
@@ -341,9 +425,9 @@ bl __create_page_tables
 内存。我们的内存是从 0x3000 0000 开始的。
 故这里面要建立一个页表，启动 MMU 。
 
-4.是能MMU
+4.使能MMU
 
-```
+```s
 ldr r13, __switch_data @ address to jump to after mmu has been enabled
 adr lr, __enbable_mmu @ return (PIC) address
 add pc, r10, #PROCINFO_INITFUNC
@@ -351,7 +435,7 @@ add pc, r10, #PROCINFO_INITFUNC
 mmu has been enabled 当MMU 使能后，会跳到 __switch_data 中去。
 如何跳到 __switch_data ，则看：__enable_mmu
 
-```
+```s
 	.type __switch_data, %object
 __switch_data:
 	.long __mmap_switched
@@ -366,7 +450,7 @@ __switch_data:
 ```
 在head_common.S 文件中，__switch_data 后是：__mmap_switched
 
-```
+```s
 __mmap_switched:
 	adr r3, __switched_data + 4
 	ldmia r3!, {r4, r5, r6, r7}
@@ -706,7 +790,7 @@ void __init parse_early_param(void)
 
 内核启动流程：
 
-```
+```c
 arch/arm/kernel/head.S
 start_kernel
 setup_arch //解析UBOOT 传入的启动参数
