@@ -189,6 +189,54 @@ void nand_chip_id (void)
     printf("5th    byte = 0x%x\n\r", buf[4]);
 }
 
+int nand_erase(unsigned int addr, unsigned int len)
+{
+    int page = addr / 2048;
+    if (addr & 0x1FFFF) {
+        printf("nand erase err, adr is not block algin\n\r");
+        return -1;
+    }
+
+    if (len & 0x1FFFF) {
+        printf("nand_earse err, len is not block align\n\r");
+        return -1;
+    }
+
+    nand_select();
+    while (1) {
+        page = addr / 2048;
+        nand_cmd(0x60);
+
+        /* row/page addr*/
+        nand_addr_byte(page & 0xff);
+        nand_addr_byte((page >> 8) & 0xff);
+        nand_addr_byte((page >> 16) & 0xff);
+
+        nand_cmd(0xD0);
+        nand_wait_ready();
+        len  -= (128 * 1024);
+        if (len == 0)
+            break;
+
+        addr += (128 *1024);
+    }
+
+    nand_deselect();
+    return 0;
+}
+
+void do_erase_nand_flash(void)
+{
+    unsigned int addr;
+
+    /* 获得地址 */
+    printf("Enter the address of sector to erase:");
+    addr = get_uint();
+
+    printf("erasing ...\n\r");
+    nand_erase(addr, 128 * 1024);
+}
+
 void nand_flash_test(void)
 {
     char c;
@@ -205,6 +253,7 @@ void nand_flash_test(void)
         switch (c) {
             case 'q':
             case 'Q': 
+                return;
                 break;
             case 's':
             case 'S': 
@@ -212,6 +261,7 @@ void nand_flash_test(void)
                 break;
             case 'e':
             case 'E': 
+                do_erase_nand_flash();
                 break;
             case 'w':
             case 'W': 
