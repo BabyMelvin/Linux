@@ -119,6 +119,16 @@ long simple_strtol(const char *cp,char **endp,unsigned int base)
 	return simple_strtoul(cp,endp,base);
 }
 
+int strlen(const char *s)
+{
+    const char *sc;
+
+    for (sc = s; *sc != '\0'; ++sc)
+        /* nothing */;
+
+    return sc - s;
+}
+
 char *gets(char s[])
 { 
 	int i = 0;

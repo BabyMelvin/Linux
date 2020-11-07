@@ -1,5 +1,6 @@
 #include "s3c2440_soc.h"
 #include "nand_flash.h"
+#include "string_utils.h"
 
 #define TXD0READY (1 << 2)
 
@@ -237,6 +238,66 @@ void do_erase_nand_flash(void)
     nand_erase(addr, 128 * 1024);
 }
 
+void nand_w_data(unsigned char val)
+{
+    NFDATA = val;
+}
+
+void nand_write(unsigned int addr, unsigned char *buf, unsigned int len)
+{
+    int page = addr / 2048;
+    int col = addr & (2048 - 1);
+    int i = 0;
+
+    nand_select();
+    while (1) {
+        nand_cmd(0x80);
+
+        // 发出地址
+        // col addr
+        nand_addr_byte(col & 0xff);
+        nand_addr_byte((col>>8) & 0xff);
+
+        // row/page addr
+        nand_addr_byte(page & 0xff);
+        nand_addr_byte((page>>8) & 0xff);
+
+        // 发送数据
+        for (; (col < 2048) && (i<len);) {
+            nand_w_data(buf[i++]);
+        }
+        nand_cmd(0x10);
+        nand_wait_ready();
+        
+        if (i == len) {
+            break;
+        } else {
+            // 开始下一个循环page
+            col = 0;
+            page++;
+        }
+    }
+    nand_deselect();
+}
+
+void do_write_nand_flash(void)
+{
+    unsigned int addr;
+    unsigned char str[100];
+    int i, j;
+    unsigned int val;
+
+    // 获得地址
+    printf("Enter the address of sector to write:");
+    addr = get_uint();
+
+    printf("Enter the string to write:");
+    gets(str);
+
+    printf("writing ...\n\r");
+    nand_write(addr, str, strlen(str) + 1);
+}
+
 void nand_flash_test(void)
 {
     char c;
@@ -265,6 +326,7 @@ void nand_flash_test(void)
                 break;
             case 'w':
             case 'W': 
+                do_write_nand_flash();
                 break;
             case 'r':
             case 'R': 
