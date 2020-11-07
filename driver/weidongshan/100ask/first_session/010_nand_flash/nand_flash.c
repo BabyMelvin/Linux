@@ -126,6 +126,7 @@ int nand_bad(unsigned int addr)
         return 0;
 }
 
+#if 0
 void nand_read(unsigned int addr, unsigned char *buf, unsigned int len)
 {
     int col = addr % 2048;
@@ -165,6 +166,7 @@ void nand_read(unsigned int addr, unsigned char *buf, unsigned int len)
         nand_deselect();
     }
 }
+#endif
 
 void nand_chip_id (void)
 {
@@ -298,6 +300,86 @@ void do_write_nand_flash(void)
     nand_write(addr, str, strlen(str) + 1);
 }
 
+void nand_read(unsigned int addr, unsigned char*buf, unsigned int len)
+{
+    int i  = 0;
+    int  page = addr/2048;
+    int col = addr & (2048 - 1);
+
+    nand_select();
+
+    while (i < len) {
+        // 发出00h命令
+        nand_cmd(00);
+
+        // 发出地址, col addr
+        nand_addr_byte(col & 0xff);
+        nand_addr_byte((col >> 8) & 0xff);
+
+        // row/page addr
+        nand_addr_byte(page & 0xff);
+        nand_addr_byte((page >> 8) & 0xff);
+        nand_addr_byte((page >> 16) & 0xff);
+
+        // 发出30h命令
+        nand_cmd(0x30);
+
+        // 等待就绪
+        nand_wait_ready();
+
+        // 读数据
+        for (; (col < 2048) && (i < len); col++) {
+            buf[i++] = nand_data();
+        }
+        
+        if (i = len)
+            break;
+        col = 0;
+        page ++;
+    }
+
+    nand_deselect();
+}
+
+void do_read_nand_flash(void)
+{
+    unsigned int addr;
+    volatile unsigned char *p;
+    int i, j;
+    unsigned char c;
+    unsigned char str[16];
+    unsigned char buf[64];
+
+    // 获得地址
+    printf("Enter the address to read:");
+    addr = get_uint();
+
+    nand_read(addr, buf, 64);
+    p = (volatile unsigned char *)buf;
+    printf("Data:\n\r");
+    
+    // 长度固定为64
+    for  (i = 0; i < 4; i++) {
+        // 每行打印16个数据
+        for (j=0; j < 16; j++) {
+            // 先打印数值
+            c = *p++;
+            str[j] = c;
+            printf("%02x ", c);
+        }
+        printf(" ;");
+        for  (j = 0; j < 16; j++) {
+            // 后打印字符
+            if (str[j] < 0x20 || str[j] > 0x7e) { //不可视
+                putchar('.');
+            } else {
+                putchar(str[j]);
+            }
+        }
+        printf("\n\r");
+    }
+}
+
 void nand_flash_test(void)
 {
     char c;
@@ -330,6 +412,7 @@ void nand_flash_test(void)
                 break;
             case 'r':
             case 'R': 
+                do_read_nand_flash();
                 break;
             default:
                 break;
