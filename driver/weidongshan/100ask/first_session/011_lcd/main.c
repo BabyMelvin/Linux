@@ -2,6 +2,7 @@
 #include "s3c2440_soc.h"
 #include "uart.h"
 #include "init.h"
+#include "lcd/lcd.h"
 
 char g_Char = 'A';
 char g_Char3 = 'a';
@@ -12,16 +13,16 @@ int g_B;
 int main(void)
 {
 	led_init();
-	//interrupt_init();  /* ³õÊ¼»¯ÖĞ¶Ï¿ØÖÆÆ÷ */
-	key_eint_init();   /* ³õÊ¼»¯°´¼ü, ÉèÎªÖĞ¶ÏÔ´ */
+	//interrupt_init();  /* åˆå§‹åŒ–ä¸­æ–­æ§åˆ¶å™¨ */
+	key_eint_init();   /* åˆå§‹åŒ–æŒ‰é”®, è®¾ä¸ºä¸­æ–­æº */
 	//timer_init();
 	
 	puts("\n\rg_A = ");
 	printHex(g_A);
 	puts("\n\r");
 
-	nor_flash_test();
-	
+	// nor_flash_test();
+	lcd_test();
 	return 0;
 }
 

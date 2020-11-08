@@ -128,7 +128,7 @@ char *gets(char s[])
 	{
 		c = getchar();
 
-		/* »ØÏÔ */
+		/* ï¿½ï¿½ï¿½ï¿½ */
 		putchar(c);
 		if (c == '\n')
 			putchar('\r');
@@ -164,3 +164,19 @@ unsigned int get_uint(void)
 }
 
 
+/**
+ * strcmp - Compare two strings
+ * @cs: One string
+ * @ct: Another string
+ */
+int strcmp(const char * cs,const char * ct)
+{
+	register signed char __res;
+
+	while (1) {
+		if ((__res = *cs - *ct++) != 0 || !*cs++)
+			break;
+	}
+
+	return __res;
+}
