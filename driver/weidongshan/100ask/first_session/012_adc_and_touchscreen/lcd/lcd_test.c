@@ -100,8 +100,8 @@ void lcd_test(void)
 	delay(1000000);
 
 	/* 画圆 */
-	draw_circle(xres/2, yres/2, yres/4, 0xff);
+	draw_circle(xres/2, yres/2, yres/4, 0xff00);
 
     /* 输出文字 */
-	fb_print_string(10, 10, "hello ,\n\rbaby melvin!", 0xff);
+	fb_print_string(10, 10, "hello ,\n\rbaby melvin!", 0xff00);
 }

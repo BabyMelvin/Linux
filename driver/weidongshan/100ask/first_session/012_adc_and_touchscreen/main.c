@@ -24,7 +24,10 @@ int main(void)
 	// nor_flash_test();
 	lcd_test();
 
-	adc_test();
+	// adc_test();
+	touchscreen_test();
+
+	while(1);
 	return 0;
 }
 
