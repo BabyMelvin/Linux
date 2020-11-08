@@ -130,7 +130,7 @@
 
 #define     NFCONF                   __REG(0x4E000000)  //NAND flash configuration             
 #define     NFCONT                   __REG(0x4E000004)  //NAND flash control                   
-#define     NFCMD                    __REG_BYTE(0x4E000008)  //NAND flash command                   
+#define     NFCCMD                    __REG_BYTE(0x4E000008)  //NAND flash command                   
 #define     NFADDR                   __REG_BYTE(0x4E00000C)  //NAND flash address                   
 #define     NFDATA                   __REG_BYTE(0x4E000010)  //NAND flash data                      
 #define     NFMECC0                  __REG(0x4E000014)  //NAND flash main area ECC0/1          

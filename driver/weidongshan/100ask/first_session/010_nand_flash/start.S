@@ -55,7 +55,6 @@ und_string:
     .string "undefined instruction exception!"
 
 .align 4
-
 do_swi:
     @ sp_svc未设置，先设置它
     ldr sp, =0x33e00000
@@ -80,7 +79,6 @@ swi_string:
     .string "swi exception"
 
 .align 4
-
 do_irq:
     @ sp_irq未设置，先设置它
     ldr sp, =0x33d00000
@@ -96,7 +94,6 @@ do_irq:
     @ 恢复现场(^会把spsr的值恢复到cpsr里)
     ldmia sp!, {r0-r12, pc}^
 
-.align 4
 reset:
     /* 关闭看门狗 */
     ldr r0, =0x53000000
@@ -131,16 +128,6 @@ reset:
 
     @ 一旦设置PLL, 就会锁定lock time直到PLL输出稳定
     @ 然后CPU工作于新的频率FCLK
-#ifdef LED_PARAMS
-    mov r0, #4
-    bl led_on
-    
-    ldr r0, =100000
-    bl delay
-    
-    mov r0, #5
-    bl led_on
-#endif
 
     @ 设置内存 sp栈
     /** 分辨nor/nand启动

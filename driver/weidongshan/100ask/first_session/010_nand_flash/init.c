@@ -106,14 +106,14 @@ void clean_bss(void)
 
 int is_boot_from_nor_flash(void)
 {
-    volatile int *p = (volatile int *)0;
-    int val;
+    volatile unsigned int *p = (volatile unsigned int *)0;
+    unsigned int val = *p;
 
-    val = *p;
     *p = 0x12345678;
+
     if (*p == 0x12345678) {
         // 写成功，是nand 启动(4k sram)
-        *p = val;
+        *p = val;  // 写入成功需要恢复0地址值
         return 0;
     } else {
         // nor 启动，不能直接写入
@@ -136,9 +136,7 @@ void copy2sdram(void)
 
     int len;
     len = ((int)&__bss_start) - ((int)&__code_start);
-    while (dest < end) {
-        *dest ++ = *src++;
-    }
+
     if (is_boot_from_nor_flash()) {
         while (dest < end) {
             *dest ++ = *src++;

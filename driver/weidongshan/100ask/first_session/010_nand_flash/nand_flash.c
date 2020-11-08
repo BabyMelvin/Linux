@@ -1,421 +1,175 @@
 #include "s3c2440_soc.h"
-#include "nand_flash.h"
-#include "string_utils.h"
-
-#define TXD0READY (1 << 2)
+#include "my_printf.h"
 
 void nand_init(void)
 {
-#define TACLS   (0)
-#define TWRPH0  (1)
-#define TWRPH1  (0)
-
-    // è®¾ç½®æ—¶åº
-    NFCONF = (TACLS << 12) | (TWRPH0 << 8) | (TWRPH1 << 4);
-
-    // ä½¿èƒ½NAND FLASH æ§åˆ¶å™¨ï¼Œåˆå§‹åŒ–ECCï¼Œç¦æ­¢ç‰‡é€‰
-    NFCONT = (1 << 4)  | (1 << 1) | (1 << 0);
+#define  TACLS   0
+#define  TWRPH0  1
+#define  TWRPH1  0
+	/*ÉèÖÃNAND FLASHµÄÊ±Ğò*/
+	NFCONF = (TACLS<<12) | (TWRPH0<<8) | (TWRPH1<<4);
+	/*Ê¹ÄÜNAND FLASH¿ØÖÆÆ÷,³õÊ¼»¯ECC£¬½ûÖ¹Æ¬Ñ¡*/
+	NFCONT = (1<<4) | (1<<1) | (1<<0);
 }
 
 void nand_select(void)
 {
-    NFCONT &= ~(1 << 1);
+	/*Ê¹ÄÜÆ¬Ñ¡*/
+	NFCONT &=~(1<<1);
 }
 
 void nand_deselect(void)
 {
-    NFCONT |= (1 << 1);
+	/*½ûÖ¹Æ¬Ñ¡*/
+	NFCONT |= (1<<1);
 }
 
-void nand_cmd (unsigned char cmd)
+void nand_cmd(unsigned char cmd)
 {
-    volatile int i;
-    NFCMD = cmd;
-    for (i = 0; i < 10; i++);
+	volatile int i;
+	NFCCMD = cmd;
+	for(i=0; i<10; i++);
 }
 
-void nand_addr(unsigned int addr)
+void nand_addr_byte(unsigned char addr)
 {
-    unsigned int col = addr % 2048;
-    unsigned int page = addr / 2048;
-    volatile int i;
-
-    NFADDR = col & 0xff;
-    for (i = 0; i < 10; i++);
-    NFADDR = (col >> 8) & 0xff;
-    for (i= 0; i < 10; i++);
-
-    NFADDR = page & 0xff;
-    for (i= 0; i < 10; i++);
-    NFADDR = (page >> 8 ) & 0xff;
-    for (i= 0; i < 10; i++);
-    NFADDR = (page >> 16) & 0xff;
-    for (i= 0; i < 10; i++);
-}
-
-void nand_page(unsigned int page)
-{
-    volatile int i;
-
-    NFADDR = page & 0xff;
-    for (i= 0; i < 10; i++);
-    NFADDR = (page >> 8) & 0xff;
-    for (i= 0; i < 10; i++);
-    NFADDR = (page >> 16) & 0xff;
-    for (i= 0; i < 10; i++);
-}
-
-void nand_col(unsigned int col)
-{
-    volatile int i;
-
-    NFADDR = col & 0xff;
-    for (i = 0; i < 10; i++);
-    NFADDR = (col >> 8) & 0xff;
-    for (i = 0; i < 10; i++);
-}
-
-void nand_wait_ready(void)
-{
-    while (!(NFSTAT & 1));
+	volatile int i;
+	NFADDR = addr;
+	for(i=0; i<10; i++);
 }
 
 unsigned char nand_data(void)
 {
-    return NFDATA;
+	return	NFDATA;
 }
 
-void nand_addr_byte (unsigned char addr)
+void wait_ready(void)
 {
-    volatile int i;
-    NFADDR = addr;
-    for (i = 0; i < 10; i++);
+	while (!(NFSTAT & 1));
 }
 
-int nand_bad(unsigned int addr)
-{
-    unsigned int col = addr % 2048;
-    unsigned int page = addr / 2048;
-    unsigned char val;
+void nand_chip_id(void)
+{ 
+	unsigned char buf[5]={0};
+	
+	nand_select(); 
+	nand_cmd(0x90);
+	nand_addr_byte(0x00);
 
-    // 1. é€‰ä¸­
-    nand_select();
+	buf[0] = nand_data();
+	buf[1] = nand_data();	
+	buf[2] = nand_data();
+	buf[3] = nand_data();
+	buf[4] = nand_data();	
+	nand_deselect(); 	
 
-    // 2.å‘å‡ºè¯»å‘½ä»¤ 00 h
-    nand_cmd(0x00);
+	printf("maker   id  = 0x%x\n\r",buf[0]);
+	printf("device  id  = 0x%x\n\r",buf[1]);	
+	printf("3rd byte    = 0x%x\n\r",buf[2]);		
+	printf("4th byte    = 0x%x\n\r",buf[3]);			
+	printf("page  size  = %d kb\n\r",1  <<  (buf[3] & 0x03));	
+	printf("block size  = %d kb\n\r",64 << ((buf[3] >> 4) & 0x03));	
+	printf("5th byte    = 0x%x\n\r",buf[4]);
 
-    // 3.å‘å‡ºåœ°å€(åˆ†5æ­¥å‘å‡º)
-    nand_col(col);
-    nand_page(page);
-
-    // 4. å‘å‡ºè¯»å‘½ä»¤30h
-    nand_cmd(0x30);
-
-    // 5.åˆ¤æ–­çŠ¶æ€
-    nand_wait_ready();
-
-    // 6.è¯»æ•°æ®
-    val = nand_data();
-
-    // 7. å–æ¶ˆé€‰ä¸­
-    nand_deselect();
-
-    if (0xff != val)
-        return 1;  // bad block
-    else
-        return 0;
+	
 }
 
-#if 0
+
 void nand_read(unsigned int addr, unsigned char *buf, unsigned int len)
 {
-    int col = addr % 2048;
-    int i = 0;
+	int i = 0;
+	int page = addr / 2048;
+	int col  = addr & (2048 - 1);
+	
+	nand_select(); 
 
-    while (i < len) {
-        // ä¸€ä¸ªblock åªåˆ¤æ–­ä¸€æ¬¡
-        if (!(addr & 0x1FFFF) & nand_bad(addr)) {
-            addr += (128 * 1024);
-            continue;
-        }
+	while (i < len)
+	{
+		/* ·¢³ö00hÃüÁî */
+		nand_cmd(00);
 
-        // 1. é€‰ä¸­
-        nand_select();
+		/* ·¢³öµØÖ· */
+		/* col addr */
+		nand_addr_byte(col & 0xff);
+		nand_addr_byte((col>>8) & 0xff);
 
-        // 2. å‘å‡ºè¯»å‘½ä»¤00h
-        nand_cmd(0x00);
+		/* row/page addr */
+		nand_addr_byte(page & 0xff);
+		nand_addr_byte((page>>8) & 0xff);
+		nand_addr_byte((page>>16) & 0xff);
 
-        // 3. å‘å‡ºåœ°å€(åˆ†5æ­¥å‘å‡º)
-        nand_addr(addr);
+		/* ·¢³ö30hÃüÁî */
+		nand_cmd(0x30);
 
-        // 4. å‘å‡ºè¯»å‘½ä»¤30h
-        nand_cmd(0x30);
+		/* µÈ´ı¾ÍĞ÷ */
+		wait_ready();
 
-        // 5. åˆ¤æ–­çŠ¶æ€
-        nand_wait_ready();
+		/* ¶ÁÊı¾İ */
+		for (; (col < 2048) && (i < len); col++)
+		{
+			buf[i++] = nand_data();			
+		}
+		if (i == len)
+			break;
 
-        // 6. è¯»æ•°æ®
-        for (; (col < 2048) && (i < len); col ++) {
-            buf[i] = nand_data();
-            i++;
-            addr++;
-        }
-        col = 0;
-
-        // 7. å–æ¶ˆé€‰ä¸­
-        nand_deselect();
-    }
-}
-#endif
-
-void nand_chip_id (void)
-{
-    unsigned char buf[5] = {0};
-
-    nand_select();
-    nand_cmd(0x90);
-    nand_addr_byte(0x00);
-   
-    buf[0] = nand_data(); 
-    buf[1] = nand_data();
-    buf[2] = nand_data();
-    buf[3] = nand_data();
-    buf[4] = nand_data();
-    nand_deselect();
-
-    printf("maker  id   = 0x%x\n\r", buf[0]);
-    printf("device id   = 0x%x\n\r", buf[1]);
-    printf("3rd    byte = 0x%x\n\r", buf[2]);
-    printf("4th    byte = 0x%x\n\r", buf[3]);
-    printf("page   size = %dkb\n\r", 1 << (buf[3] & 0x03));
-    printf("block  size = %dkb\n\r", 64 << ((buf[3] >> 4) & 0x03));
-    printf("5th    byte = 0x%x\n\r", buf[4]);
+		col = 0;
+		page++;
+	}
+	
+	nand_deselect(); 	
 }
 
-int nand_erase(unsigned int addr, unsigned int len)
-{
-    int page = addr / 2048;
-    if (addr & 0x1FFFF) {
-        printf("nand erase err, adr is not block algin\n\r");
-        return -1;
-    }
-
-    if (len & 0x1FFFF) {
-        printf("nand_earse err, len is not block align\n\r");
-        return -1;
-    }
-
-    nand_select();
-    while (1) {
-        page = addr / 2048;
-        nand_cmd(0x60);
-
-        /* row/page addr*/
-        nand_addr_byte(page & 0xff);
-        nand_addr_byte((page >> 8) & 0xff);
-        nand_addr_byte((page >> 16) & 0xff);
-
-        nand_cmd(0xD0);
-        nand_wait_ready();
-        len  -= (128 * 1024);
-        if (len == 0)
-            break;
-
-        addr += (128 *1024);
-    }
-
-    nand_deselect();
-    return 0;
-}
-
-void do_erase_nand_flash(void)
-{
-    unsigned int addr;
-
-    /* è·å¾—åœ°å€ */
-    printf("Enter the address of sector to erase:");
-    addr = get_uint();
-
-    printf("erasing ...\n\r");
-    nand_erase(addr, 128 * 1024);
-}
-
-void nand_w_data(unsigned char val)
-{
-    NFDATA = val;
-}
-
-void nand_write(unsigned int addr, unsigned char *buf, unsigned int len)
-{
-    int page = addr / 2048;
-    int col = addr & (2048 - 1);
-    int i = 0;
-
-    nand_select();
-    while (1) {
-        nand_cmd(0x80);
-
-        // å‘å‡ºåœ°å€
-        // col addr
-        nand_addr_byte(col & 0xff);
-        nand_addr_byte((col>>8) & 0xff);
-
-        // row/page addr
-        nand_addr_byte(page & 0xff);
-        nand_addr_byte((page>>8) & 0xff);
-
-        // å‘é€æ•°æ®
-        for (; (col < 2048) && (i<len);) {
-            nand_w_data(buf[i++]);
-        }
-        nand_cmd(0x10);
-        nand_wait_ready();
-        
-        if (i == len) {
-            break;
-        } else {
-            // å¼€å§‹ä¸‹ä¸€ä¸ªå¾ªç¯page
-            col = 0;
-            page++;
-        }
-    }
-    nand_deselect();
-}
-
-void do_write_nand_flash(void)
-{
-    unsigned int addr;
-    unsigned char str[100];
-    int i, j;
-    unsigned int val;
-
-    // è·å¾—åœ°å€
-    printf("Enter the address of sector to write:");
-    addr = get_uint();
-
-    printf("Enter the string to write:");
-    gets(str);
-
-    printf("writing ...\n\r");
-    nand_write(addr, str, strlen(str) + 1);
-}
-
-void nand_read(unsigned int addr, unsigned char*buf, unsigned int len)
-{
-    int i  = 0;
-    int  page = addr/2048;
-    int col = addr & (2048 - 1);
-
-    nand_select();
-
-    while (i < len) {
-        // å‘å‡º00hå‘½ä»¤
-        nand_cmd(00);
-
-        // å‘å‡ºåœ°å€, col addr
-        nand_addr_byte(col & 0xff);
-        nand_addr_byte((col >> 8) & 0xff);
-
-        // row/page addr
-        nand_addr_byte(page & 0xff);
-        nand_addr_byte((page >> 8) & 0xff);
-        nand_addr_byte((page >> 16) & 0xff);
-
-        // å‘å‡º30hå‘½ä»¤
-        nand_cmd(0x30);
-
-        // ç­‰å¾…å°±ç»ª
-        nand_wait_ready();
-
-        // è¯»æ•°æ®
-        for (; (col < 2048) && (i < len); col++) {
-            buf[i++] = nand_data();
-        }
-        
-        if (i = len)
-            break;
-        col = 0;
-        page ++;
-    }
-
-    nand_deselect();
-}
-
-void do_read_nand_flash(void)
-{
-    unsigned int addr;
-    volatile unsigned char *p;
-    int i, j;
-    unsigned char c;
-    unsigned char str[16];
-    unsigned char buf[64];
-
-    // è·å¾—åœ°å€
-    printf("Enter the address to read:");
-    addr = get_uint();
-
-    nand_read(addr, buf, 64);
-    p = (volatile unsigned char *)buf;
-    printf("Data:\n\r");
-    
-    // é•¿åº¦å›ºå®šä¸º64
-    for  (i = 0; i < 4; i++) {
-        // æ¯è¡Œæ‰“å°16ä¸ªæ•°æ®
-        for (j=0; j < 16; j++) {
-            // å…ˆæ‰“å°æ•°å€¼
-            c = *p++;
-            str[j] = c;
-            printf("%02x ", c);
-        }
-        printf(" ;");
-        for  (j = 0; j < 16; j++) {
-            // åæ‰“å°å­—ç¬¦
-            if (str[j] < 0x20 || str[j] > 0x7e) { //ä¸å¯è§†
-                putchar('.');
-            } else {
-                putchar(str[j]);
-            }
-        }
-        printf("\n\r");
-    }
-}
 
 void nand_flash_test(void)
 {
-    char c;
-    while (1) {
-        printf("[s] Scan nand flash\n\r");
-        printf("[e] Erase nand flash\n\r");
-        printf("[w] Write nand flash\n\r");
-        printf("[r] Read nand flash\n\r");
-        printf("[q] quit \n\r");
-        printf("Enter selection:");
-        c = getchar();
-    
-        printf("%c\n\r", c);
-        switch (c) {
-            case 'q':
-            case 'Q': 
-                return;
-                break;
-            case 's':
-            case 'S': 
-                nand_chip_id();
-                break;
-            case 'e':
-            case 'E': 
-                do_erase_nand_flash();
-                break;
-            case 'w':
-            case 'W': 
-                do_write_nand_flash();
-                break;
-            case 'r':
-            case 'R': 
-                do_read_nand_flash();
-                break;
-            default:
-                break;
-        }
-    }
+	char c;
+
+	while (1)
+	{
+		/* ´òÓ¡²Ëµ¥, ¹©ÎÒÃÇÑ¡Ôñ²âÊÔÄÚÈİ */
+		printf("[s] Scan nand flash\n\r");
+		printf("[e] Erase nand flash\n\r");
+		printf("[w] Write nand flash\n\r");
+		printf("[r] Read nand flash\n\r");
+		printf("[q] quit\n\r");
+		printf("Enter selection: ");
+
+		c = getchar();
+		printf("%c\n\r", c);
+
+		/* ²âÊÔÄÚÈİ:
+		 * 1. Ê¶±ğnand flash
+		 * 2. ²Á³ınand flashÄ³¸öÉÈÇø
+		 * 3. ±àĞ´Ä³¸öµØÖ·
+		 * 4. ¶ÁÄ³¸öµØÖ·
+		 */
+		switch (c)		 
+		{
+			case 'q':
+			case 'Q':
+				return;
+				break;
+				
+			case 's':
+			case 'S':
+				nand_chip_id();
+				break;
+
+			case 'e':
+			case 'E':
+				break;
+
+			case 'w':
+			case 'W':
+				break;
+
+			case 'r':
+			case 'R':
+				break;
+			default:
+				break;
+		}
+	}
 }
+
+ 
