@@ -42,6 +42,7 @@ int lcd_controller_init(p_lcd_params plcdparams)
     // 调用所有选择的LCD控制器初始化函数
     if (g_p_lcd_controller_selected) {
         g_p_lcd_controller_selected->init(plcdparams);
+        g_p_lcd_controller_selected->init_palette();
         return 0;
     }
 

@@ -7,6 +7,7 @@ typedef struct lcd_controller {
     void (*init)(p_lcd_params plcdparams);
     void (*enable)(void);
     void (*disable)(void);
+    void (*init_palette)(void);
 } lcd_controller, *p_lcd_controller;
 
 int lcd_controller_init(p_lcd_params plcdparams);

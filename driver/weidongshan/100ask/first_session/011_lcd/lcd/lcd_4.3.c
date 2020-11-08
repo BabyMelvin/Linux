@@ -27,7 +27,7 @@ lcd_params lcd_4_3_params = {
 	},
 	.xres = 480,
 	.yres = 272,
-	.bpp  = 32,  /* 16, no 24bpp */
+	.bpp  = 8,  /* 16, no 24bpp */
 	.fb_base = LCD_FB_BASE,
 };
 

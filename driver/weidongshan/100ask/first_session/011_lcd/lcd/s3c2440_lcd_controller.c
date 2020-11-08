@@ -132,11 +132,34 @@ void s3c2440_lcd_controller_disable(void)
 	LCDCON1 &= ~(1<<0);
 }
 
+/* 设置调色板之前, 先关闭lcd_controller */
+void s3c2440_lcd_controller_init_palette(void)
+{
+	volatile unsigned int *palette_base =  (volatile unsigned int *)0x4D000400;
+	int i;
+
+	int bit = LCDCON1 & (1<<0);
+
+	/* LCDCON1'BIT 0 : 设置LCD控制器是否输出信号 */
+	if (bit)
+		LCDCON1 &= ~(1<<0);
+
+	for (i = 0; i < 256; i++)
+	{
+		/* 低16位 : rgb565 */	
+		*palette_base++ = i;
+	}
+
+	if (bit)
+		LCDCON1 |= (1<<0);
+}
+
 struct lcd_controller s3c2440_lcd_controller = {
 	.name    = "s3c2440",
 	.init    = s3c2440_lcd_controller_init,
 	.enable  = s3c2440_lcd_controller_enalbe,
 	.disable = s3c2440_lcd_controller_disable,
+	.init_palette = s3c2440_lcd_controller_init_palette,
 };
 
 void s3c2440_lcd_controller_add(void)
