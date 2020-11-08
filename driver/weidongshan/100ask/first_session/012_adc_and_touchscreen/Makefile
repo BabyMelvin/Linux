@@ -1,4 +1,4 @@
-objs :=start.o led.o uart.o init.o nand_flash.o main.o exception.o interrupt.o timer.o nor_flash.o my_printf.o string_utils.o lib1funcs.o
+objs :=start.o init.o nand_flash.o led.o uart.o  main.o exception.o interrupt.o timer.o nor_flash.o my_printf.o string_utils.o lib1funcs.o
 
 objs += lcd/lcd_test.o
 objs += lcd/font.o

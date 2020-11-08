@@ -15,7 +15,7 @@ int main(void)
 	led_init();
 	//interrupt_init();  /* 初始化中断控制器 */
 	key_eint_init();   /* 初始化按键, 设为中断源 */
-	//timer_init();
+	timer_init();
 	
 	puts("\n\rg_A = ");
 	printHex(g_A);

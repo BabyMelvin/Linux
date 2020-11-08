@@ -1,42 +1,72 @@
 
 #include "s3c2440_soc.h"
+#define TIMER_NUM  32
+#define NULL  ((void *)0)
 
+typedef void(*timer_func)(void);
+typedef struct timer_desc {
+	char *name;
+	timer_func fp;
+}timer_desc, *p_timer_desc;
+
+timer_desc timer_array[TIMER_NUM];
+
+int register_timer(char *name, timer_func fp)
+{
+	int i;
+	for (i = 0; i < TIMER_NUM; i++) {
+		if (!timer_array[i].fp){
+			timer_array[i].name = name;
+			timer_array[i].fp = fp;
+			return 0;
+		}
+	}
+
+	return -1;
+}
+
+void unregister_timer(char *name)
+{
+	int i;
+	for (i = 0; i < TIMER_NUM; i++) {
+		if (!strcmp(timer_array[i].name, name)){
+			timer_array[i].name = NULL;
+			timer_array[i].fp = NULL;
+		}
+	}
+}
 void timer_irq(void)
 {
-	/* µãµÆ¼ÆÊý */
-	static int cnt = 0;
-	int tmp;
-
-	cnt++;
-
-	tmp = ~cnt;
-	tmp &= 7;
-	GPFDAT &= ~(7<<4);
-	GPFDAT |= (tmp<<4);
+	int i;
+	for (i = 0; i < TIMER_NUM; i++) {
+		if (timer_array[i].fp) {
+			timer_array[i].fp();
+		}
+	}
 }
 
 void timer_init(void)
 {
-	/* ÉèÖÃTIMER0µÄÊ±ÖÓ */
+	/* ï¿½ï¿½ï¿½ï¿½TIMER0ï¿½ï¿½Ê±ï¿½ï¿½ */
 	/* Timer clk = PCLK / {prescaler value+1} / {divider value} 
 	             = 50000000/(99+1)/16
 	             = 31250
 	 */
-	TCFG0 = 99;  /* Prescaler 0 = 99, ÓÃÓÚtimer0,1 */
+	TCFG0 = 49;  /* Prescaler 0 = 49, ï¿½ï¿½ï¿½ï¿½timer0,1 */
 	TCFG1 &= ~0xf;
 	TCFG1 |= 3;  /* MUX0 : 1/16 */
 
-	/* ÉèÖÃTIMER0µÄ³õÖµ */
-	TCNTB0 = 15625;  /* 0.5sÖÐ¶ÏÒ»´Î */
+	/* ï¿½ï¿½ï¿½ï¿½TIMER0ï¿½Ä³ï¿½Öµ */
+	TCNTB0 = 15625;  /* 0.5sï¿½Ð¶ï¿½Ò»ï¿½ï¿½ */
 
-	/* ¼ÓÔØ³õÖµ, Æô¶¯timer0 */
+	/* ï¿½ï¿½ï¿½Ø³ï¿½Öµ, ï¿½ï¿½ï¿½ï¿½timer0 */
 	TCON |= (1<<1);   /* Update from TCNTB0 & TCMPB0 */
 
-	/* ÉèÖÃÎª×Ô¶¯¼ÓÔØ²¢Æô¶¯ */
+	/* ï¿½ï¿½ï¿½ï¿½Îªï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	TCON &= ~(1<<1);
 	TCON |= (1<<0) | (1<<3);  /* bit0: start, bit3: auto reload */
 
-	/* ÉèÖÃÖÐ¶Ï */
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ */
 	register_irq(10, timer_irq);
 }
 

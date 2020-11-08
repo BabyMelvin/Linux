@@ -6,12 +6,36 @@ void delay(volatile int d)
 	while (d--);
 }
 
+/* æ¯10msè¯¥å‡½æ•°è¢«è°ƒç”¨ä¸€æ¬¡ 
+ * æ¯500msæ“ä½œä¸€ä¸‹LEDå®ç°è®¡æ•°
+ */
+void led_timer_irq(void)
+{
+	/* ç‚¹ç¯è®¡æ•° */
+	static int timer_num = 0;
+	static int cnt = 0;
+	int tmp;
+
+	timer_num++;
+	if (timer_num < 50)
+		return;
+	timer_num = 0;
+
+	cnt++;
+
+	tmp = ~cnt;
+	tmp &= 7;
+	GPFDAT &= ~(7<<4);
+	GPFDAT |= (tmp<<4);
+}
 
 int led_init(void)
 {
-	/* ÉèÖÃGPFCONÈÃGPF4/5/6ÅäÖÃÎªÊä³öÒı½Å */
+	/* ï¿½ï¿½ï¿½ï¿½GPFCONï¿½ï¿½GPF4/5/6ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	GPFCON &= ~((3<<8) | (3<<10) | (3<<12));
 	GPFCON |=  ((1<<8) | (1<<10) | (1<<12));
+
+	register_timer("led", led_timer_irq);
 }
 
 
@@ -20,11 +44,11 @@ int led_test(void)
 	int val = 0;  /* val: 0b000, 0b111 */
 	int tmp;
 
-	/* ÉèÖÃGPFCONÈÃGPF4/5/6ÅäÖÃÎªÊä³öÒı½Å */
+	/* ï¿½ï¿½ï¿½ï¿½GPFCONï¿½ï¿½GPF4/5/6ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	GPFCON &= ~((3<<8) | (3<<10) | (3<<12));
 	GPFCON |=  ((1<<8) | (1<<10) | (1<<12));
 
-	/* Ñ­»·µãÁÁ */
+	/* Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	while (1)
 	{
 		tmp = ~val;
