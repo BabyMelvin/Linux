@@ -31,22 +31,47 @@ void enter_wait_pen_up_mode(void)
 	ADCTSC = WAIT_PEN_UP | PULLUP_ENABLE | YM_ENABLE | YP_DISABLE | XP_DISABLE | XM_DISABLE | WAIT_INT_MODE;
 }
 
+void enter_auto_measure_mode(void)
+{
+	ADCTSC = AUTO_PST | NO_OPR_MODE;
+}
+
 void Isr_Tc(void)
 {
-	printf("ADCUPDN = 0x%x, ADCDAT0 = 0x%x, ADCDAT1 = 0x%x, ADCTSC = 0x%x\n\r", ADCUPDN, ADCDAT0, ADCDAT1, ADCTSC);
+	//printf("ADCUPDN = 0x%x, ADCDAT0 = 0x%x, ADCDAT1 = 0x%x, ADCTSC = 0x%x\n\r", ADCUPDN, ADCDAT0, ADCDAT1, ADCTSC);
 	
 	if (ADCDAT0 & (1<<15))
 	{
-		printf("pen up\n\r");
+		//printf("pen up\n\r");
 		enter_wait_pen_down_mode();
-	}
-	else	
-	{
-		printf("pen down\n\r");
+	} else {
+		//printf("pen down\n\r");
 
-		/* 进入"等待触摸笔松开的模式" */
-		enter_wait_pen_up_mode();
+        /* 进入"自动测量"模式 */
+		enter_auto_measure_mode();
+		
+        /* 启动ADC */
+		ADCCON |= (1<<0);
 	}
+}
+
+/**
+ * ADC中断获得坐标
+ * */
+void Isr_Adc(void)
+{
+	int x = ADCDAT0;
+	int y = ADCDAT1;
+
+	if (!(x & (1<<15))) /* 如果仍然按下才打印 */
+	{
+		x &= 0x3ff;
+		y &= 0x3ff;
+		
+		printf("x = %08d, y = %08d\n\r", x, y);
+	}
+
+	enter_wait_pen_up_mode();
 }
 
 void AdcTsIntHandle(int irq)
@@ -54,9 +79,10 @@ void AdcTsIntHandle(int irq)
 	if (SUBSRCPND & (1<<TC_INT_BIT))  /* 如果是触摸屏中断 */
 		Isr_Tc();
 
-//	if (SUBSRCPND & (1<<ADC_INT_BIT))  /* ADC中断 */
-//		Isr_Adc();
-	SUBSRCPND = (1<<TC_INT_BIT) | (1<<ADC_INT_BIT);
+	if (SUBSRCPND & (1<<ADC_INT_BIT))  /* ADC中断 */
+		Isr_Adc();
+	
+    SUBSRCPND = (1<<TC_INT_BIT) | (1<<ADC_INT_BIT);
 }
 
 void adc_ts_int_init(void)
@@ -82,7 +108,10 @@ void adc_ts_reg_init(void)
 	 */
 	ADCCON = (1<<14) | (49<<6) | (0<<3);
 
-	ADCDLY = 0xff;	
+	/*  按下触摸屏, 延时一会再发出TC中断
+	 *  延时时间 = ADCDLY * 晶振周期 = ADCDLY * 1 / 12000000 = 5ms
+	 */
+	ADCDLY = 60000;		
 }
 
 void touchscreen_init(void)
