@@ -55,7 +55,7 @@ int lcd_init(void)
 	/* 注册LCD控制器 */
 	lcd_contoller_add();
 	
-    
+
 	/* 选择某款LCD */
 	select_lcd("lcd_4.3");
 	/* 选择某款LCD控制器 */
@@ -63,3 +63,4 @@ int lcd_init(void)
 	/* 使用LCD的参数, 初始化LCD控制器 */
 	lcd_controller_init(g_p_lcd_selected);
 }
+

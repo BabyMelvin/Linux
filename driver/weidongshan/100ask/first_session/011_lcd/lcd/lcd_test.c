@@ -19,7 +19,9 @@ void lcd_test(void)
     printf("xres=%d, yres=%d, bpp=%d\r\n", xres, yres, bpp);
     
     fb_get_lcd_params();
-
+    // font 初始化
+    font_init();
+    
     /* 往framebuffer写数据*/
     if (bpp == 16) {
         // 让LCD输出整屏幕红色,565:0xf800
@@ -43,22 +45,22 @@ void lcd_test(void)
 
     } else if (bpp == 32) {
         // 让LCD输出整屏幕红色,RRGGBB:0xff0000
-        p = (unsigned short *)fb_base;
+        p2 = (unsigned int *)fb_base;
         for (x = 0; x < xres; x++)
             for (y = 0; y < yres; y++)
-                *p++ = 0xff0000;
+                *p2++ = 0xff0000;
 
         // 让LCD输出整屏幕green,RRGGBB:0x00ff00
-        p = (unsigned short *)fb_base;
+        p2 = (unsigned int *)fb_base;
         for (x = 0; x < xres; x++)
             for (y = 0; y < yres; y++)
-                *p++ = 0x00ff00;
+                *p2++ = 0x00ff00;
 
         // 让LCD输出整屏blue,RRGGBB:0x0000ff
-        p = (unsigned short *)fb_base;
+        p2 = (unsigned int *)fb_base;
         for (x = 0; x < xres; x++)
             for (y = 0; y < yres; y++)
-                *p++ = 0x0000ff;
+                *p2++ = 0x0000ff;
 
     }
 
@@ -75,4 +77,7 @@ void lcd_test(void)
 
 	/* 画圆 */
 	draw_circle(xres/2, yres/2, yres/4, 0xff00);
+
+    /* 输出文字 */
+	fb_print_string(10, 10, "hello ,\n\rbaby melvin!", 0xff00);
 }

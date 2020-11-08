@@ -66,3 +66,4 @@ void lcd_contoller_add (void)
 {
     s3c2440_lcd_controller_add();
 }
+

@@ -2,6 +2,7 @@ objs :=start.o led.o uart.o init.o nand_flash.o main.o exception.o interrupt.o t
 
 objs += lcd/lcd_test.o
 objs += lcd/font.o
+objs += lcd/font_8x16.o
 objs += lcd/framebuffer.o
 objs += lcd/gemetory.o
 objs += lcd/lcd.o
