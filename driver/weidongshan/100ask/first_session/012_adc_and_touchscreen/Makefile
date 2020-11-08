@@ -9,6 +9,8 @@ objs += lcd/lcd.o
 objs += lcd/lcd_4.3.o
 objs += lcd/lcd_controller.o
 objs += lcd/s3c2440_lcd_controller.o
+objs += adc_touchscreen/adc.o
+objs += adc_touchscreen/adc_test.o
 
 all: $(objs)
 	#arm-linux-ld -Ttext 0 -Tdata 0x30000000  start.o led.o uart.o init.o main.o -o sdram.elf
@@ -16,7 +18,7 @@ all: $(objs)
 	arm-linux-objcopy -O binary -S sdram.elf lcd_test.bin
 	arm-linux-objdump -D sdram.elf > sdram.dis
 clean:
-	rm *.bin *.o *.elf *.dis lcd/*.o
+	rm *.bin *.o *.elf *.dis lcd/*.o adc_touchscreen/*.o
 	
 %.o : %.c
 	arm-linux-gcc -march=armv4 -c -o $@ $<
