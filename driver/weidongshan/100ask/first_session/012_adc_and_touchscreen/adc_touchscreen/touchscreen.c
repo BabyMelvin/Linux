@@ -22,6 +22,38 @@
 #define NO_OPR_MODE      (0)
 
 static volatile int g_ts_timer_enable = 0;
+
+static int g_ts_x;
+static int g_ts_y;
+static int g_ts_pressure;
+static int g_ts_data_valid = 0;
+
+void report_ts_xy(int x, int y, int pressure);
+
+void report_ts_xy(int x, int y, int pressure)
+{
+	//printf("x = %08d, y = %08d\n\r", x, y);
+
+	if (g_ts_data_valid == 0)
+	{
+		g_ts_x = x;
+		g_ts_y = y;
+		g_ts_pressure = pressure;
+		g_ts_data_valid = 1;
+	}
+}
+
+void ts_read_raw(int *px, int *py, int *ppressure)
+{
+
+	while (g_ts_data_valid == 0);
+
+	*px = g_ts_x;
+	*py = g_ts_y;
+	*ppressure = g_ts_pressure;
+	g_ts_data_valid = 0;
+}
+
 static void ts_timer_enable(void)
 {
 	g_ts_timer_enable = 1;
@@ -60,6 +92,7 @@ void Isr_Tc(void)
 	{
 		//printf("pen up\n\r");
 		enter_wait_pen_down_mode();
+        report_ts_xy(0, 0, 0);
 	} else {
 		//printf("pen down\n\r");
 
@@ -76,21 +109,63 @@ void Isr_Tc(void)
  * */
 void Isr_Adc(void)
 {
+    static int adc_cnt = 0;
+	static int adc_x = 0;
+	static int adc_y = 0;
 	int x = ADCDAT0;
 	int y = ADCDAT1;
 
+    printf("adc irs 001\r\n");
 	if (!(x & (1<<15))) /* 如果仍然按下才打印 */
 	{
+        printf("adc irs 002, adc_cnt = %d\r\n", adc_cnt);
+#if 0
 		x &= 0x3ff;
 		y &= 0x3ff;
 		
 		printf("x = %08d, y = %08d\n\r", x, y);
-
+	    report_ts_xy(x, y, 1);
         /* 启动定时器以再次读取数据 */
         ts_timer_enable();
+#endif
+        /* 第1次启动ADC后:
+		 *   a. 要连续启动N次, 获得N个数据, 求平均值并上报
+		 *   b. 得到N次数据后, 再启动TIMER 
+		 */
+		adc_x += (x & 0x3ff);
+		adc_y += (y & 0x3ff);
+		adc_cnt++;
+
+		if (adc_cnt == 16)
+		{
+			adc_x >>= 4;
+			adc_y >>= 4;
+			report_ts_xy(adc_x, adc_y, 1);
+
+			adc_cnt = 0;
+			adc_x = 0;
+			adc_y = 0;
+			
+			/* 启动定时器以再次读取数据 */
+			ts_timer_enable();
+		}
+		else
+		{
+			/* 再次启动ADC */
+			/* 进入"自动测量"模式 */
+			enter_auto_measure_mode();
+			
+			/* 启动ADC */
+			ADCCON |= (1<<0);
+		}
 	} else {
+        adc_cnt = 0;
+		adc_x = 0;
+		adc_y = 0;
+
         ts_timer_disable();
 		enter_wait_pen_down_mode();
+        report_ts_xy(0, 0, 0);
     }
 
 	enter_wait_pen_up_mode();

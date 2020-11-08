@@ -49,3 +49,42 @@ void fb_put_pixel(int x, int y, unsigned int color)
 			break;
 	}
 }
+
+void clear_screen(unsigned int color)
+{
+	int x, y;
+	unsigned char *p0;
+	unsigned short *p;
+	unsigned int *p2;
+
+	/* 往framebuffer中写数据 */
+	if (bpp == 8)
+	{
+		/* bpp: palette[color] */
+
+		p0 = (unsigned char *)fb_base;
+		for (x = 0; x < xres; x++)
+			for (y = 0; y < yres; y++)
+				*p0++ = color;
+	}
+	else if (bpp == 16)
+	{
+		/* 让LCD输出整屏的红色 */
+
+		/* 565: 0xf800 */
+
+		p = (unsigned short *)fb_base;
+		for (x = 0; x < xres; x++)
+			for (y = 0; y < yres; y++)
+				*p++ = convert32bppto16bpp(color);
+			
+	}
+	else if (bpp == 32)
+	{
+		p2 = (unsigned int *)fb_base;
+		for (x = 0; x < xres; x++)
+			for (y = 0; y < yres; y++)
+				*p2++ = color;
+
+	}
+}

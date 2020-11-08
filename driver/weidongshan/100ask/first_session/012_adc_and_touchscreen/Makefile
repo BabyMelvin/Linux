@@ -13,6 +13,7 @@ objs += adc_touchscreen/adc.o
 objs += adc_touchscreen/adc_test.o
 objs += adc_touchscreen/touchscreen.o
 objs += adc_touchscreen/touchscreen_test.o
+objs += adc_touchscreen/tslib.o
 
 all: $(objs)
 	#arm-linux-ld -Ttext 0 -Tdata 0x30000000  start.o led.o uart.o init.o main.o -o sdram.elf
