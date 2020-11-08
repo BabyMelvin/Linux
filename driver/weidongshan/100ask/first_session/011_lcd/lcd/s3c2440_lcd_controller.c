@@ -33,8 +33,8 @@ void s3c2440_lcd_controller_init(p_lcd_params plcdparams)
 	 * [4:1]: bpp mode
 	 * [0]  : LCD video output and the logic enable/disable
 	 */
-	//int clkval = (double)HCLK/plcdparams->time_seq.vclk/2-1+0.5;
-	int clkval = 5;
+	int clkval = (double)HCLK/plcdparams->time_seq.vclk/2-1+0.5;
+	//int clkval = 5;
 	int bppmode = plcdparams->bpp == 8  ? 0xb :\
 				  plcdparams->bpp == 16 ? 0xc :\
 				  0xd;  /* 0xd: 24,32bpp */
