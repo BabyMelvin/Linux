@@ -1,3 +1,5 @@
+#include "gemetory.h"
+
 void lcd_test(void)
 {
     unsigned int fb_base;
@@ -16,6 +18,8 @@ void lcd_test(void)
     get_lcd_params(&fb_base, &xres, &yres, &bpp);
     printf("xres=%d, yres=%d, bpp=%d\r\n", xres, yres, bpp);
     
+    fb_get_lcd_params();
+
     /* 往framebuffer写数据*/
     if (bpp == 16) {
         // 让LCD输出整屏幕红色,565:0xf800
@@ -57,4 +61,18 @@ void lcd_test(void)
                 *p++ = 0x0000ff;
 
     }
+
+    delay(1000000);
+    /* 画线 */
+	draw_line(0, 0, xres - 1, 0, 0xff0000);
+	draw_line(xres - 1, 0, xres - 1, yres - 1, 0xffff00);
+	draw_line(0, yres - 1, xres - 1, yres - 1, 0xff00aa);
+	draw_line(0, 0, 0, yres - 1, 0xff00ef);
+	draw_line(0, 0, xres - 1, yres - 1, 0xff4500);
+	draw_line(xres - 1, 0, 0, yres - 1, 0xff0780);
+
+	delay(1000000);
+
+	/* 画圆 */
+	draw_circle(xres/2, yres/2, yres/4, 0xff00);
 }
