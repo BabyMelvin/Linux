@@ -18,8 +18,8 @@ int main (void)
     //timer_init();
 
     //nor_flash_test();
-    //nand_init();
-    //nand_flash_test();
+    nand_init();
+    nand_flash_test();
     
     return 0;
 }

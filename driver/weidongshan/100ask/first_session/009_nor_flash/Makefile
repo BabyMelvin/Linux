@@ -5,9 +5,9 @@ GXX=arm-linux
 all: start.o led.o init.o uart.o main.o interrupt.o exception.o  timer.o my_printf.o lib1funcs.o nor_flash.o string_utils.o
 
 	#${GXX}-ld -Ttext 0 start.o main.o led.o init.o uart.o -o sdram.elf
-	${GXX}-ld -T  sdram.lds $^ -o nor_flash.elf
-	${GXX}-objcopy -O binary -S nor_flash.elf nor_flash.bin
-	${GXX}-objdump -D nor_flash.elf > nor_flash.dis
+	${GXX}-ld -T  sdram.lds $^ -o nand_flash.elf
+	${GXX}-objcopy -O binary -S nand_flash.elf nand_flash.bin
+	${GXX}-objdump -D nand_flash.elf > nnand_flash.dis
 
 %.o : %.c
 	${GXX}-gcc -c -march=armv4 -o $@ $<
