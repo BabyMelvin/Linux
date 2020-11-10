@@ -4,6 +4,7 @@ uboot是bootloader程序。
 ## uboot常用命令
 
 * help 当前板支持命令
+* set bootdelay 10 ：设置“倒数计时”为 10 秒。加 save 命令 保存，reset 重启后可见到“倒数计时”。
 * printenv查看环境变量
 * setenv添加，修改，删除环境变量
 * saveenv保存环境变量，将当前所有变量及其值存入flash中。

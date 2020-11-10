@@ -103,3 +103,178 @@ gcc -L. -o test main.o -lsub
 ```
 gcc -pipe hello.c -o hello
 ```
+
+# 2.`__attribute__`选项
+`__attribute__` 可以用来设置 **函数属性**, **变量属性** 和 **类型属性**, **只与声明一起使用**. **即使函数是定义在同一文件内**, **也需要额外提供声明才能生效**. 写法为`__attribute__((arg1, arg2, arg3…))`, 这里列举一些用比较常用的属性:
+
+## 2.1 format
+format 被用来描述函数的参数形式, 支持的参数形式有printf, scanf, strftime 和 strfmon,比较常用的是 printf 形式, format 的语法为:`__attribute__((format(archetype, string-index, first-to-check)))`
+
+* archetype 为参数形式
+* string-index 是指函数的格式化字符串在所有参数中所处的位置
+* first-to-check 是指第一个格式化参数的位置
+
+例如：
+
+```c
+void myprintf(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
+```
+以上声明表示`myprint()`函数的第一个参数为格式化字符串, 第二个及往后的都是格式化参数, 这样以下调用在` gcc -Wformat` 选项中可能会产生警告:
+
+```c
+// 编译检测
+myprint("%s", 6); // warning: format ‘%s’ expects type ‘char *’, but argument 2 has type ‘int’
+myprint("%d", 7); // ok
+myprint("%d%s%d", 7, 3); // test.c:10: warning: format ‘%s’ expects type ‘char *’, but argument 3 has type ‘int’
+						 // test.c:10: warning: too few arguments for format
+```
+
+# 2.2 const
+const属性告诉编译器该函数**调用一次后缓存返回结果**,以后的调用直接使用缓存的值
+
+## 2.3 noreturn
+例如以下代码使用`-Wall`选项编译时会产生警告: warning: control reaches end of non-void function
+
+```c
+extern void myexit{exit()};
+int test(int n) {
+if ( n > 0 ) {
+	myexit();
+} // 控制逻辑分支没有返回值
+else
+	return 0;
+}
+```
+
+而将`myexit()`的声明改为:`extern void myexit(exit()) __attribute__((noreturn))`则不会产生上面的警告了.
+
+## 2.4 aligned
+设置类型所使用的对齐方式,
+
+```c
+#include
+struct a {
+	char b;
+	short c;
+};
+
+struct a4 {
+	char b;
+	short c;
+} __attribute__((aligned(4)));
+
+struct a8 {
+	char b;
+	short c;
+} __attribute__((aligned(8)));
+struct ap {
+	char b;
+	short c;
+} __attribute__((packed));
+int main() {
+	printf("sizeof(char) = %dn",sizeof(char));
+	printf("sizeof(short) = %dn",sizeof(short));
+	printf("sizeof(a) = %dn",sizeof(struct a));
+	printf("sizeof(a4) = %dn",sizeof(struct a4));
+	printf("sizeof(a8) = %dn",sizeof(struct a8));
+	printf("sizeof(ap) = %dn",sizeof(struct ap));
+}
+```
+运行结果为
+
+```
+sizeof(char) = 1
+sizeof(short) = 2
+sizeof(a) = 4
+sizeof(a4) = 4
+sizeof(a8) = 8
+sizeof(ap) = 3
+```
+
+## 2.5 no_instrument_function
+关于这个参数的使用首先要解释一下 gcc 的 `-finstrument-functions` 选项, 当 GCC 使用这个选项编译代码的时候会在**每一个用户自定义函数中添加两个函数调用**:
+
+```c
+void __cyg_profile_func_enter(void *this, void *callsite);
+void __cyg_profile_func_exit(void *this, void *callsite);
+```
+这两个函数是在 glibc 内部声明的, 可以由用户自己定义实现, `__cyg_profile_func_enter()`在进入函数的时候调用, `void __cyg_profile_func_exit()`在函数退出的时候调用. 第一个参数this指向当前函数地址, 第二个参数 callsite 指向上一级函数地址,举个例子来说明一下:
+
+```c
+#include <stdio.h>
+#define debug_print(fmt, args...) \
+	do { \
+		fprintf(stderr, fmt, ##args); \
+	} while(0) \
+
+extern "C" {
+	void __cyg_profile_func_enter(void* callee, void* callsite)
+	__attribute__((no_instrument_function));
+	void __cyg_profile_func_enter(void* callee, void* callsite)
+	{
+		debug_print("Entering %p in %pn", callee, callsite);
+	}
+	void __cyg_profile_func_exit(void* callee, void* callsite)
+	__attribute__((no_instrument_function));
+	void __cyg_profile_func_exit(void* callee, void* callsite) {
+		debug_print("Exiting %p in %pn", callee, callsite);
+	}
+	void foo() {
+		printf("foo()\n");
+	}
+}
+
+int main() {
+	foo();
+	return 0;
+}
+```
+编译运行：
+
+```
+$ g++ t.cc -finstrument-functions -g
+$ ./a.out
+Entering 0x8048690 in 0xb764ec76
+Entering 0x804862a in 0x80486b3
+foo()
+Exiting 0x804862a in 0x80486b3
+Exiting 0x8048690 in 0xb764ec76
+```
+这里输出的都是函数地址信息,如果想定位到函数代码,可以借助 addr2line 工具:
+
+```
+$ addr2line -e a.out -f -s 0x804862a 0x80486b3
+foo
+t.cc:22
+main
+t.cc:29
+```
+最后回到 `__attribute__((no_instrument_function))`, 这个选项的作用就是用来禁止编译器向指定的函数内部添加`__cyg_profile_func_enter()` 和 `__cyg_profile_func_exit()`调用代码,例如用户可能会在`__cyg_profile_func_enter` 函数中调用自定义的函数, 这些被调用的自定义函数声明中都要加上`__attribute__((no_instrument_function))`属性, 避免产生无限递归的调用. 另外也可以通过 GCC 的以下两个选项来实现同样的作用:
+
+```
+-finstrument-functions-exclude-file-list=file1,file2,... #屏蔽file1,file2 中的函数
+-finstrument-functions-exclude-function-list=func1,func2,... #屏蔽func1,func2 函数
+```
+
+另外可以参考一篇 developerWorks 的文章:[用 Graphviz 可视化函数调用](https://www.ibm.com/developerworks/cn/linux/l-graphvis/)
+
+## 2.6 deprecated
+设置了这一属性的函数/变量/类型在代码中被使用的时候会使编译器产生一条警告, 例如
+
+```c
+void foo() __attribute__((deprecated));
+void foo(){}
+int main() {
+	foo();
+	return 0;
+}
+```
+
+编译:
+
+```
+$ gcc test.c
+test.c: In function ‘main’:
+test.c:6: warning: ‘foo’ is deprecated (declared at test.c:3)
+```
+这个选项可以用来在检验代码升级的时候旧版本的代码**是否都已经被移除**.

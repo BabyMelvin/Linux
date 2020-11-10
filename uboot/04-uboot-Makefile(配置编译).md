@@ -36,9 +36,9 @@ HOSTARCH:=$(shell uname -m | \
            -e s/ppc64/ppc/ \
            -e s/macppc/ppc/)
 ```
-“sed –e”表示后面跟的是一串命令脚本，而表达式“s/abc/def/”表示要从标准输入中，查找到内容为“abc”的，然后替换成“def”。其中“abc”表达式用可以使用“.”作为通配符。
+`sed –e`表示后面跟的是一串命令脚本，而表达式`s/abc/def/`表示要从标准输入中，查找到内容为“abc”的，然后替换成“def”。其中“abc”表达式用可以使用`.`作为通配符。
 
-命令“uname –m”将输出主机CPU的体系架构类型。作者的电脑使用Intel Core2系列的CPU，因此“uname –m”输出“i686”。 “i686”可以匹配命令“sed -e s/i.86/i386/”中的“i.86”，因此在作者的机器上执行Makefile，HOSTARCH将被设置成“i386” 。
+命令`uname –m`将输出主机CPU的体系架构类型。作者的电脑使用Intel Core2系列的CPU，因此`uname –m`输出“i686”。 “i686”可以匹配命令`sed -e s/i.86/i386/`中的“i.86”，因此在作者的机器上执行Makefile，HOSTARCH将被设置成“i386” 。
 
 ### 2.1.2 定义主机操作系统类型
 
@@ -46,16 +46,18 @@ HOSTARCH:=$(shell uname -m | \
 HOSTOS:= = $(shell uname -s | tr '[:upper:]' '[:lower:]' | \
            sed -e 's/\(cygwin\).*/cygwin/')
 ```
- “uname –s”输出主机内核名字，作者使用Linux发行版Ubuntu9.10，因此“uname –s”结果是“Linux”。“tr '[:upper:]' '[:lower:]'”作用是将标准输入中的所有大写字母转换为响应的小写字母。因此执行结果是将HOSTOS 设置为“linux”。
+ `uname –s`输出主机内核名字，作者使用Linux发行版Ubuntu9.10，因此`uname –s`结果是“Linux”。`tr '[:upper:]' '[:lower:]'`作用是将标准输入中的所有大写字母转换为响应的小写字母。因此执行结果是将HOSTOS 设置为“linux”。
+
 ### 2.1.3 定义执行shell脚本的shell
 
 ```makefile
 # Set shell to bash if possible,otherwise fall back to sh
+# echo作为返回值给SHELL
 SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
        else if [ -x /bin/bash ]; then echo /bin/bash; \
        else echo sh; fi; fi)
 ```
-`"$$BASH"`的作用实质上是生成了字符串`“$BASH”`（前一个`$`号的作用是指明第二个`$`是普通的字符）。若执行当前Makefile的shell中定义了`“$BASH”`环境变量，且文件`“$BASH”`是可执行文件，则SHELL的值为`“$BASH”`。否则，若`/bin/bash`是可执行文件，则SHELL值为`“/bin/bash”`。若以上两条都不成立，则将“sh”赋值给SHELL变量。
+`"$$BASH"`的作用实质上是生成了字符串`$BASH`（前一个`$`号的作用是指明第二个`$`是普通的字符）。若执行当前Makefile的shell中定义了`$BASH`环境变量，且文件`$BASH`是可执行文件，则SHELL的值为`$BASH`。否则，若`/bin/bash`是可执行文件，则SHELL值为`/bin/bash`。若以上两条都不成立，则将“sh”赋值给`SHELL`变量。
 
 #### 2.1.4 设定编译输出目录
 
@@ -66,7 +68,10 @@ BUILD_DIR := $(O)
 endif
 endif
 ```
-函数$( origin, variable) 输出的结果是一个字符串，输出结果由变量variable定义的方式决定，若variable在命令行中定义过，则origin函数返回值为"command line"。假若在命令行中执行了`“export BUILD_DIR=/tmp/build”`的命令，则“$(origin O)”值为“command line”，而BUILD_DIR被设置为`“/tmp/build”`。
+函数`$( origin, variable)`输出的结果是一个字符串，输出结果由变量variable定义的方式决定
+
+* 若variable在命令行中定义过，则origin函数返回值为"command line"。
+* 假若在命令行中执行了`“export BUILD_DIR=/tmp/build”`的命令，则`$(origin O)`值为“command line”，而BUILD_DIR被设置为`/tmp/build`。
 
 ```makefile
 ifneq ($(BUILD_DIR),)
@@ -84,13 +89,13 @@ endif #ifneq($(BUILD_DIR),)
 ```
  若`$(BUILD_DIR)`为空，则将其赋值为当前目录路径（源代码目录）。并检查`$(BUILD_DIR)`目录是否存在。
 
-```
-OBJTREE           := $(if $(BUILD_DIR),$(BUILD_DIR),$(CURDIR))
-SRCTREE          := $(CURDIR)
-TOPDIR             := $(SRCTREE)
-LNDIR        := $(OBJTREE)
+```makefile
+OBJTREE:= $(if $(BUILD_DIR),$(BUILD_DIR),$(CURDIR))
+SRCTREE:= $(CURDIR)
+TOPDIR := $(SRCTREE)
+LNDIR  := $(OBJTREE)
 … …
-MKCONFIG      := $(SRCTREE)/mkconfig
+MKCONFIG := $(SRCTREE)/mkconfig
 … …
 ifneq ($(OBJTREE),$(SRCTREE))
 obj := $(OBJTREE)/
@@ -104,15 +109,16 @@ CURDIR变量指示Make当前的工作目录，由于当前Make在U-Boot顶层目
 
 执行完上面的代码后
 
-* SRCTREE，src变量就是U-Boot代码顶层目
-* OBJTREE，obj变量就是输出目录
+* SRCTREE:src变量就是U-Boot代码顶层目
+* OBJTREE:obj变量就是输出目录
 * 若没有定义BUILD_DIR环境变量，则SRCTREE，src变量与OBJTREE，obj变量都是U-Boot源代码目录。
-* MKCONFIG则表示U-Boot根目录下的mkconfig脚本。
+* MKCONFIG则表示U-Boot根目录下的**mkconfig脚本**。
 
 ## 2.2 make mini2440_config命令执行过程
-下面分析命令“make mini2440_config”执行过程，为了简化分析过程这里主要分析将编译目标输出到源代码目录的情况
+下面分析命令`make mini2440_config`执行过程，为了简化分析过程这里主要分析将编译目标输出到源代码目录的情况
 
 ```makefile
+# 语法:$(string_text:term_text=replace_text)
 mini2440_config :      unconfig
        @$(MKCONFIG) $(@:_config=) arm arm920t mini2440 samsung s3c24x0
 ```
@@ -120,21 +126,22 @@ mini2440_config :      unconfig
 
 ```makefile
 unconfig:
-	@rm -f $(obj)include/config.h $(obj)include/config.mk \
+    @rm -f $(obj)include/config.h $(obj)include/config.mk \
     $(obj)board/*/config.tmp $(obj)board/*/*/config.tmp \
-	$(obj)include/autoconf.mk $(obj)include/autoconf.mk.dep
+    $(obj)include/autoconf.mk $(obj)include/autoconf.mk.dep
 ```
-其中“@”的作用是执行该命令时不在shell显示。“obj”变量就是编译输出的目录，因此“unconfig”的作用就是清除上次执行`make *_config`命令生成的配置文件（如`include/config.h`，`include/config.mk`等）。
+其中`@`的作用是执行该命令时不在shell显示。“obj”变量就是编译输出的目录，因此“unconfig”的**作用**就是清除上次执行`make *_config`命令生成的配置文件（如`include/config.h`，`include/config.mk`等）。
 
- `$(MKCONFIG)`在上面指定为`“$(SRCTREE)/mkconfig”`。`$(@:_config=)`为将传进来的所有参数中的`_config`替换为`空`（其中`“@”`指规则的目标文件名，在这里就是`“mini2440_config ”`。`$(text:patternA=patternB)`，这样的语法表示把text变量每一个元素中结尾的patternA的文本替换为patternB，然后输出） 。因此`$(@:_config=)`的作用就是将mini2440_config中的_config去掉，得到mini2440。
+ `$(MKCONFIG)`在上面指定为`“$(SRCTREE)/mkconfig”`。`$(@:_config=)`为将传进来的所有参数中的`_config`替换为`空`（其中`“@”`指规则的目标文件名，在这里就是`“mini2440_config ”`。
+ 
+ * `$(text:patternA=patternB)`，这样的语法表示把text变量每一个元素中结尾的patternA的文本替换为patternB，然后输出） 。因此`$(@:_config=)`的作用就是将mini2440_config中的_config去掉，得到mini2440。
 
-因此“@$(MKCONFIG) $(@:_config=) arm arm920t mini2440 samsung s3c24x0”实际上就是执行了如下命令：
+因此`@$(MKCONFIG) $(@:_config=) arm arm920t mini2440 samsung s3c24x0`实际上就是执行了如下命令：
 
 ```makefile
 ./mkconfig mini2440 arm arm920t mini2440 samsung s3c24x0
 ```
-即将`“mini2440 arm arm920t mini2440 samsung s3c24x0”`作为参数传递给当前目录下的mkconfig脚本执行。
-在mkconfig脚本中给出了mkconfig的用法：
+即将`mini2440 arm arm920t mini2440 samsung s3c24x0`作为参数传递给当前目录下的**mkconfig脚本**执行。在mkconfig脚本中给出了mkconfig的用法：
 
 ```makefile
 # Parameters:  Target  Architecture  CPU  Board [VENDOR] [SOC]
@@ -168,8 +175,10 @@ while [ $# -gt 0 ] ; do
 done
 [ "${BOARD_NAME}" ] || BOARD_NAME="$1" 
 ```
- 环境变量$#表示传递给脚本的参数个数，这里的命令有6个参数，因此$#是6 。shift的作用是使$1=$2，$2=$3，$3=$4….，而原来的$1将丢失。因此while循环的作用是，依次处理传递给mkconfig脚本的选项。由于我们并没有传递给mkconfig任何的选项，因此while循环中的代码不起作用。
-最后将BOARD_NAME的值设置为$1的值，在这里就是“mini2440”。
+ 
+ * 环境变量`$#`表示传递给脚本的参数个数，这里的命令有6个参数，因此`$#`是6 。
+ *　shift的作用是使`$1=$2，$2=$3，$3=$4….`，而原来的`$1`将丢失。因此while循环的作用是，依次处理传递给mkconfig脚本的选项。由于我们并没有传递给mkconfig任何的选项，因此while循环中的代码不起作用。
+最后将BOARD_NAME的值设置为`$1`的值，在这里就是“mini2440”。
 
 ### 2.2.2检查参数合法性
 
@@ -265,7 +274,7 @@ else
     BOARDDIR=$5/$4
 fi
 ```
-以上代码指定board目录下的一个目录为当前开发板专有代码的目录。若$5（VENDOR）为空则BOARDDIR设置为$4（BOARD），否则设置为`$5/$4`（VENDOR/BOARD）。在这里由于$5不为空，因此BOARDDIR被设置为`samsung/mini2440`。
+以上代码指定board目录下的一个目录为当前开发板专有代码的目录。若`$5（VENDOR）`为空则BOARDDIR设置为`$4（BOARD）`，否则设置为`$5/$4`（VENDOR/BOARD）。在这里由于`$5`不为空，因此BOARDDIR被设置为`samsung/mini2440`。
 
 ### 2.2.6 构建`include/config.h`文件
 
@@ -308,7 +317,7 @@ ln -s proc-armv asm-arm/proc
 
 （2）创建`include/config.mk`文件，内容如下所示：
 
-```
+```makefile
 ARCH   = arm
 CPU    = arm920t
 BOARD  = mini2440
@@ -335,6 +344,7 @@ System not configured - see README
 U-Boot是如何知道用户没有执行过`“make <board_name>_config”`命令的呢？阅读U-Boot源代码就可以发现了，Makefile中有如下代码：
 
 ```bash
+# sinclude等价于-include，不存在不报错
 ifeq ($(obj)include/config.mk,$(wildcard $(obj)include/config.mk)) # config.mk存在
 all: 
 	sinclude $(obj)include/autoconf.mk.dep
@@ -349,7 +359,7 @@ endif      # config.mk
 ```
 若`include/config.mk`文件存在，则`$(wildcard $(obj)include/config.mk)`命令执行的结果是`“$(obj)include/config.mk”`展开的字符串，否则结果为空。由于`include/config.mk`是`“make <board_name>_config”`命令执行过程生成的，若从没有执行过`“make <board_name>_config”`命令则`include/config.mk`必然不存在。因此Make就执行else分支的代码，在输出“System not configured - see README”的信息后就返回了。
 
-下面再来分析“make all”命令正常执行的过程，在Makefile中有如下代码：
+下面再来分析`make all`命令正常执行的过程，在Makefile中有如下代码：
 
 ### 2.3.1 `include/autoconf.mk`生成过程 
 
@@ -358,7 +368,7 @@ all:
 	sinclude $(obj)include/autoconf.mk.dep
 	sinclude $(obj)include/autoconf.mk
 ```
- `include/autoconf.mk`文件中是与开发板相关的一些宏定义，在Makefile执行过程中需要根据某些宏来确定执行哪些操作。下面简要分析`include/autoconf.mk`生成的过程，`include/autoconf.mk`生成的规则如下：
+ `include/autoconf.mk`文件中是与**开发板相关的一些宏定义**，在Makefile执行过程中需要根据某些宏来确定执行哪些操作。下面简要分析`include/autoconf.mk`生成的过程，`include/autoconf.mk`生成的规则如下：
 
 ```makefile
 $(obj)include/autoconf.mk: $(obj)include/config.h
@@ -371,7 +381,7 @@ $(obj)include/autoconf.mk: $(obj)include/config.h
 ```
 `include/autoconf.mk`依赖于`make <board_name>_config`命令生成的`include/config.h`。因此执行`make <board_name>_config`命令后再执行`make all`将更新`include/autoconf.mk`。
 
-编译选项`“-dM”`的作用是输出`include/common.h`中定义的所有宏。根据上面的规则，编译器提取`include/common.h`中定义的宏，然后输出给`tools/scripts/define2mk.sed`脚本处理，处理的结果就是`include/autoconf.mk`文件。其中`tools/scripts/define2mk.sed`脚本的主要完成了在`include/common.h`中查找和处理以`“CONFIG_”`开头的宏定义的功能。
+编译选项`-dM`的作用是输出`include/common.h`中定义的所有宏。根据上面的规则，编译器提取`include/common.h`中定义的宏，然后输出给`tools/scripts/define2mk.sed`脚本处理，处理的结果就是`include/autoconf.mk`文件。其中`tools/scripts/define2mk.sed`脚本的主要完成了在`include/common.h`中查找和处理以`“CONFIG_”`开头的宏定义的功能。
 
  `include/common.h`文件包含了`include/config.h`文件，而`include/config.h`文件又包含了`config_defaults.h`，`configs/mini2440.h`，`asm/config.h`文件。因此`include/autoconf.mk`实质上就是`config_defaults.h`，`configs/mini2440.h`，`asm/config.h`三个文件中`“CONFIG_”`开头的有效的宏定义的集合。
 
@@ -427,7 +437,7 @@ PLATFORM_RELFLAGS =
 PLATFORM_CPPFLAGS =          #编译选项
 PLATFORM_LDFLAGS =           #连接选项
 ```
-用这3个变量表示交叉编译器的编译选项，在后面Make会检查交叉编译器支持的编译选项，然后将适当的选项添加到这3个变量中。
+用这3个变量表示**交叉编译器的编译选项**，在后面Make会检查交叉编译器支持的编译选项，然后将适当的选项添加到这3个变量中。
 
 ```makefile
 #
@@ -438,9 +448,11 @@ PLATFORM_LDFLAGS =           #连接选项
 cc-option = $(shell if $(CC) $(CFLAGS) $(1) -S -o /dev/null -xc /dev/null \
               > /dev/null 2>&1; then echo "$(1)"; else echo "$(2)"; fi ;)
 ```
-变量CC和CFLAGS在后面的代码定义为延时变量，其中的CC即`arm-linux-gcc`。函数cc-option用于检查编译器CC是否支持某选项。将2个选项作为参数传递给cc-option函数，该函数调用CC编译器检查参数1是否支持，若支持则函数返回参数1，否则返回参数2 （因此CC编译器必须支持参数1或参数2，若两个都不支持则会编译出错）。可以像下面这样调用cc-option函数，并将支持的选项添加到FLAGS中：
+变量CC和CFLAGS在后面的代码定义为**延时变量**，其中的CC即`arm-linux-gcc`。
 
-```
+函数`cc-option`用于检查编译器CC是否支持某选项。将2个选项作为参数传递给cc-option函数，该函数调用CC编译器检查参数1是否支持，若支持则函数返回参数1，否则返回参数2 （因此CC编译器必须支持参数1或参数2，若两个都不支持则会编译出错）。可以像下面这样调用cc-option函数，并将支持的选项添加到FLAGS中：
+
+```makefile
 FLAGS +=$(call cc-option,option1,option2)
 ```
 
@@ -476,14 +488,14 @@ CROSS_COMPILE ?= arm-linux-
 # Load generated board configuration
 sinclude $(OBJTREE)/include/autoconf.mk
 
-ifdef      ARCH
+ifdef ARCH
 sinclude $(TOPDIR)/lib_$(ARCH)/config.mk   # include architecture dependend rules
 endif
 ```
 `$(ARCH)`的值是“arm”，因此将`“lib_arm/config.mk”`包含进来。`lib_arm/config.mk`脚本指定了交叉编译器，添加了一些跟CPU架构相关的编译选项，最后还指定了`cpu/arm920t/u-boot.lds`为U-Boot的连接脚本。
 
 ```makefile
-ifdef      CPU
+ifdef CPU
 sinclude $(TOPDIR)/cpu/$(CPU)/config.mk             # include  CPU specific rules
 endif
 ```
@@ -491,20 +503,20 @@ endif
 `$(CPU)`的值是“arm920t”，因此将`“cpu/arm920t/config.mk”`包含进来。这个脚本主要设定了跟arm920t处理器相关的编译选项。
 
 ```makefile
-ifdef      SOC
+ifdef SOC
 sinclude $(TOPDIR)/cpu/$(CPU)/$(SOC)/config.mk       # include  SoC  specific rules
 endif
 ```
 
 ```makefile
-ifdef      SOC
+ifdef SOC
 sinclude $(TOPDIR)/cpu/$(CPU)/$(SOC)/config.mk       # include  SoC  specific rules
 endif
 ```
 `$(SOC)`的值是`s3c24x0`，因此Make程序尝试将`cpu/arm920t/s3c24x0/config.mk`包含进来，而这个文件并不存在，但是由于用的是`“sinclude”`命令，所以并不会报错。
 
 ```makefile
-ifdef      VENDOR
+ifdef  VENDOR
 	BOARDDIR = $(VENDOR)/$(BOARD)
 else
 	BOARDDIR = $(BOARD)
@@ -513,7 +525,7 @@ endif
 `$(BOARD)`的值是mini2440，VENDOR的值是samsung，因此BOARDDIR的值是`samsung/mini2440`。BOARDDIR变量表示开发板特有的代码所在的目录。
 
 ```makefile
-ifdef      BOARD
+ifdef  BOARD
 sinclude $(TOPDIR)/board/$(BOARDDIR)/config.mk   # include board specific rules
 endif
 ```
@@ -522,7 +534,7 @@ Make将`“board/samsung/mini2440/config.mk”`包含进来。该脚本只有如
 ```makefile
 TEXT_BASE = 0x33F80000
 ```
- U-Boot编译时将使用TEXT_BASE作为代码段连接的起始地址。
+ U-Boot编译时将使用TEXT_BASE作为**代码段连接的起始地址**。
 
 ```makefile
 LDFLAGS += -Bstatic -T $(obj)u-boot.lds $(PLATFORM_LDFLAGS)
@@ -531,6 +543,8 @@ ifneq ($(TEXT_BASE),)
 endif
 ```
 执行完以上代码后，LDFLAGS中包含了`“-Bstatic -T u-boot.lds ”`和`“-Ttext 0x33F80000”`的字样。
+
+链接地址是0x33f80000,意思是这个 UBOOT 运行时应该位于 0x33f8000 这里。
 
 #### 2.3.2.5 指定隐含的编译规则
 
@@ -553,7 +567,7 @@ $(obj)%.i:     %.c
 $(obj)%.s:     %.c
        $(CC)  $(CFLAGS) $(CFLAGS_$(@F)) $(CFLAGS_$(BCURDIR)) -o $@ $< -c -S
 ```
-例如：根据以上的定义，以“.s”结尾的目标文件将根据第一条规则由同名但后缀为“.S”的源文件来生成，若不存在“.S”结尾的同名文件则根据最后一条规则由同名的“.c”文件生成。
+例如：根据以上的定义，以`.s`结尾的目标文件将根据第一条规则由同名但后缀为`.S`的源文件来生成，若不存在`.S`结尾的同名文件则根据最后一条规则由同名的`.c`文件生成。
 
 下面回来接着分析Makefile的内容：
 
@@ -582,6 +596,7 @@ LIBS += post/libpost.a
 LIBS := $(addprefix $(obj),$(LIBS))
 ```
 LIBS变量指明了U-Boot需要的库文件，包括`平台/开发板`相关的目录、通用目录下相应的库，都通过相应的子目录编译得到的。
+
 对于mini2440开发板，以上跟平台相关的有以下几个：
 
 ```makefile
@@ -605,14 +620,14 @@ U_BOOT_ONENAND = $(obj)u-boot-onenand.bin
 ONENAND_BIN ?= $(obj)onenand_ipl/onenand-ipl-2k.bin
 endif
 ```
-对于有的开发板，U-Boot支持在NAND Flash启动，这些开发板的配置文件定义了CONFIG_NAND_U_BOOT，CONFIG_ONENAND_U_BOOT。对于s3c2440，U-Boot原始代码并不支持NAND Flash启动，因此也没有定义这两个宏。
+对于有的开发板，U-Boot支持在NAND Flash启动，这些开发板的配置文件定义了CONFIG_NAND_U_BOOT，CONFIG_ONENAND_U_BOOT。对于s3c2440，U-Boot原始代码并不支持NAND Flash启动，因此**也没有定义这两个宏**。
 
 ```makefile
 ALL += $(obj)u-boot.srec $(obj)u-boot.bin $(obj)System.map $(U_BOOT_NAND) $(U_BOOT_ONENAND)
 
-all:         $(ALL)
+all: $(ALL)
 ```
-其中U_BOOT_NAND与U_BOOT_ONENAND 为空，而`u-boot.srec`，`u-boot.bin`，`System.map`都依赖与u-boot。因此执行“make all”命令将生成u-boot，u-boot.srec，u-boot.bin，System.map 。
+其中U_BOOT_NAND与U_BOOT_ONENAND 为空，而`u-boot.srec`，`u-boot.bin`，`System.map`都依赖与u-boot。因此执行`make all`命令将生成u-boot，u-boot.srec，u-boot.bin，System.map 。
 
 * 其中u-boot是**ELF文件**
 * u-boot.srec是Motorola S-Record format文件
@@ -636,9 +651,9 @@ endif
 ```
 这里生成的`$(obj)u-boot`目标就是ELF格式的U-Boot文件了。由于CONFIG_KALLSYMS未定义，因此`ifeq ($(CONFIG_KALLSYMS),y)`与`endif`间的代码不起作用。
 
-其中`depend，$(SUBDIRS)，$(OBJS)，$(LIBBOARD)，$(LIBS)，$(LDSCRIPT)， $(obj)u-boot.lds`是$(obj)u-boot的依赖，而`$(GEN_UBOOT)`编译命令。
+其中`depend，$(SUBDIRS)，$(OBJS)，$(LIBBOARD)，$(LIBS)，$(LDSCRIPT)， $(obj)u-boot.lds`是`$(obj)u-boot`的依赖，而`$(GEN_UBOOT)`编译命令。
 
-下面分析$(obj)u-boot的各个依赖：
+下面分析`$(obj)u-boot`的各个依赖：
 
 #### 2.4.1 依赖目标depend
 
@@ -656,20 +671,20 @@ depend dep: $(TIMESTAMP_FILE) $(VERSION_FILE) $(obj)include/autoconf.mk
 #### 2.4.2 依赖SUBDIRS
 
 ```makefile
-SUBDIRS    = tools \
+SUBDIRS = tools \
 	examples/standalone \
 	examples/api
 
-$(SUBDIRS):     depend
+$(SUBDIRS): depend
 	$(MAKE) -C $@ all
 ```
-执行tools,`examples/standalone` ，`examples/api`目录下的Makefile。
+执行`tools`,`examples/standalone` ，`examples/api`目录下的Makefile。
 
 #### 2.4.3 OBJS
  OBJS的值是`“cpu/arm920t/start.o”`。它使用如下代码编译得到：
 
 ```makefile
-$(OBJS):      depend
+$(OBJS): depend
        $(MAKE) -C cpu/$(CPU) $(if $(REMOTE_BUILD),$@,$(notdir $@))
 ```
 以上规则表明，对于OBJS包含的每个成员，都进入`cpu/$(CPU)`目录（即`cpu/arm920t`）编译它们。
@@ -693,19 +708,19 @@ $(LIBBOARD): depend $(LIBS)
 $(LIBS):   depend $(SUBDIRS)
 	$(MAKE) -C $(dir $(subst $(obj),,$@))
 ```
-上面的规则表明，对于LIBS中的每个成员，都进入相应的子目录执行“make”命令编译它们。例如对于LIBS中的`“common/libcommon.a”`成员，程序将进入common目录执行Makefile，生成libcommon.a 。
+上面的规则表明，对于LIBS中的每个成员，都进入相应的子目录执行“make”命令编译它们。例如对于LIBS中的`common/libcommon.a`成员，程序将进入common目录执行Makefile，生成libcommon.a 。
 
 #### 2.4.6 LDSCRIPT
 
 ```makefile
 LDSCRIPT := $(SRCTREE)/cpu/$(CPU)/u-boot.lds
 … …
-$(LDSCRIPT):   depend
+$(LDSCRIPT): depend
               $(MAKE) -C $(dir $@) $(notdir $@)
 ```
-`“$(MAKE) -C $(dir $@) $(notdir $@)”`命令经过变量替换后就是`“make -C cpu/arm920t/  u-boot.lds”`。也就是转到`cpu/arm920t/`目录下，执行`“make u-boot.lds”`命令。
+`$(MAKE) -C $(dir $@) $(notdir $@)`命令经过变量替换后就是`make -C cpu/arm920t/  u-boot.lds`。也就是转到`cpu/arm920t/`目录下，执行`make u-boot.lds`命令。
 
-#### 2.4.7 $(obj)u-boot.lds
+#### 2.4.7 `$(obj)u-boot.lds`
 
 ```makefile
 $(obj)u-boot.lds: $(LDSCRIPT)
@@ -713,7 +728,7 @@ $(obj)u-boot.lds: $(LDSCRIPT)
 ```
 以上执行结果实质上是将`cpu/arm920t/u-boot.lds`经编译器简单预处理后输出到U-Boot顶层目录下的u-boot.lds文件。其中的`cpu/arm920t/u-boot.lds`文件内容如下：
 
-```
+```lds
 /* 输出为ELF文件，小端方式， */
 OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
 OUTPUT_ARCH(arm)   
@@ -724,33 +739,33 @@ SECTIONS
        . = ALIGN(4);
        .text :
        {
-/* cpu/arm920t/start.o放在最前面，保证最先执行的是start.o */
+            /* cpu/arm920t/start.o放在最前面，保证最先执行的是start.o */
             cpu/arm920t/start.o    (.text)
-/*以下2个文件必须放在前4K，因此也放在前面，其中board/samsung/mini2440/lowlevel_init.o 包含内存初始化所需代码，而 board/samsung/mini2440/nand_read.o 包含U-Boot从NAND Flash搬运自身的代码 */
-			board/samsung/mini2440/lowlevel_init.o (.text)
-			board/samsung/mini2440/nand_read.o (.text)
+            /*以下2个文件必须放在前4K，因此也放在前面，其中board/samsung/mini2440/lowlevel_init.o 包含内存初始化所需代码，而 board/samsung/mini2440/nand_read.o 包含U-Boot从NAND Flash搬运自身的代码 */
+	     board/samsung/mini2440/lowlevel_init.o (.text)
+	     board/samsung/mini2440/nand_read.o (.text)
 
-/* 其他文件的代码段 */
-			*(.text)
+            /* 其他文件的代码段 */
+	     *(.text)
 
        }
 
-/* 只读数据段 */
-	   . = ALIGN(4);
+       /* 只读数据段 */
+	. = ALIGN(4);
        .rodata : { *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*))) }
 
- /* 代码段 */
+       /* 代码段 */
        . = ALIGN(4);
        .data : { *(.data) }
 
-/* u-boot自定义的got段 */
+       /* u-boot自定义的got段 */
        . = ALIGN(4);
        .got : { *(.got) }
        . = .;
-       __u_boot_cmd_start = .;          /*将 __u_boot_cmd_start指定为当前地址 */
-       .u_boot_cmd : { *(.u_boot_cmd) }             /* 存放所有U-Boot命令对应的cmd_tbl_t结构体 */
-       __u_boot_cmd_end = .;           /*  将__u_boot_cmd_end指定为当前地址  */
-/* bss段 */
+       __u_boot_cmd_start = .;            /*将 __u_boot_cmd_start指定为当前地址 */
+       .u_boot_cmd : { *(.u_boot_cmd) }   /* 存放所有U-Boot命令对应的cmd_tbl_t结构体 */
+       __u_boot_cmd_end = .;              /*  将__u_boot_cmd_end指定为当前地址  */
+       /* bss段 */
        . = ALIGN(4);
        __bss_start = .;
        .bss (NOLOAD) : { *(.bss) . = ALIGN(4); }
@@ -758,7 +773,7 @@ SECTIONS
 
 }
 ```
-u-boot.lds实质上是U-Boot连接脚本。对于生成的U-Boot编译生成的“u-boot”文件，可以使用objdump命令可以查看它的分段信息：
+u-boot.lds实质上是U-Boot连接脚本。对于生成的U-Boot编译生成的“u-boot”文件，可以使用**objdump命令可以查看它的分段信息**：
 
 ```
 $objdump -x u-boot | more
@@ -806,6 +821,34 @@ GEN_UBOOT = \
 ```
 以上命令使用`$(LDFLAGS)`作为连接脚本，最终生成“u-boot”文件。
 
+`board/100ask24x0/u-boot.lds`这样一个链接脚本。这个链接脚本的第一个代码段文件从0x33f80000 处开始运行（当前地址 0 加上 0x33f80000，即放 UBOOT 放在 64M SDRAM 的最上边 512K 空间处）。
+
+最后替换相关变量后，结果如下：
+
+```
+arm-linux-ld -Bstatic -T /work/arm920t/sourceCode/u_boot/u-boot-1.1.6/board/100ask24x0/u-boot.lds -Ttext 0x33F80000 
+```
+若想你的 UBOOT 放在另一个地址，则可以修改这个值。如这里单板有 64MSDRAM，将UBOOT 放在这 64M SDRAM 的最上边。
+
+```
+-------------- -----> 0x34000000
+|             |
+|512k放UBOOT  |
+--------------  ----> 0x33f80000
+|             |
+|             |
+|  64M SRAM   |
+|             |
+|             |
+--------------  ----> 0x30000000
+```
+
+若是生成的 UBOOT 超过 512K,则把这个“TEXT_BASE”放到下面点，保证上面放 UBOOT 的空间即可。
+若内存没有 64M，则这个值也要修改。
+
+从 0 地址开始的话只有 4k 的 SRAM 可用，从 0x30000000 开始的话就有 64M 的 SDRAM 可用。
+RAM 的地址范围是从 0x30000000 到 0x34000000 共 64MByte。
+
 #### 2.4.9 u-boot.bin文件生成过程
 
 生成u-boot.bin文件的规则如下：
@@ -819,7 +862,9 @@ $(obj)u-boot.bin: $(obj)u-boot
 ```
 arm-linux-objcopy --gap-fill=0xff -O binary u-boot u-boot.bin
 ```
-编译命令中的“-O binary”选项指定了输出的文件为二进制文件。而“--gap-fill=0xff”选项指定使用“0xff”填充段与段间的空闲区域。这条编译命令实现了ELF格式的U-Boot文件到BIN格式的转换。
+编译命令中的`-O binary`选项指定了输出的文件为二进制文件。而`--gap-fill=0xff`选项指定使用`0xff`填充段与段间的空闲区域。
+
+这条编译命令实现了ELF格式的U-Boot文件到BIN格式的转换。
 
 ### 2.5 System.map文件的生成
 
@@ -832,6 +877,8 @@ SYSTEM_MAP = \
 	LC_ALL=C sort
 $(obj)System.map:     $(obj)u-boot
 	@$(call SYSTEM_MAP,$<) > $(obj)System.map
+
+# 等价于
 arm-linux-nm u-boot | grep -v '\(compiled\)\|\(\.o$$\)\|\( [aUw] \)\|\(\.\.ng$$\)\|\(LASH[RL]DI\)' | LC_ALL=C sort  > System.map
 ```
 
@@ -852,6 +899,10 @@ arm-linux-nm u-boot | grep -v '\(compiled\)\|\(\.o$$\)\|\( [aUw] \)\|\(\.\.ng$$\
 33f8004c T _bss_end
 … …
 ```
- System.map表示的是地址标号到该标号表示的地址的一个映射关系。System.map每一行的格式都是`“addr type name”`，addr是标号对应的地址值，name是标号名，type表示标号的类型。
+ System.map表示的是地址标号到该标号表示的地址的一个映射关系。System.map每一行的格式都是`addr type name`
+ 
+* addr是标号对应的地址值
+* name是标号名
+* type表示标号的类型。
 
 U-Boot的编译和运行并不一定要生成System.map，这个文件主要是提供给**用户或外部程序调试时使用的**。
