@@ -15,34 +15,34 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
-int main(){
+int main()
+{
     int fd;
-    char *start,*buf;
-    fd=open("/dev/memdev",O_RDWR);
-    buf=(char*)malloc(100);
-    memset(buf,0,100);
-    start=mmap(NULL,100,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+    char *start, *buf;
+    fd = open("/dev/memdev", O_RDWR);
+    buf = (char*)malloc(100);
+    memset(buf, 0, 100);
+    start = mmap(NULL, 100, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     //读出数据
-    strcpy(buf,start);
+    strcpy(buf, start);
     sleep(1);
-    printf("buf ;l= %s\n",buf);
+    printf("buf ;l= %s\n", buf);
 
     //写入数据
-    strcpy(start,"buf is not null");
-    memset(buf,0,100);
-    strcpy(buf,start);
+    strcpy(start, "buf is not null");
+    memset(buf, 0, 100);
+    strcpy(buf, start);
     sleep(1);
-    printf("buf 2=%s\n",buf);
+    printf("buf 2=%s\n", buf);
 
-    munmap(start,100);
+    munmap(start, 100);
     free(buf);
     close(fd);
     return 0;
 }
-

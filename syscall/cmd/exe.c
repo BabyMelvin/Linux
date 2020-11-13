@@ -15,22 +15,23 @@
  *
  * =====================================================================================
  */
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
 
-int main(void){
-    char *argv0[]={"ls","-l",NULL};
+int main(void)
+{
+    char* argv0[] = { "ls", "-l", NULL };
     printf("开始：hello world\n");
     //执行 /bin/ls
-    execl("/bin/ls","ls","-l",NULL);
+    execl("/bin/ls", "ls", "-l", NULL);
 
-    execlp("ls","ls","-l",NULL);
+    execlp("ls", "ls", "-l", NULL);
 
-    execv("/bin/ls",argv0);
+    execv("/bin/ls", argv0);
 
-    execvp("ls",argv0);
+    execvp("ls", argv0);
     printf("接收: hello world\n");
+    
     return 0;
 }
-

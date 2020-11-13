@@ -9,8 +9,8 @@
  *      first exit handler
  * */
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static void my_exit(void)
 {
@@ -22,7 +22,7 @@ static void my_exit2(void)
     printf("second exit handler\n");
 }
 
-int main (void)
+int main(void)
 {
     if (atexit(my_exit) != 0) {
         printf("Can't register my_exit\n");

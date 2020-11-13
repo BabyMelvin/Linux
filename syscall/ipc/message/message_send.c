@@ -16,92 +16,92 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
-#include <sys/types.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-struct student{
+#include <sys/types.h>
+struct student {
     int num;
     char name[32];
 };
 
-struct msgbuf{
+struct msgbuf {
     long type;
     struct student stu;
-    struct msgbuf *next;
+    struct msgbuf* next;
 };
 
-struct msgbuf* create_node(long type,int num,char*name){
-    struct msgbuf * temp;
-    temp=malloc(sizeof(struct msgbuf));
-    temp->type=type;
-    temp->stu.num=num;
-    strcpy(temp->stu.name,name);
-    temp->next=NULL;
+struct msgbuf* create_node(long type, int num, char* name)
+{
+    struct msgbuf* temp;
+    temp = malloc(sizeof(struct msgbuf));
+    temp->type = type;
+    temp->stu.num = num;
+    strcpy(temp->stu.name, name);
+    temp->next = NULL;
     return temp;
 }
-struct msgbuf* insert_node_head(struct msgbuf*head,struct msgbuf*temp){
-   if(temp==NULL){
-     head=temp;
-   }else{
-       temp->next=head;
-       head=temp;
-   } 
-   return head;
+struct msgbuf* insert_node_head(struct msgbuf* head, struct msgbuf* temp)
+{
+    if (temp == NULL) {
+        head = temp;
+    } else {
+        temp->next = head;
+        head = temp;
+    }
+    return head;
 }
-void print_node(struct msgbuf*head){
-    while(head){
-        printf("type=%ld,num=%d,name=%s\n",head->type,head->stu.num,head->stu.name);
-        head=head->next;
+void print_node(struct msgbuf* head)
+{
+    while (head) {
+        printf("type=%ld,num=%d,name=%s\n", head->type, head->stu.num, head->stu.name);
+        head = head->next;
     }
 }
-int main(void){
-    int msg_id,num;
+int main(void)
+{
+    int msg_id, num;
     char ch;
     long type;
     char name[32];
-    struct msgbuf*temp;
-    struct msgbuf *p;
-    struct msgbuf *head=NULL;
+    struct msgbuf* temp;
+    struct msgbuf* p;
+    struct msgbuf* head = NULL;
 
     key_t key;
     //通过文件路径获得唯一的KEY值标识,或者指定key=0x2000;
-    key=ftok(".","a");
+    key = ftok(".", "a");
 
     //创建消息队列
-    msg_id=msgget(key,IPC_CREAT|0777);
+    msg_id = msgget(key, IPC_CREAT | 0777);
 
     //生成创建消息链表
-    while(1){
+    while (1) {
         printf("输入 type,num,name\n");
-        scanf("%ld%d%s",&type,&num,name);
-        temp=create_node(type,num,name);
+        scanf("%ld%d%s", &type, &num, name);
+        temp = create_node(type, num, name);
         printf("y/n,insert?\n");
         getchar();
-        ch=getchar();
-        if(ch=='Y'||ch=='y'){
-            if(temp){
-                head=insert_node_head(head,temp);
-            }else{
+        ch = getchar();
+        if (ch == 'Y' || ch == 'y') {
+            if (temp) {
+                head = insert_node_head(head, temp);
+            } else {
                 break;
             }
-        }else if(ch=='N'||ch=='n'){
+        } else if (ch == 'N' || ch == 'n') {
             break;
         }
-        
     }
     print_node(head);
-    p=head;
-    while(p){
+    p = head;
+    while (p) {
         //flag:IPC_NOWAIT
         //struct msgbuf{long type,char *data};
-        msgsnd(msg_id,p,sizeof(struct msgbuf)-sizeof(long),0);
-        p=p->next;
+        msgsnd(msg_id, p, sizeof(struct msgbuf) - sizeof(long), 0);
+        p = p->next;
     }
     return 0;
 }
-
-

@@ -4,15 +4,15 @@
  * */
 
 #include <dirent.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-int main (int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    DIR *dp;
-    struct dirent *dirp;
+    DIR* dp;
+    struct dirent* dirp;
 
-    if (argc != 2 ) {
+    if (argc != 2) {
         printf("usage: ls directory_name\n");
         return -1;
     }

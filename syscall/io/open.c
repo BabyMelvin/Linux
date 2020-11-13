@@ -22,29 +22,31 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/fcntl.h>
 
-int main(int argc,char* argv[]){
+int main(int argc, char* argv[])
+{
     int fd;
     char name[1024];
-    int i=0;
-    while(true){
-        sprintf(name,"file%d",++i);
+    int i = 0;
+
+    while (1) {
+        sprintf(name, "file%d", ++i);
         umask(0);
-        fd=open(name,O_CREAT|O_RDWR|O_EXCL,0777);
-        if(fd==-1)
+        fd = open(name, O_CREAT | O_RDWR | O_EXCL, 0777);
+        if (fd == -1)
             exit(1);
-        else{
+        else {
             //关闭文件会释放所有的记录锁，进程结束，内核关闭所有打开的文件.
             close(fd);
         }
-        printf("第%d 个文件已被创建\n",i);
+        printf("第%d 个文件已被创建\n", i);
     }
     return 0;
 }
-

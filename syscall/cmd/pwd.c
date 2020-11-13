@@ -19,9 +19,11 @@
 #include <unistd.h>
 
 #define SIZE 4096
-int main(void){
+int main(void)
+{
     char buf[SIZE];
     chdir("/");
-    printf("当前工作目录:%s\n",getcwd(buf,sizeof(buf)));
+    printf("当前工作目录:%s\n", getcwd(buf, sizeof(buf)));
+
     return 0;
 }

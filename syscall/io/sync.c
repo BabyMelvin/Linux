@@ -23,7 +23,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int main(){
+int main()
+{
     /* 
      * 1.void sync(void); 缓冲区排入队列，准备写入磁盘
      * 将所有修改过的块缓冲区排入队列，然后返回，并不等待实际写磁盘操作结束.
@@ -43,4 +44,3 @@ int main(){
      * fsync用于数据库这样的应用程序，修保证修改过的程序写入磁盘上
      */
 }
-

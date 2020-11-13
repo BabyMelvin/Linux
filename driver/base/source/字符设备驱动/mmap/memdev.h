@@ -21,8 +21,8 @@
 #define MEMDEV_NR_DEVS 2
 #define MEMDEV_SIZE 4096
 
-struct mem_dev{
-    char*data;
+struct mem_dev {
+    char* data;
     unsigned long size;
 };
 #endif

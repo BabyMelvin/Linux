@@ -21,18 +21,24 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
+#include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <sys/types.h>
 
-int main(int argc,char * argv){
-    struct msgqid_ds *qbuf;
+int main(int argc, char* argv)
+{
+    struct msgqid_ds* qbuf;
+    int msg_id;
+    key_t key;
+    //key=ftok(".",'a');创建的Key值不同。。。
+    key = 0x152000f6;
+    msg_id = msgget(key, IPC_CREAT | 0777);
+
     //IPC_STAT
-    if(msgctl(qid,IPC_STAT,qbuf)==-1){
+    if (msgctl(msg_id, IPC_STAT, qbuf) == -1) {
         return -1;
     }
     return 0;
 }
-

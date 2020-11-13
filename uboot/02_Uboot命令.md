@@ -47,7 +47,7 @@ uboot是bootloader程序。
 * cp 数据拷贝,`cp[.b,.l,.w] saddress daddress len`.cp提供一种内存与内存，内存与falsh之间数据拷贝的方法。
 
 **程序跳转执行**
-* go:执行内存中二进制代码，一个简单跳转到指定地址
+* `go`:执行内存中二进制代码，一个简单跳转到指定地址
 	* `go addr [arg..]`开始地址addr,参数为arg。
 * `bootm`执行内存中二进制代码.启动application传递参数arg。当启动linux kernel,arg参数可以是`initrd`镜像的地址。
 * `bdinfo`显示开发板信息

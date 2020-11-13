@@ -15,20 +15,21 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(void){
+int main(void)
+{
     extern char** environ;
     int i;
-    for(i=0;environ[i]!=NULL;i++){
-        printf("环境：%s\n",environ[i]);
+    for (i = 0; environ[i] != NULL; i++) {
+        printf("环境：%s\n", environ[i]);
     }
-    printf("PATH=%s\n",getenv("PATH");
+
+    printf("PATH=%s\n", getenv("PATH"));
     //1:override
-    setenv("PATH","hello",1);
-    printf("PATH=%s\n",getenv("PATH")); 
-    
+    setenv("PATH", "hello", 1);
+    printf("PATH=%s\n", getenv("PATH"));
+
     return 0;
 }
-

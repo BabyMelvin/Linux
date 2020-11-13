@@ -38,47 +38,48 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <sys/wait.h>
-int main(int argc,char* argv[]){
-    pid_t cpid,w;
+#include <unistd.h>
+int main(int argc, char* argv[])
+{
+    pid_t cpid, w;
     int status;
-    cpid=fork();
-    if(cpid==-1){
+    cpid = fork();
+    if (cpid == -1) {
         perror("fork");
         exit(EXIT_FAILURE);
     }
-    cpid=fork();
-    if(cpid==-1){
+    cpid = fork();
+    if (cpid == -1) {
         perror("fork");
         exit(EXIT_FAILURE);
     }
-    
-    if(cpid==0){
+
+    if (cpid == 0) {
         //被任何一个子进程执行
-        printf("子进程 pid=%ld\n",(long)getpid());     
-        if(argc==1){
+        printf("子进程 pid=%ld\n", (long)getpid());
+        if (argc == 1) {
             //等待信号
             pause();
             _exit(atoi(argv[1]));
         }
-    }else{
-        do{
-            w=waitpid(cpid,&status,WUNTRACED|WCONTINUED);
-            if(w==-1){
+    } else {
+        do {
+            w = waitpid(cpid, &status, WUNTRACED | WCONTINUED);
+            if (w == -1) {
                 perror("waitpid");
                 exit(EXIT_FAILURE);
             }
-            if(WIFEXITED(status)){
-                printf("exited ,status=%d\n",WEXITSTATUS(status));
-            }else if(WIFSIGNALED(status)){
-                printf("killed by signal %d\n",WTERMSIG(status));
-            }else if(WIFCONTINUED(status)){
+            if (WIFEXITED(status)) {
+                printf("exited ,status=%d\n", WEXITSTATUS(status));
+            } else if (WIFSIGNALED(status)) {
+                printf("killed by signal %d\n", WTERMSIG(status));
+            } else if (WIFCONTINUED(status)) {
                 printf("continued\n");
             }
-        }while(!WIFEXITED(status)&&!WIFSIGNALED(status));
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
         exit(EXIT_SUCCESS);
     }
     return 0;

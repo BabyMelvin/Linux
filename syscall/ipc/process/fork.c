@@ -15,36 +15,34 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <unistd.h>
 
-int main(void){
+int main(void)
+{
     pid_t pid;
-    int n=10;
+    int n = 10;
     //一次调用两次返回
-    pid=fork();
+    pid = fork();
     //pid=0 或者子进程pid
-    printf("pid=%ld\n",(long)pid);
-    printf("分开后进程id=%ld\n",(long)getpid());
-    if(pid>0){
+    printf("pid=%ld\n", (long)pid);
+    printf("分开后进程id=%ld\n", (long)getpid());
+    if (pid > 0) {
         //父进程中
-        while(1){
-            printf("i am in parent n=%d,my pid=%d my-parent pid=%d\n",n++,getpid(),getppid());
+        while (1) {
+            printf("i am in parent n=%d,my pid=%d my-parent pid=%d\n", n++, getpid(), getppid());
             sleep(1);
         }
-    }else if(pid==0){
+    } else if (pid == 0) {
         //子进程中
-        printf("i am in child,n=%d,my pid=%d, my parent pid=%d\n",n++,getpid(),getppid());
-        execl("/usr/bin/firefox","firefox","wwww.baidu.com",NULL);
+        printf("i am in child,n=%d,my pid=%d, my parent pid=%d\n", n++, getpid(), getppid());
+        execl("/usr/bin/firefox", "firefox", "wwww.baidu.com", NULL);
         sleep(10);
-    }else{
+    } else {
         perror("fork");
         exit(1);
     }
     return 0;
 }
-
-

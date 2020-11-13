@@ -15,12 +15,13 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
+int main()
+{
     system("ls -al /etc/passwd");
-    for(;;);
+    for (;;)
+        ;
     return 0;
 }
-

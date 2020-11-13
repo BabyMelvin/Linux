@@ -22,18 +22,19 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-int main(){
+int main()
+{
     int fd;
     int flag;
-    fd=open("cops",O_RDONLY);
-    flag=fcntl(fd,GETFL);
-    flg|=O_NONBLOCK;
-    fcntl(fd,SETFL,flag);
+    fd = open("cops", O_RDONLY);
+    flag = fcntl(fd, F_GETFL);
+    flag |= O_NONBLOCK;
+    fcntl(fd, F_SETFL, flag);
     close(fd);
     return 0;
 }

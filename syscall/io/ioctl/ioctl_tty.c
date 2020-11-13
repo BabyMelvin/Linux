@@ -23,22 +23,22 @@
  * =====================================================================================
  */
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
 
-int main(void){
+int main(void)
+{
     struct winsize size;
-    if(isatty(STDOUT_FILENO)==0){
+    if (isatty(STDOUT_FILENO) == 0) {
         printf("不是tty终端文件，如果是>0\n");
         exit(1);
     }
-    if(ioctl(STDOUT_FILENO,TIOCGWINSZ,&size)<0){
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) < 0) {
         perror("ioctl:获取窗口大小失败");
         exit(1);
     }
-    printf("行宽=%d,列高=%d,总大小=%d\n",size.ws_row,size.ws_col,size);
+    printf("行宽=%d,列高=%d,总大小=%d\n", size.ws_row, size.ws_col, size);
     return 0;
 }
-

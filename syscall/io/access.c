@@ -22,12 +22,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int main(void){
-    if(access("file",F_OK)<0){
+int main(void)
+{
+    if (access("file", F_OK) < 0) {
         perror("access");
         exit(1);
     }
     printf("file 文件存在\n");
     return 0;
 }
-

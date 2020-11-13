@@ -23,33 +23,34 @@
  *
  * =====================================================================================
  */
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
-#include <stdio.h>
 
-int main(void){
-    int fd=open("file.hole",O_RDWR|O_CREAT,0x777);
-    if(fd<0){
+int main(void)
+{
+    int fd = open("file.hole", O_RDWR | O_CREAT, 0x777);
+    if (fd < 0) {
         perror("open");
         exit(-1);
     }
-    if(write(fd,"1234567890",10)!=10)
+    if (write(fd, "1234567890", 10) != 10)
         perror("write");
     /* offset_now=10 */
 
     //扩大一个文件一定要又一次写操作
     //SEEK_CUR | SEEK_END
-    if(lseek(fd,16384,SEEK_SET)==-1){
+    if (lseek(fd, 16384, SEEK_SET) == -1) {
         printf("cannot seek\n");
-    }else{
+    } else {
         printf("seek OK\n");
     }
     /* offset_now=16384*/
 
-    if(write(fd,"abcdef",6)!=6)
+    if (write(fd, "abcdef", 6) != 6)
         perror("write");
     /* offset_now=16390*/
 

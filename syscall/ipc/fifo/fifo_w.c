@@ -17,30 +17,33 @@
  *
  * =====================================================================================
  */
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <string.h>
 #include <errno.h>
-void sys_err(char *str,int exitno){
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+void sys_err(char* str, int exitno)
+{
     perror(str);
     exit(exitno);
 }
-int main(void){
-    char buf[1024]="hello world ... \n";
-    int len;
-    fd=open("my_fifo",O_WRONLY|O_NONBLOCK);
-    if(fd<0){
-        sys_err("open",1);
+
+int main(void)
+{
+    char buf[1024] = "hello world ... \n";
+    int len, fd;
+    fd = open("my_fifo", O_WRONLY | O_NONBLOCK);
+    if (fd < 0) {
+        sys_err("open", 1);
     }
-    len=write(fd,buf,strlen(buf));
-    if(len<0){
-        if(errno!=ENXIO){
+    len = write(fd, buf, strlen(buf));
+    if (len < 0) {
+        if (errno != ENXIO) {
             sys_err("write");
-        }else{
+        } else {
             printf("非阻塞，但是没有读写端没有打开\n");
         }
         close(fd);
@@ -48,4 +51,3 @@ int main(void){
     close(fd);
     return 0;
 }
-

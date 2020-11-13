@@ -579,7 +579,7 @@ LIBS += cpu/$(CPU)/lib$(CPU).a
 ifdef SOC
 LIBS += cpu/$(CPU)/$(SOC)/lib$(SOC).a
 endif
-
+ 
 ifeq ($(CPU),ixp)
 LIBS += cpu/ixp/npe/libnpe.a
 endif
