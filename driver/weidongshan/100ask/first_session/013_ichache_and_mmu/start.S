@@ -144,7 +144,7 @@ reset:
 	 * 然后CPU工作于新的频率FCLK
 	 */
 	
-	
+	bl enable_icache
 
 	/* 设置内存: sp 栈 */
 	/* 分辨是nor/nand启动
@@ -200,3 +200,9 @@ und_code:
 halt:
 	b halt
 	
+enable_icache:
+	/* 设置协处理器使能icache */
+	mrc p15, 0, r0, c1, c0, 0
+	orr r0, r0, #(1<<12)  /* r0 = r0 or (1<<12) */
+	mcr p15, 0, r0, c1, c0, 0	
+	mov pc, lr
