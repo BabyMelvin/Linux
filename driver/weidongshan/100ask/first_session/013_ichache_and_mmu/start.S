@@ -164,6 +164,12 @@ reset:
 	bl sdram_init
 	//bl sdram_init2	 /* 用到有初始值的数组, 不是位置无关码 */
 
+	/* 创建页表 */
+	bl create_page_table
+
+	/* 启动MMU */
+	bl mmu_enable
+
 	/* 重定位text, rodata, data段整个程序 */
 	bl copy2sdram
 
@@ -205,4 +211,22 @@ enable_icache:
 	mrc p15, 0, r0, c1, c0, 0
 	orr r0, r0, #(1<<12)  /* r0 = r0 or (1<<12) */
 	mcr p15, 0, r0, c1, c0, 0	
+	mov pc, lr
+
+mmu_enable:
+	/* 把页表基址告诉cp15 */
+	ldr r0, =0x32000000
+	mcr p15, 0, r0, c2, c0, 0
+
+	/* 设置域为0xffffffff, 不进行权限检查 */
+	ldr r0, =0xffffffff
+	mcr p15, 0, r0, c3, c0, 0
+
+	/* 使能icache,dcache,mmu */
+	mrc p15, 0, r0, c1, c0, 0
+	orr r0, r0, #(1<<12)  /* enable icache */
+	orr r0, r0, #(1<<2)  /* enable dcache */
+	orr r0, r0, #(1<<0)  /* enable mmu */
+	mcr p15, 0, r0, c1, c0, 0	
+
 	mov pc, lr

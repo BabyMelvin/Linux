@@ -1,4 +1,4 @@
-objs :=start.o init.o nand_flash.o led.o uart.o  main.o exception.o interrupt.o timer.o nor_flash.o my_printf.o string_utils.o lib1funcs.o
+objs :=start.o init.o nand_flash.o mmu.o led.o uart.o  main.o exception.o interrupt.o timer.o nor_flash.o my_printf.o string_utils.o lib1funcs.o
 
 objs += lcd/lcd_test.o
 objs += lcd/font.o
@@ -18,7 +18,7 @@ objs += adc_touchscreen/tslib.o
 all: $(objs)
 	#arm-linux-ld -Ttext 0 -Tdata 0x30000000  start.o led.o uart.o init.o main.o -o sdram.elf
 	arm-linux-ld -T sdram.lds $^ libgcc.a -o sdram.elf
-	arm-linux-objcopy -O binary -S sdram.elf icache_test.bin
+	arm-linux-objcopy -O binary -S sdram.elf mmu_test.bin
 	arm-linux-objdump -D sdram.elf > sdram.dis
 clean:
 	rm *.bin *.o *.elf *.dis lcd/*.o adc_touchscreen/*.o
