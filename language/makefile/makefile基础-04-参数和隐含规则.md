@@ -180,3 +180,15 @@ rm -f z.o
 * CXXFLAGS : C++ 语言编译器参数。
 * CPPFLAGS : C 预处理器参数。（C 和 Fortran 编译器也会用到）。
 * LDFLAGS : 链接器参数。（如：ld ）
+
+定义宏，字符串:
+
+```make
+# 在Makefile里面定义一个字符串在程序里面使用，
+CFLAGS += -DMY_PATH=/etc/mycfg
+CFLAGS += -DMY_PATH="/etc/mycfg"
+#上面两种写法都不行。
+
+#正确的写法如下：
+CFLAGS += -DMY_PATH=\"/etc/mycfg\"
+```
